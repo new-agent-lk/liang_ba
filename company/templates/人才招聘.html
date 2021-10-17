@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!--内页大图开始-->
+    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
+        <img src="{{ MEDIA_URL }}{{ companyinfo.topimg }}" alt="{{ companyinfo.name }}"/></div>
+    <!--内页大图结束-->
+    <div class="submian">
+        <div class="w1200 clearfix">
+            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% url 'index' %}" title="首页">首页</a> > <a
+                    href="javascript:;"
+                    title="人才招聘">人才招聘</a>
+            </div>
+
+            <div class="subleft fl">
+                <!--栏目分类开始-->
+                <div class="lefta bor9">
+
+                    <div class="title"><h2>人才招聘</h2></div>
+                    <div class="comt">
+                        <ul>
+
+
+                            <li class="{% ifnotequal request.GET.category 'zwfb' %}hover{% endifnotequal %}">
+                                <a href="{% url 'recruits' %}" title="人才理念">人才理念</a>
+                            </li>
+
+                            <li class="{% ifequal request.GET.category 'zwfb' %}hover{% endifequal %}">
+                                <a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--栏目分类结束-->
+
+                <!--推荐产品开始-->
+                <div class="leftnews bor9">
+                    <div class="title"><i>推荐产品</i></div>
+                    <div class="leftprocomt clearfix">
+                        <ul>
+                            {% for left_product in left_products %}
+                                {% if forloop.counter|divisibleby:"2" %}
+                                    <li style="margin-right: 0;"><a href="{% url 'product_detail' left_product.id %}"
+                                                                    title="{{ left_product.name }}"><img
+                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
+                                        <p>{{ left_product.name }}</p></a></li>
+                                {% else %}
+                                    <li><a href="{% url 'product_detail' left_product.id %}"
+                                           title="{{ left_product.name }}"><img
+                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
+                                        <p>{{ left_product.name }}</p></a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!--推荐产品结束-->
+
+                <!--联系我们开始-->
+                <div class="leftnews bor9">
+                    <div class="title"><i>联系我们</i></div>
+                    <div class="leftcont">
+                        <h2>{{ companyinfo.name }}</h2>
+                        <span>
+                            地址：{{ companyinfo.address }}<br>
+                            电话：{{ companyinfo.telephone }}<br>
+                        </span>
+                        <p>咨询热线<i>{{ companyinfo.phone }}</i></p></div>
+                </div>
+                <!--联系我们结束-->
+            </div>
+            <div class="subright fr">
+                <!--单页内容开始-->
+                {{ recruit.info|safe }}
+                <!--单页内容结束-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

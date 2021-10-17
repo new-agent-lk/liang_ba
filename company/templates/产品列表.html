@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!--内页大图开始-->
+    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
+
+        <img src="{{ MEDIA_URL }}{{ companyinfo.topimg }}" alt="{{ companyinfo.name }}"/></div>
+    <!--内页大图结束-->
+    <div class="submian">
+        <div class="w1200 clearfix">
+            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% url 'index' %}" title="首页">首页</a> > <a
+                    href="javascript:;"
+                    title="产品中心">产品中心</a>
+            </div>
+
+            <div class="subleft fl">
+                <!--栏目分类开始-->
+                <div class="lefta bor9">
+                    <div class="title"><h2>产品中心</h2></div>
+                    <div class="comt">
+                        <ul>
+                            {% for product_cat in product_cats %}
+                                <li class="{% ifequal request.GET.category product_cat.id|slugify %}hover{% endifequal %}">
+                                    <a
+                                            href="{% url 'products' %}?category={{ product_cat.id }}"
+                                            title="{{ product_cat.name }}">{{ product_cat.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!--栏目分类结束-->
+
+                <!--推荐产品开始-->
+                <div class="leftnews bor9">
+                    <div class="title"><i>推荐产品</i></div>
+                    <div class="leftprocomt clearfix">
+                        <ul>
+                            {% for left_product in left_products %}
+                                {% if forloop.counter|divisibleby:"2" %}
+                                    <li style="margin-right: 0;"><a href="{% url 'product_detail' left_product.id %}"
+                                                                    title="{{ left_product.name }}"><img
+                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
+                                        <p>{{ left_product.name }}</p></a></li>
+                                {% else %}
+                                    <li><a href="{% url 'product_detail' left_product.id %}"
+                                           title="{{ left_product.name }}"><img
+                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
+                                        <p>{{ left_product.name }}</p></a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!--推荐产品结束-->
+
+                <!--联系我们开始-->
+                <div class="leftnews bor9">
+                    <div class="title"><i>联系我们</i></div>
+                    <div class="leftcont">
+                        <h2>{{ companyinfo.name }}</h2>
+                        <span>
+                            地址：{{ companyinfo.address }}<br>
+                            电话：{{ companyinfo.telephone }}<br>
+                        </span>
+                        <p>咨询热线<i>{{ companyinfo.phone }}</i></p></div>
+                </div>
+                <!--联系我们结束-->
+            </div>
+            <div class="subright fr">
+                <!--产品列表开始-->
+                <div class="honorlist list_imgH clearfix">
+                    <ul class="list clearfix">
+                        {% for product in products %}
+                            <li class="item"
+                                style="{% if forloop.counter|divisibleby:'3' %}margin-right: 0;{% endif %}">
+                                <a href="{% url 'product_detail' product.id %}?category={{ request.GET.category }}&keywords={{ request.GET.keywords }}"
+                                   title="{{ product.name }}">
+                                    <img src="{{ MEDIA_URL }}{{ product.img }}" alt="{{ product.name }}">
+                                    <div class="item_mask">
+                                        <div class="item_link_icon ico"></div>
+                                    </div>
+                                    <span>{{ product.name }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="clear"></div>
+                    <!--分页样式-->
+                    <div class="pglist">
+                        <a>总数 {{ products.paginator.num_pages }}</a>
+                        {% if products.has_previous %}
+                            <a href="?page={{ products.previous_page_number }}&category={{ request.GET.category }}&keywords={{ request.GET.keywords }}">上一页</a>
+                        {% else %}
+                            <a href="javascript:;">上一页</a>
+                        {% endif %}
+                        {% for page in products.paginator.page_range %}
+                            {% ifequal page products.number %}
+                                <a href="javascript:;" class="hover">{{ page }}</a>
+                            {% else %}
+                                <a href="?page={{ page }}&category={{ request.GET.category }}&keywords={{ request.GET.keywords }}">{{ page }}</a>
+                            {% endifequal %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                            <a href="?page={{ products.next_page_number }}&category={{ request.GET.category }}&keywords={{ request.GET.keywords }}">下一页</a>
+                        {% else %}
+                            <a href="javascript:;">下一页</a>
+                        {% endif %}
+                        <a>页次 {{ products.number }}/{{ products.paginator.num_pages }}</a>
+                    </div>
+
+                </div>
+                <!--产品列表结束-->
+                <!--推荐资讯开始-->
+                <h4 class="anlitopH4"><span>推荐资讯</span></h4>
+                <div class="divremmnews">
+                    <ul class="clearfix">
+                        {% for foot_new in foot_news %}
+                            <li><span class="fr">{{ foot_new.add_time|date:'Y-m-d' }}</span>
+                                <a href="{% url 'news_detail' foot_new.id %}" title="{{ foot_new.title }}">
+                                    {% if foot_new.title|length > 22 %}
+                                        {{ foot_new.title|slice:':22' }}...
+                                    {% else %}
+                                        {{ foot_new.title }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--推荐资讯结束-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

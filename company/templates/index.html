@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+<!-- 以下3行是留给小白的，可删除 -->
+
+{% load static %}
+{% block content %}
+    <!--幻灯片大图开始-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+        <div id="banner" class="banner">
+            <ul class="list clearfix">
+                {% for carousel in carousels %}
+                    <li><a href="javascript:;"><img src="{{ MEDIA_URL }}{{ carousel.img }}" alt=""/></a></li>
+                {% endfor %}
+            </ul>
+            <div class="tip"></div>
+            <a href="javascript:;" id="btn_prev" class="ico"></a> <a href="javascript:;" id="btn_next" class="ico"></a>
+        </div>
+    </div>
+    <!--幻灯片大图结束-->
+
+    <div class="index">
+        <!--产品中心开始-->
+        <div id="floor_2_main">
+            <div class="floor_2 w1200">
+
+
+                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">PRODUCT CENTER</p>
+                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
+                            class="line fl"></em><span class="word">产品中心</span><em class="line fr"></em></h3></div>
+                <!--产品分类开始-->
+                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+                    {% for product_cat in product_cats %}
+                        <a href="{% url 'products' %}?category={{ product_cat.id }}"
+                           title="{{ product_cat.name }}">{{ product_cat.name }}</a>
+                    {% endfor %}
+                </div>
+                <!--产品分类结束-->
+                <div class="proCenter" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+                    <ul class="list clearfix">
+                        {% for product in products %}
+                            <li><a href="{% url 'product_detail' product.id %}" title="{{ product.name }}"><img
+                                    src="{{ MEDIA_URL }}{{ product.img }}"
+                                    alt="{{ product.name }}"/>
+                                <div class="title clearfix"><h3 class="tit fl">{{ product.name }}</h3><em
+                                        class="icon fr"></em></div>
+                            </a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <div class="line fl"></div>
+                    <a class="look_more fl" href="{% url 'products' %}" title="查看更多>>">查看更多>></a>
+                    <div class="line fl"></div>
+                </div>
+            </div>
+        </div>
+        <!--产品中心结束-->
+
+        <!--小banner开始-->
+        <div class="index_slip" aos="fade-up" aos-easing="ease" aos-duration="700">
+            <div class="slip w1200">
+                <div class="slip_tit fl">
+                    <h3 class="tit1" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">
+                        {{ indexask_1.title }}</h3>
+                    <p class="tit2" aos="fade-up" aos-easing="ease" aos-duration="700"
+                       aos-delay="700">{{ indexask_1.info }}</p></div>
+                <a class="slip_btn fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="400"
+                   href="{% url 'contact' %}">立即咨询</a>
+            </div>
+        </div>
+        <!--小banner结束-->
+
+        <!--产品优势开始-->
+        <div id="floor_3_main">
+            <div class="floor_3 w1200">
+                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">OUR ADVATAGES</p>
+                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
+                            class="line fl"></em><span class="word">产品优势</span><em class="line fr"></em></h3></div>
+                <div class="proAdvant">
+                    <ul class="list clearfix">
+                        {% for advantage in advantages %}
+                            <li aos="fade-up" aos-easing="ease" aos-duration="700"
+                                    {% if forloop.counter == 2 %}
+                                aos-delay="300"
+                                    {% elif forloop.counter == 3 %}
+                                aos-delay="500"
+                                    {% endif %}>
+                                <a href="javascript:;">
+                                    <img class="img" src="{{ MEDIA_URL }}{{ advantage.img }}"
+                                         alt="{{ advantage.title }}"/>
+                                    <div class="title">
+                                        <h3 class="tit">{{ advantage.title }}</h3>
+                                        <p class="cont">{{ advantage.info }}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--产品优势结束-->
+
+        <!--工程案例开始-->
+        <div id="floor_4_main">
+            <div class="floor_4 w1200">
+                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">PROJECT CASE</p>
+                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
+                            class="line fl"></em><span class="word">工程案例</span><em class="line fr"></em></h3></div>
+                <!--案例分类开始-->
+                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+
+
+                    <a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a>
+
+                    <a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a>
+
+                    <a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></div>
+                <!--案例分类结束-->
+                <div class="proCase" id="scroll" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+                    <div class="bd">
+                        <ul class="list clearfix">
+                            {% for project in projects %}
+                                <li><a href="{% url 'demo_detail' project.id %}" title="{{ project.title }}">
+                                    <img class="img" src="{{ MEDIA_URL }}{{ project.img }}" alt="{{ project.title }}"/>
+                                    <div class="title"><h3 class="tit">{{ project.title }}</h3>
+                                        <p class="cont">
+                                            {{ project.digest }}...
+                                        </p>
+                                    </div>
+                                    <p class="view_detail">详情>></p></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>
+                </div>
+                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <div class="line fl"></div>
+                    <a class="look_more fl" href="{% url 'demos' %}" title="查看更多>>">查看更多>></a>
+                    <div class="line fl"></div>
+                </div>
+            </div>
+        </div>
+        <!--工程案例结束-->
+
+        <!--小banner开始-->
+        <div class="index_slip index_slip1" aos="fade-up" aos-easing="ease" aos-duration="700">
+            <div class="slip w1200">
+                <div class="slip_tit fl">
+                    <h3 class="tit1" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">
+                        {{ indexask_2.title }}</h3>
+                    <p class="tit2" aos="fade-up" aos-easing="ease" aos-duration="700"
+                       aos-delay="700">{{ indexask_2.info }}</p></div>
+                <a class="slip_btn fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="400"
+                   href="{% url 'contact' %}">立即咨询</a></div>
+        </div>
+        <!--小banner结束-->
+
+        <!--关于我们开始-->
+        <div id="floor_1_main">
+            <div class="floor_1 w1200">
+                <div class="about clearfix">
+                    <a class="item fl" href="javascript:;" aos="fade-right" aos-easing="ease" aos-duration="700">
+
+                        <img src="{% static '/images/about.jpg' %}" alt="{{ companyinfo.name }}"/></a>
+                    <div class="contW fl">
+
+
+                        <div class="title"><p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700"
+                                              aos-delay="300">ABOUT US</p>
+                            <h3 class="tit" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">关于我们</h3>
+                        </div>
+                        <a href="{% url 'about' %}"><p class="cont" aos="fade-up" aos-easing="ease" aos-duration="700"
+                                                       aos-delay="500">
+                            {{ companyinfo.digest }}...</p>
+                            <p class="view_detail" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="600">
+                                详情>></p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--关于我们结束-->
+
+        <!--新闻动态开始-->
+        <div id="floor_5_main">
+            <div class="floor_5 w1200">
+
+
+                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">NEWS CENTER</p>
+                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
+                            class="line fl"></em><span class="word">新闻动态</span><em class="line fr"></em></h3></div>
+                <!--新闻分类开始-->
+                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+
+                    <a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
+
+                    <a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
+
+                    <a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
+                <!--新闻分类结束-->
+                <div class="inews" id="inews" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
+                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>
+                    <div class="bd">
+                        <div class="ulWrap clearfix">
+                            <div class="list">
+                                {% for new_ in news %}
+                                    <li class="clearfix" style="{% if forloop.counter|divisibleby:"2" %}margin-right: 0;{% endif %}">
+                                        <a href="{% url 'news_detail' new_.id %}" title="{{ new_.title }}">
+                                            <div class="time fl"><p class="day">{{ new_.add_time|date:'d' }}</p>
+                                                <p class="year">{{ new_.add_time|date:'Y/m' }}</p></div>
+                                            <div class="title fl"><h3 class="tit">
+                                                {% if new_.title|length > 19 %}
+                                                    {{ new_.title|slice:':19' }}...
+                                                {% else %}
+                                                    {{ new_.title }}
+                                                {% endif %}
+                                            </h3>
+                                                <p class="cont">
+                                                    {{ new_.digest }}…</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
+                    <div class="line fl"></div>
+                    <a class="look_more fl" href="{% url 'news' %}" title="查看更多>>">查看更多>></a>
+                    <div class="line fl"></div>
+                </div>
+            </div>
+        </div>
+        <!--新闻动态结束-->
+    </div>
+{% endblock %}

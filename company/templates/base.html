@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{% load static %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="Keywords" content=""/>
+    <meta name="Description" content=""/>
+    {% block title %}
+        <title>{{ companyinfo.name }}</title>
+    {% endblock %}
+    <meta name="viewport" content="width=1380">
+    <link href="{% static '/css/aos.css' %}" rel="stylesheet">
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
+    <link href="{% static '/css/common.css' %}" rel="stylesheet">
+    <script src="{% static '/js/jquery.js' %}"></script>
+    <script src="{% static '/js/jquery.SuperSlide.2.1.1.js' %}"></script>
+    <script src="{% static '/js/mobile.js' %}"></script>
+    <script>$(function () {
+        $("#cur").addClass("hover");
+    })</script>
+    {% block headjs %}
+    {% endblock %}
+    {% block headcss %}
+    {% endblock %}
+</head>
+<body>
+
+<!--顶部开始-->
+<div class="top_main" aos="fade-down" aos-easing="ease" aos-duration="700">
+    <div class="top w1200 clearfix"><span class="top_l fl">您好，欢迎访问{{ companyinfo.name }}！</span>
+        <ul class="top_r fr">
+            <li><a href="{% url 'contact' %}">网站地图</a>（<a href="https://map.baidu.com/" target="_blank">百度</a> / <a
+                    href="http://www.google.cn/maps/"
+                    target="_blank">谷歌</a>）
+            </li>
+            <li class="split"></li>
+            <li><a href="javascript:void(0)" onclick="_addFavorite()" title="加入收藏">加入收藏</a></li>
+            <li class="split"></li>
+            <li><a href="{% url 'contact' %}" title="联系我们">联系我们</a></li>
+        </ul>
+        <script>
+            // 该内容为处理各种浏览器的收藏功能
+            function _addFavorite() {
+                var url = window.location;
+                var title = document.title;
+                var ua = navigator.userAgent.toLowerCase();
+                if (ua.indexOf("360se") > -1) {
+                    alert("由于360浏览器功能限制，请按 Ctrl+D 手动收藏！");
+                } else if (ua.indexOf("msie 8") > -1) {
+                    window.external.AddToFavoritesBar(url, title); //IE8
+                } else if (document.all) {//IE类浏览器
+                    try {
+                        window.external.addFavorite(url, title);
+                    } catch (e) {
+                        alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
+                    }
+                } else if (window.sidebar) {//firfox等浏览器；
+                    window.sidebar.addPanel(title, url, "");
+                } else {
+                    alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');
+                }
+            }
+        </script>
+    </div>
+</div>
+<!--顶部结束-->
+<!--页头开始-->
+<div class="header_main">
+    <div class="header w1200 clearfix"><a class="logo fl" href="{% url 'index' %}" title="{{ companyinfo.name }}"
+                                          aos="fade-right"
+                                          aos-easing="ease" aos-duration="700" aos-delay="100" aos-duration="700">
+
+        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>
+        <div class="tel fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100"><s
+                class="ico"></s><span>{{ companyinfo.phone }}</span><br/><span>{{ companyinfo.telephone }}</span></div>
+        <!--搜索栏开始-->
+        <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">
+            <form action="{% url 'products' %}" method="get">
+                <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>
+                <input type="submit" class="sbtn" value="搜索"/></form>
+        </div>
+        <!--搜索栏结束-->
+    </div>
+</div>
+<!--页头结束-->
+<!--导航开始-->
+<div class="nav_main" aos="fade-down" aos-easing="ease" aos-duration="700">
+    <div class="nav w1200">
+        <ul class="list clearfix" id="nav">
+            <li><a href="{% url 'index' %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">网站首页</a>
+            </li>
+            <li><a href="{% url 'about' %}" title="关于我们"
+                   class="{% ifequal request.path|slice:'6' '/about' %}hover{% endifequal %}">关于我们</a>
+                <dl>
+                    <dd><a href="{% url 'about' %}" title="公司简介">公司简介</a></dd>
+                    <dd><a href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a></dd>
+                </dl>
+            </li>
+            <li><a href="{% url 'products' %}" title="产品中心"
+                   class="{% ifequal request.path|slice:'9' '/products' %}hover{% endifequal %}">产品中心</a>
+                <dl>
+                    {% for product_cat in product_cats %}
+                        <dd><a href="{% url 'products' %}?category={{ product_cat.id }}"
+                               title="{{ product_cat.name }}">{{ product_cat.name }}</a></dd>
+                    {% endfor %}
+                </dl>
+            </li>
+            <li><a href="{% url 'news' %}" title="新闻动态"
+                   class="{% ifequal request.path|slice:'5' '/news' %}hover{% endifequal %}">新闻动态</a>
+                <dl>
+                    <dd><a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a></dd>
+                    <dd><a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a></dd>
+                    <dd><a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></dd>
+                </dl>
+            </li>
+            <li><a href="{% url 'demos' %}" title="工程案例"
+                   class="{% ifequal request.path|slice:'6' '/demos' %}hover{% endifequal %}">工程案例</a>
+                <dl>
+                    <dd><a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a></dd>
+                    <dd><a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a></dd>
+                    <dd><a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></dd>
+                </dl>
+            </li>
+            <li><a href="{% url 'recruits' %}" title="人才招聘"
+                   class="{% ifequal request.path|slice:'9' '/recruits' %}hover{% endifequal %}">人才招聘</a>
+                <dl>
+                    <dd><a href="{% url 'recruits' %}" title="人才理念">人才理念</a></dd>
+                    <dd><a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a></dd>
+                </dl>
+            </li>
+            <li><a href="{% url 'contact' %}" title="联系我们"
+                   class="{% ifequal request.path|slice:'8' '/contact' %}hover{% endifequal %}">联系我们</a>
+                <dl>
+                    <dd><a href="{% url 'contact' %}?flag=getmsg" title="在线留言">在线留言</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--导航结束-->
+{% block content %}
+{% endblock %}
+<!--页尾开始-->
+<div class="footer">
+    <div class="w1200 clearfix">
+        <!--友情链接开始-->
+        <div class="links" aos="fade-up" aos-easing="ease" aos-duration="700">
+            <span>友情链接：</span>
+            {% for friendly_link in friendly_links %}
+                <a href="{{ friendly_link.friendly_link }}" title="{{ friendly_link.title }}"
+                   target="_blank">{{ friendly_link.title }}</a>
+            {% endfor %}
+        </div>
+        <!--友情链接结束-->
+
+        <!--联系方式开始-->
+        <div class="contact tel fl" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="300">
+            <!--二维码开始-->
+            <div class="ewm fl">
+
+                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/></div>
+            <!--二维码结束-->
+            <div class="contact_info fl">
+                <p class="p1">咨询热线:</p>
+                <p class="tel">{{ companyinfo.phone }}</p>
+                <p class="p2">联系人：{{ companyinfo.linkman }}</p>
+                <p class="p1">邮　箱：{{ companyinfo.email }}</p></div>
+        </div>
+        <!--联系方式结束-->
+
+        <!--底部导航开始-->
+        <div class="bNav fr" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="300">
+
+            <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">关于我们</a></h3>
+                <a href="{% url 'about' %}" title="公司简介">公司简介</a>
+                <a href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a></div>
+            <div class="item"><h3><a href="{% url 'products' %}" title="产品中心">产品中心</a></h3>
+                {% for product_cat in product_cats %}
+                    <a href="{% url 'products' %}?category={{ product_cat.id }}"
+                       title="{{ product_cat.name }}">{{ product_cat.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="item"><h3><a href="{% url 'news' %}" title="新闻动态">新闻动态</a></h3>
+                <a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
+                <a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
+                <a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
+            <div class="item"><h3><a href="{% url 'demos' %}" title="工程案例">工程案例</a></h3>
+                <a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a>
+                <a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a>
+                <a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></div>
+            <div class="item"><h3><a href="{% url 'recruits' %}" title="人才招聘">人才招聘</a></h3>
+                <a href="{% url 'recruits' %}" title="人才理念">人才理念</a>
+                <a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a></div>
+            <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系我们</a></h3>
+                <a href="{% url 'contact' %}?flag=getmsg" title="在线留言">在线留言</a></div>
+        </div>
+        <!--底部导航结束-->
+    </div>
+</div>
+<!--页尾结束-->
+
+<!--版权开始-->
+<div class="copyright">
+    <div class="w1200">
+        Copyright @ 2020 {{ companyinfo.name }}　地址：{{ companyinfo.address }}　备案号：<a href="javascript:;" target="_blank"
+                                                                                    title="{{ companyinfo.record_nums }}">{{ companyinfo.record_nums }}</a>
+        <p class="fr">技术支持：<a href="javascript:;" target="_blank"
+                              title="{{ companyinfo.name }}">{{ companyinfo.name }}</a>
+        </p></div>
+</div>
+<!--版权结束-->
+
+<!--浮动客服开始-->
+<dl class="toolbar" id="toolbar">
+    <dd><a class="slide tel slide-tel" href="javascript:;" title="咨询热线"><i><span></span></i>{{ companyinfo.phone }}</a>
+    </dd>
+    <dd>
+        <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes& Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45"
+           title="在线QQ"><i class="qq"><span></span></i></a></dd>
+    <dd><i class="code"><span></span></i>
+        <ul class="pop pop-code">
+            <li>
+
+                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/>
+                <h3><b>微信号：{{ companyinfo.weichat }}</b>微信二维码</h3></li>
+        </ul>
+    </dd>
+    <dd><a href="javascript:;"><i id="top" class="top"><span></span></i></a></dd>
+</dl>
+<!--浮动客服结束-->
+{% block footjs %}
+{% endblock %}
+<script src="{% static '/js/aos.js' %}"></script>
+<script src="{% static '/js/app.js' %}"></script>
+<script type="text/javascript">
+    AOS.init({
+        easing: 'ease-out-back',
+        duration: 1000
+    });
+</script>
+<!--弹窗插件开始-->
+
+</body>
+</html>
