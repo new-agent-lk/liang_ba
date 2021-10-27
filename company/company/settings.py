@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'liang_ba',   # 请换成新建的数据库名称
         'USER': 'root',
-        'PASSWORD': 'Ernest962464.',  # 请换成自己的密码
+        'PASSWORD': '123456',  # 请换成自己的密码
         'HOST': '127.0.0.1',  # 如果不能连接，改成localhost
         'POST': '3306',
     }
@@ -128,6 +128,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # 配置用户上传的文件
 MEDIA_URL = '/media/'
