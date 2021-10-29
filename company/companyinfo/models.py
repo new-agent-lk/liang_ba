@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-__author__ = "版权所有@源码商城：https://codes-index.taobao.com/"
-__date__ = "2020/6/13 1:03 下午"
 
 # 常规模块的引入分为三部分，依次为：
 # Python内置模块（如json、datetime）、第三方模块（如Django）、自己写的模块
@@ -9,6 +7,9 @@ __date__ = "2020/6/13 1:03 下午"
 from datetime import datetime
 
 from django.db import models
+from wagtail.core.models import Page
+from wagtail.core.fields import RichTextField
+from wagtail.admin.edit_handlers import FieldPanel
 
 from ckeditor_uploader.fields import RichTextUploadingField  # 富文本编辑器
 

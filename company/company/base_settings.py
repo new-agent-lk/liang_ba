@@ -33,6 +33,24 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'companyinfo',  # 新创建的应用
+    'companysite',
+
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+
+    'taggit',
+    'modelcluster',
+
     'jet',  # 一定要放在admin前面
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'companyinfo',  # 新创建的应用
+
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器文件上传
 ]
@@ -53,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'company.urls'
@@ -229,3 +249,7 @@ CKEDITOR_CONFIGS = {
 }
 
 DJANGO_SETTINGS_MODULE = True
+
+WAGTAIL_SITE_NAME = 'Liang Ba'
+
+TAGGIT_CASE_INSENSITIVE = True

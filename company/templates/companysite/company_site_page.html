@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags static %}
+
+{% block body_class %}template-companysitepage{% endblock %}
+
+{% block content %}
+    <!--幻灯片大图开始-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+        <div id="banner" class="banner">
+            <ul class="list clearfix">
+                {% for carousel in carousels %}
+                    <li><a href="javascript:;"><img src="{{ MEDIA_URL }}{{ carousel.img }}" alt=""/></a></li>
+                {% endfor %}
+            </ul>
+            <div class="tip"></div>
+            <a href="javascript:;" id="btn_prev" class="ico"></a> <a href="javascript:;" id="btn_next" class="ico"></a>
+        </div>
+    </div>
+    <!--幻灯片大图结束-->
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    {% for post in page.get_children %}
+        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+        {{ post.specific.intro }}
+        {{ post.specific.body|richtext }}
+    {% endfor %}
+
+{% endblock %}
