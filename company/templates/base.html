@@ -18,6 +18,7 @@
     <script src="{% static '/js/jquery.js' %}"></script>
     <script src="{% static '/js/jquery.SuperSlide.2.1.1.js' %}"></script>
     <script src="{% static '/js/mobile.js' %}"></script>
+    <script src="{% static '/js/echarts.min.js' %}"></script>
     <script>$(function () {
         $("#cur").addClass("hover");
     })</script>
@@ -174,7 +175,7 @@
         <!--底部导航开始-->
         <div class="bNav fr" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="300">
 
-            <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">关于我们</a></h3>
+            <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">我们是谁</a></h3>
                 <a href="{% url 'about' %}" title="公司简介">公司简介</a>
                 <a href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a></div>
             <div class="item"><h3><a href="{% url 'products' %}" title="产品中心">产品中心</a></h3>
@@ -191,10 +192,10 @@
                 <a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a>
                 <a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a>
                 <a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></div>
-            <div class="item"><h3><a href="{% url 'recruits' %}" title="人才招聘">人才招聘</a></h3>
+            <div class="item"><h3><a href="{% url 'recruits' %}" title="人才招聘">加入量霸</a></h3>
                 <a href="{% url 'recruits' %}" title="人才理念">人才理念</a>
                 <a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a></div>
-            <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系我们</a></h3>
+            <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系量霸</a></h3>
                 <a href="{% url 'contact' %}?flag=getmsg" title="在线留言">在线留言</a></div>
         </div>
         <!--底部导航结束-->

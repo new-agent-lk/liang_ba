@@ -63,7 +63,106 @@ $(function () {
 			$(this).find("ul").remove();
 		}
 	});
+
+	//折线图
+    echart();
 });
+
+function echart() {
+    var myChart = echarts.init(document.getElementById('main'));
+    window.onresize = function () {
+        myChart.resize();
+    };
+        var option = {
+        // 标题
+        title: {
+            text: '折线图'
+        },
+        // 工具箱 保存图片
+        toolbox: {
+          show: true,
+          feature: {
+              saveAsImage: {
+                  show: true
+              }
+          }
+        },
+        tooltip: {},
+        // 图例声明
+        legend: {
+          data:['8月', '9月', '10月'],
+            right: 150
+        },
+        // 横坐标
+        xAxis: {
+            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子","卫衣","阿迪达斯","vans"]
+        },
+        // 纵坐标
+        yAxis: {
+        },
+        // 数据
+        series: [
+            {   name: '8月',
+                type: 'line',
+                data: [40, 20, 36, 20, 10, 20,30,66,54],
+                lineStyle: {
+                    normal: {
+                        color: 'skyblue'
+                    }
+                },
+                itemStyle: {
+                    color: 'skyblue'
+                },
+                label: {
+                    show: false,
+                    position: 'bottom',
+                    textStyle: {
+                        fontSize: 14
+                    }
+                }
+            },
+            {   name: '9月',
+                type: 'line',
+                data: [35, 13, 25, 50, 40, 60,30,77,65],
+                lineStyle: {
+                    normal: {
+                        color: '#c26611'
+                    }
+                },
+                itemStyle: {
+                    color: '#c26611'
+                },
+                label: {
+                    show: false,
+                    position: 'bottom',
+                    textStyle: {
+                        fontSize: 14
+                    }
+                }
+            },
+            {   name: '10月',
+                type: 'line',
+                data: [45, 20, 23, 56, 35, 48, 41,45,80],
+                lineStyle: {
+                    normal: {
+                        color: '#d33392'
+                    }
+                },
+                itemStyle: {
+                    color: '#d33392'
+                },
+                label: {
+                    show: false,
+                    position: 'bottom',
+                    textStyle: {
+                        fontSize: 14
+                    }
+                }
+            }
+        ]
+    };
+        myChart.setOption(option);
+}
 
 function nav() {
     //导航条鼠标滑过;

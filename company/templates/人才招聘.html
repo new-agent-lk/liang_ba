@@ -33,41 +33,6 @@
                 </div>
                 <!--栏目分类结束-->
 
-                <!--推荐产品开始-->
-                <div class="leftnews bor9">
-                    <div class="title"><i>推荐产品</i></div>
-                    <div class="leftprocomt clearfix">
-                        <ul>
-                            {% for left_product in left_products %}
-                                {% if forloop.counter|divisibleby:"2" %}
-                                    <li style="margin-right: 0;"><a href="{% url 'product_detail' left_product.id %}"
-                                                                    title="{{ left_product.name }}"><img
-                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
-                                        <p>{{ left_product.name }}</p></a></li>
-                                {% else %}
-                                    <li><a href="{% url 'product_detail' left_product.id %}"
-                                           title="{{ left_product.name }}"><img
-                                            src="{{ MEDIA_URL }}{{ left_product.img }}" alt="{{ left_product.name }}">
-                                        <p>{{ left_product.name }}</p></a></li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                <!--推荐产品结束-->
-
-                <!--联系我们开始-->
-                <div class="leftnews bor9">
-                    <div class="title"><i>联系我们</i></div>
-                    <div class="leftcont">
-                        <h2>{{ companyinfo.name }}</h2>
-                        <span>
-                            地址：{{ companyinfo.address }}<br>
-                            电话：{{ companyinfo.telephone }}<br>
-                        </span>
-                        <p>咨询热线<i>{{ companyinfo.phone }}</i></p></div>
-                </div>
-                <!--联系我们结束-->
             </div>
             <div class="subright fr">
                 <!--单页内容开始-->
