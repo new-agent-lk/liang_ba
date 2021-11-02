@@ -46,23 +46,23 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 /*header_main*/
 .header_main{width: 100%; height: 120px; z-index: 100; background: #fff;}
 .header_main .logo{width: 540px;height: 60px;display: block;margin-top: 28px;}
-.header_main .logo img{width: 100%; height: 100%; display: block;}
+.header_main .logo img{ height: 100%; display: block;margin: 0 auto;}
 .header_main .tel{width: 300px;padding: 32px 0 0 0;line-height: 26px;margin-left: 30px;}
 .header_main .tel span{font-size: 30px;font-weight: bold;color: #0185d0;font-family: arial;}
 .header_main .tel s{width: 57px; height: 57px; float: left; margin-right: 10px; background-position: 0 0;}
-.header_main .search{width: 300px;height: 41px;line-height: 41px;margin-top: 38px;border: 2px solid #1048a0;position: relative;float: right;}
+.header_main .search{width: 300px;height: 41px;line-height: 41px;margin-top: 38px;border: 2px solid #0083fe;position: relative;float: right;}
 .header_main .search *{font-family: arial;}
-.header_main .search .sbtn{width: 100px;height: 45px;font-size: 16px;text-align: center;color: #fff;position: absolute;right: -2px;top: -2px;background: #1048a0;cursor:pointer;}
+.header_main .search .sbtn{width: 100px;height: 45px;font-size: 16px;text-align: center;color: #fff;position: absolute;right: -2px;background: linear-gradient(to right, #0083fe, #00f2e3);top: -2px;cursor:pointer;}
 .header_main .search .stxt{width: 200px;padding-left: 10px;height: 41px;line-height: 41px;border: 0px;background: none;outline:none;color: #999;}
-.nav_main{width:100%;height: 60px;line-height: 60px;background: #1048a0;position: relative;z-index: 3;}
-.nav .list{width: 102%; margin:0 auto;height: 60px; line-height: 60px;position: relative;}
+.nav_main{width:100%;height: 60px;line-height: 60px;background: -webkit-linear-gradient(to right, #0083fe, #00ecdd);background: linear-gradient(180deg, #0083fe, #00f2e3);position: relative;z-index: 3;}
+.nav .list{width: 100%; margin:0 auto;height: 60px; line-height: 60px;position: relative;}
 .nav_main .nav{width: 1200px; margin: 0 auto;}
-.nav_main .nav li{float:left;width: 170px;display: block;position: relative;z-index: 10;font-size: 16px;border-right:1px solid #0b2d7e;text-align: center;}
-.nav_main .nav li:first-child{border-left:1px solid #0b2d7e;background: none;}
-.nav_main .nav li:first-child.hover{background-color:#0185d0;}
+.nav_main .nav li{float:left;width: 20%;display: block;position: relative;z-index: 10;font-size: 20px;text-align: center;font-weight: bold;}
+.nav_main .nav li:first-child{background: none;}
+/*.nav_main .nav li:hover{background-color:#0185d0;}*/
 .nav_main .nav li a{display: block;color:#fff;font-size:16px;}
-.nav_main .nav li a:hover, .nav_main .nav li a.hover, .nav_main .nav li #hover2{background: #0185d0;}
-.nav_main .nav dl{width: 169px;background: #fff;position: absolute;left: 0;top: 60px;z-index: 12;border: 1px solid #0185d0;}
+/*.nav_main .nav li a:hover, .nav_main .nav li a.hover, .nav_main .nav li #hover2{background: #0185d0;}*/
+.nav_main .nav dl{width: 240px;background: #fff;position: absolute;left: 0;top: 60px;z-index: 12;border: 1px solid #0185d0;}
 .nav_main .nav dl{position: absolute;filter: progid:DXImageTransform.Microsoft.Shadow(color=#4c91c0,direction=120,strength=5);opacity: 0;visibility: hidden;transition: all .6s ease 0s;transform: translate3d(0, 10px, 0);-moz-transform: translate3d(0, 10px, 0);-webkit-transform: translate3d(0, 10px, 0);}
 .nav_main .nav li:hover dl{opacity: 1;visibility: visible;transform: translate3d(0, 0, 0);-moz-transform: translate3d(0, 0, 0);-webkit-transform: translate3d(0, 0, 0);}
 .nav_main .nav dl dd{line-height: 49px; height: 49px; border-top: 1px solid #e5e5e5; text-align: left; position: relative; z-index: 12; display: block; width: 100%;}
