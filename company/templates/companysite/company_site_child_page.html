@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags static wagtailimages_tags %}
+
+{% block body_class %}template-companysitechildpage{% endblock %}
+
+{% block content %}
+    <!--内页大图开始-->
+    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
+        {% image page.top_image fill-1920x300 alt=page.top_image_info %}</div>
+    <!--内页大图结束-->
+
+{% endblock %}

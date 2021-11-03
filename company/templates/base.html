@@ -29,46 +29,7 @@
 </head>
 <body>
 
-<!--顶部开始-->
-<!--<div class="top_main" aos="fade-down" aos-easing="ease" aos-duration="700">-->
-<!--    <div class="top w1200 clearfix"><span class="top_l fl">您好，欢迎访问{{ companyinfo.name }}！</span>-->
-<!--        <ul class="top_r fr">-->
-<!--            <li><a href="{% url 'contact' %}">网站地图</a>（<a href="https://map.baidu.com/" target="_blank">百度</a> / <a-->
-<!--                    href="http://www.google.cn/maps/"-->
-<!--                    target="_blank">谷歌</a>）-->
-<!--            </li>-->
-<!--            <li class="split"></li>-->
-<!--            <li><a href="javascript:void(0)" onclick="_addFavorite()" title="加入收藏">加入收藏</a></li>-->
-<!--            <li class="split"></li>-->
-<!--            <li><a href="{% url 'contact' %}" title="联系我们">联系我们</a></li>-->
-<!--        </ul>-->
-<!--        <script>-->
-<!--            // 该内容为处理各种浏览器的收藏功能-->
-<!--            function _addFavorite() {-->
-<!--                var url = window.location;-->
-<!--                var title = document.title;-->
-<!--                var ua = navigator.userAgent.toLowerCase();-->
-<!--                if (ua.indexOf("360se") > -1) {-->
-<!--                    alert("由于360浏览器功能限制，请按 Ctrl+D 手动收藏！");-->
-<!--                } else if (ua.indexOf("msie 8") > -1) {-->
-<!--                    window.external.AddToFavoritesBar(url, title); //IE8-->
-<!--                } else if (document.all) {//IE类浏览器-->
-<!--                    try {-->
-<!--                        window.external.addFavorite(url, title);-->
-<!--                    } catch (e) {-->
-<!--                        alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');-->
-<!--                    }-->
-<!--                } else if (window.sidebar) {//firfox等浏览器；-->
-<!--                    window.sidebar.addPanel(title, url, "");-->
-<!--                } else {-->
-<!--                    alert('您的浏览器不支持,请按 Ctrl+D 手动收藏!');-->
-<!--                }-->
-<!--            }-->
-<!--        </script>-->
-<!--    </div>-->
-<!--</div>-->
-<!--顶部结束-->
-<!--页头开始-->
+
 <div class="header_main">
     <div class="header w1200 clearfix"><a class="logo fl" href="{% url 'index' %}" title="{{ companyinfo.name }}"
                                           aos="fade-right"
@@ -88,55 +49,28 @@
 </div>
 <!--页头结束-->
 <!--导航开始-->
+{% load wagtailcore_tags %}
 <div class="nav_main" aos="fade-down" aos-easing="ease" aos-duration="700">
     <div class="nav w1200">
         <ul class="list clearfix" id="nav">
-            <li><a href="{% url 'index' %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>
+            <li><a href="{% pageurl page. %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>
             </li>
             <li><a href="{% url 'about' %}" title="关于我们"
                    class="{% ifequal request.path|slice:'6' '/about' %}hover{% endifequal %}">我们是谁</a>
-{#                <dl>#}
-{#                    <dd><a href="{% url 'about' %}" title="公司简介">量霸科技</a></dd>#}
-{#                    <dd><a href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a></dd>#}
-{#                </dl>#}
+
             </li>
-{#            <li><a href="{% url 'products' %}" title="产品中心"#}
-{#                   class="{% ifequal request.path|slice:'9' '/products' %}hover{% endifequal %}">产品中心</a>#}
-{#                <dl>#}
-{#                    {% for product_cat in product_cats %}#}
-{#                        <dd><a href="{% url 'products' %}?category={{ product_cat.id }}"#}
-{#                               title="{{ product_cat.name }}">{{ product_cat.name }}</a></dd>#}
-{#                    {% endfor %}#}
-{#                </dl>#}
-{#            </li>#}
             <li><a href="{% url 'news' %}" title="新闻动态"
                    class="{% ifequal request.path|slice:'5' '/news' %}hover{% endifequal %}">新闻动态</a>
-{#                <dl>#}
-{#                    <dd><a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a></dd>#}
-{#                    <dd><a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a></dd>#}
-{#                    <dd><a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></dd>#}
-{#                </dl>#}
+
             </li>
-{#            <li><a href="{% url 'demos' %}" title="工程案例"#}
-{#                   class="{% ifequal request.path|slice:'6' '/demos' %}hover{% endifequal %}">工程案例</a>#}
-{#                <dl>#}
-{#                    <dd><a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a></dd>#}
-{#                    <dd><a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a></dd>#}
-{#                    <dd><a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></dd>#}
-{#                </dl>#}
-{#            </li>#}
+
             <li><a href="{% url 'recruits' %}" title="人才招聘"
                    class="{% ifequal request.path|slice:'9' '/recruits' %}hover{% endifequal %}">加入量霸</a>
-{#                <dl>#}
-{#                    <dd><a href="{% url 'recruits' %}" title="人才理念">人才理念</a></dd>#}
-{#                    <dd><a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a></dd>#}
-{#                </dl>#}
+
             </li>
             <li><a href="{% url 'contact' %}" title="联系我们"
                    class="{% ifequal request.path|slice:'8' '/contact' %}hover{% endifequal %}">联系量霸</a>
-{#                <dl>#}
-{#                    <dd><a href="{% url 'contact' %}?flag=getmsg" title="在线留言">在线留言</a></dd>#}
-{#                </dl>#}
+
             </li>
         </ul>
     </div>

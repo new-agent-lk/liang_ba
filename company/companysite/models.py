@@ -1,23 +1,96 @@
 from django.db import models
+from modelcluster.fields import ParentalKey
 
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
-from companyinfo.models import CompanyInfo, ProductCats,FriendlyLinks
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+
+from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
+from companyinfo.models import City
 # Create your models here.
 
 
 class CompanySitePage(Page):
-    intro = RichTextField(blank=True)
+    index_ask_title = models.CharField(verbose_name='首页咨询标题', max_length=25, default="XXX")
+    index_ask_info = models.CharField(verbose_name='首页咨询内容', max_length=50, default="XXX")
 
     content_panels = Page.content_panels + [
-        FieldPanel('intro', classname="full")
+        InlinePanel('banner_images', label="Banner images"),
+        InlinePanel('advantages_images', label="Advantages images"),
+    ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+        context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+        news = News.objects.all().order_by('-add_time')
+        news = news[:8] if len(news) > 8 else news
+        context['news'] = news
+        return context
+
+
+class CompanySitePageBannerImage(Orderable):
+    page = ParentalKey(CompanySitePage, on_delete=models.CASCADE, related_name='banner_images')
+    banner_image = models.ForeignKey(
+        'wagtailimages.Image',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+    info = models.CharField(blank=True, max_length=250)
+
+    panels = [
+        ImageChooserPanel('banner_image'),
+        FieldPanel('info'),
+    ]
+
+
+class CompanySitePageAdvantagesImage(Orderable):
+    page = ParentalKey(CompanySitePage, on_delete=models.CASCADE, related_name='advantages_images')
+    advantages_image = models.ForeignKey(
+        'wagtailimages.Image',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+    info = models.CharField(blank=True, null=True, max_length=250)
+    title = models.CharField(verbose_name='标题', max_length=10, default='产品优势')
+
+    panels = [
+        ImageChooserPanel('advantages_image'),
+        FieldPanel('info'),
+        FieldPanel('title'),
+    ]
+
+
+class CompanySiteChildPage(Page):
+    body = RichTextField(blank=True)
+    top_image_info = models.CharField(blank=True, max_length=250)
+    top_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('body', classname="full")
+    ]
+
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page top img"),
+        ImageChooserPanel('top_image')
     ]
 
     def get_context(self, request):
 
         context = super().get_context(request)
         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
-        context['product_cats'] = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
         return context
+
+
