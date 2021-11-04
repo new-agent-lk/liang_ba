@@ -16,6 +16,8 @@ class CompanySitePage(Page):
     index_ask_info = models.CharField(verbose_name='首页咨询内容', max_length=50, default="XXX")
 
     content_panels = Page.content_panels + [
+        FieldPanel('index_ask_title'),
+        FieldPanel('index_ask_info'),
         InlinePanel('banner_images', label="Banner images"),
         InlinePanel('advantages_images', label="Advantages images"),
     ]
