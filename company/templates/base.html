@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-{% load static %}
+{% load static wagtailcore_tags %}
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="Keywords" content=""/>
@@ -31,7 +31,7 @@
 
 
 <div class="header_main">
-    <div class="header w1200 clearfix"><a class="logo fl" href="{% url 'index' %}" title="{{ companyinfo.name }}"
+    <div class="header w1200 clearfix"><a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}"
                                           aos="fade-right"
                                           aos-easing="ease" aos-duration="700" aos-delay="100" aos-duration="700">
 
@@ -40,7 +40,7 @@
                 class="ico"></s><span>{{ companyinfo.phone }}</span><br/><span>{{ companyinfo.telephone }}</span></div>
         <!--搜索栏开始-->
         <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">
-            <form action="{% url 'products' %}" method="get">
+            <form action="{% slugurl 'products' %}" method="get">
                 <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>
                 <input type="submit" class="sbtn" value="搜索"/></form>
         </div>
@@ -49,26 +49,26 @@
 </div>
 <!--页头结束-->
 <!--导航开始-->
-{% load wagtailcore_tags %}
+
 <div class="nav_main" aos="fade-down" aos-easing="ease" aos-duration="700">
     <div class="nav w1200">
         <ul class="list clearfix" id="nav">
-            <li><a href="{% pageurl page. %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>
+            <li><a href="{% slugurl 'index' %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>
             </li>
-            <li><a href="{% url 'about' %}" title="关于我们"
+            <li><a href="{% slugurl 'about' %}" title="关于我们"
                    class="{% ifequal request.path|slice:'6' '/about' %}hover{% endifequal %}">我们是谁</a>
 
             </li>
-            <li><a href="{% url 'news' %}" title="新闻动态"
+            <li><a href="{% slugurl 'news' %}" title="新闻动态"
                    class="{% ifequal request.path|slice:'5' '/news' %}hover{% endifequal %}">新闻动态</a>
 
             </li>
 
-            <li><a href="{% url 'recruits' %}" title="人才招聘"
+            <li><a href="{% slugurl 'recruits' %}" title="人才招聘"
                    class="{% ifequal request.path|slice:'9' '/recruits' %}hover{% endifequal %}">加入量霸</a>
 
             </li>
-            <li><a href="{% url 'contact' %}" title="联系我们"
+            <li><a href="{% slugurl 'contact' %}" title="联系我们"
                    class="{% ifequal request.path|slice:'8' '/contact' %}hover{% endifequal %}">联系量霸</a>
 
             </li>
@@ -109,28 +109,16 @@
         <!--底部导航开始-->
         <div class="bNav fr" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="300">
 
-            <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">我们是谁</a></h3>
-                <a href="{% url 'about' %}" title="公司简介">公司简介</a>
-                <a href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a></div>
-{#            <div class="item"><h3><a href="{% url 'products' %}" title="产品中心">产品中心</a></h3>#}
-{#                {% for product_cat in product_cats %}#}
-{#                    <a href="{% url 'products' %}?category={{ product_cat.id }}"#}
-{#                       title="{{ product_cat.name }}">{{ product_cat.name }}</a>#}
-{#                {% endfor %}#}
-{#            </div>#}
-            <div class="item"><h3><a href="{% url 'news' %}" title="新闻动态">新闻动态</a></h3>
-                <a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
-                <a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
-                <a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
-{#            <div class="item"><h3><a href="{% url 'demos' %}" title="工程案例">工程案例</a></h3>#}
-{#                <a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a>#}
-{#                <a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a>#}
-{#                <a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></div>#}
-            <div class="item"><h3><a href="{% url 'recruits' %}" title="人才招聘">加入量霸</a></h3>
-                <a href="{% url 'recruits' %}" title="人才理念">人才理念</a>
-                <a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a></div>
-            <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系量霸</a></h3>
-                <a href="{% url 'contact' %}?flag=getmsg" title="在线留言">在线留言</a></div>
+            <div class="item"><h3><a href="{% slugurl 'about' %}" title="关于我们">我们是谁</a></h3>
+                <a href="{% slugurl 'about' %}" title="公司简介">公司简介</a>
+                <a href="{% slugurl 'about' %}?flag=" title="荣誉资质">荣誉资质</a></div>
+
+            <div class="item"><h3><a href="{% slugurl 'news' %}" title="新闻动态">新闻动态</a></h3>
+                <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
+
+            <div class="item"><h3><a href="{% slugurl 'recruits' %}" title="人才招聘">加入量霸</a></h3>
+                <a href="{% slugurl 'recruits' %}" title="人才理念">人才理念</a>
+            <div class="item"><h3><a href="{% slugurl 'contact' %}" title="联系我们">联系量霸</a></h3>
         </div>
         <!--底部导航结束-->
     </div>

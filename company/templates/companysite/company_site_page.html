@@ -62,7 +62,7 @@
                     <p class="tit2" aos="fade-up" aos-easing="ease" aos-duration="700"
                        aos-delay="700">{{ page.indexask_ask_info }}</p></div>
                 <a class="slip_btn fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="400"
-                   href="{% url 'contact' %}">立即咨询</a></div>
+                   href="{% slugurl 'contact' %}">立即咨询</a></div>
         </div>
         <!--小banner结束-->
 
@@ -80,7 +80,7 @@
                                               aos-delay="300">ABOUT US</p>
                             <h3 class="tit" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">关于我们</h3>
                         </div>
-                        <a href="{% url 'about' %}"><p class="cont" aos="fade-up" aos-easing="ease" aos-duration="700"
+                        <a href="{% slugurl 'about' %}"><p class="cont" aos="fade-up" aos-easing="ease" aos-duration="700"
                                                        aos-delay="500">
                             {{ companyinfo.digest }}...</p>
                             <p class="view_detail" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="600">
@@ -103,11 +103,11 @@
                 <!--新闻分类开始-->
                 <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
 
-                    <a href="{% url 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
+                    <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
 
-                    <a href="{% url 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
+                    <a href="{% slugurl 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
 
-                    <a href="{% url 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
+                    <a href="{% slugurl 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
                 <!--新闻分类结束-->
                 <div class="inews" id="inews" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
                     <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>
@@ -138,7 +138,7 @@
                 </div>
                 <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
                     <div class="line fl"></div>
-                    <a class="look_more fl" href="{% url 'news' %}" title="查看更多>>">查看更多>></a>
+                    <a class="look_more fl" href="{% slugurl 'news' %}" title="查看更多>>">查看更多>></a>
                     <div class="line fl"></div>
                 </div>
             </div>

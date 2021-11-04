@@ -322,9 +322,9 @@ class NewsDetailView(View):
                 'comments': comments,
             }
 
-            return render(request, '新闻页面.html', context)
+            return render(request, 'new.html', context)
         except BaseException as e:
-            return render(request, '新闻页面.html', {})
+            return render(request, 'new.html', {})
 
     def post(self, request, pk):
         content = request.POST.get('content', '')  # 获取评论内容

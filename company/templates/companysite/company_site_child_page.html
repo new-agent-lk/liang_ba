@@ -7,7 +7,45 @@
 {% block content %}
     <!--内页大图开始-->
     <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
-        {% image page.top_image fill-1920x300 alt=page.top_image_info %}</div>
+        {% with page.top_image as content %}
+        {% if content %}{% image content.image fill-1920x300 alt=content.info %}{% endif %}
+        {% endwith %}
+    </div>
     <!--内页大图结束-->
+    <div class="submian">
+        <div class="w1200 clearfix">
+            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% slugurl 'index' %}" title="首页">首页</a> > <a
+                    href="{% pageurl page %}"
+                    title="{{ page.navigation }}">{{ page.navigation }}</a>
+            </div>
+
+            <div class="subleft fl">
+                <!--栏目分类开始-->
+                <div class="lefta bor9">
+
+                    <div class="title"><h2>{{ page.navigation }}</h2></div>
+                    <div class="comt">
+                        <ul>
+                            <li class="{% ifnotequal request.GET.flag 'ryzz' %}hover{% endifnotequal %}"><a
+                                    href="{% pageurl page %}" title="{{ page.navigation }}">{{ page.navigation }}</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <!--栏目分类结束-->
+
+
+            </div>
+            <div class="subright fr">
+                <div id="main" style="height: 450px;">
+
+                </div>
+                <!--单页内容开始-->
+                {{ page.company_info|richtext }}
+                <!--单页内容结束-->
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

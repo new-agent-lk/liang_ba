@@ -67,23 +67,23 @@ class CompanySitePageAdvantagesImage(Orderable):
 
 
 class CompanySiteChildPage(Page):
-    body = RichTextField(blank=True)
-    top_image_info = models.CharField(blank=True, max_length=250)
-    top_image = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
+    content = RichTextField(blank=True)
+    navigation = models.CharField(verbose_name='标题', max_length=255, default='关于我们')
+
+    def top_image(self):
+
+        top_image = self.child_images.first()
+
+        if top_image:
+            content = {'image': top_image.child_image, 'info': top_image.info}
+            return content
+        else:
+            return None
 
     content_panels = Page.content_panels + [
-        FieldPanel('body', classname="full")
-    ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page top img"),
-        ImageChooserPanel('top_image')
+        FieldPanel('content', classname="full"),
+        FieldPanel('navigation'),
+        InlinePanel('child_images', label="Child images"),
     ]
 
     def get_context(self, request):
@@ -94,3 +94,20 @@ class CompanySiteChildPage(Page):
         return context
 
 
+class CompanySiteChildPageImage(Orderable):
+    page = ParentalKey(CompanySiteChildPage, on_delete=models.CASCADE, related_name='child_images')
+    child_image = models.ForeignKey(
+        'wagtailimages.Image',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+    info = models.CharField(verbose_name='介绍', blank=True, null=True, max_length=250)
+    title = models.CharField(verbose_name='标题', max_length=10, null=True, blank=True)
+
+    panels = [
+        ImageChooserPanel('child_image'),
+        FieldPanel('info'),
+        FieldPanel('title'),
+    ]
