@@ -2,8 +2,10 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 
 from wagtail.core.models import Page, Orderable
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core import blocks
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
@@ -71,6 +73,11 @@ class CompanySitePageAdvantagesImage(Orderable):
 class CompanySiteChildPage(Page):
     content = RichTextField(blank=True)
     navigation = models.CharField(verbose_name='标题', max_length=255, default='关于我们')
+    stream = StreamField([
+        ('source_code', blocks.RawHTMLBlock()),
+        ('info', blocks.RichTextBlock()),
+        ('image', ImageChooserBlock()),
+    ], blank=True)
 
     def top_image(self):
 
@@ -85,6 +92,7 @@ class CompanySiteChildPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('content', classname="full"),
         FieldPanel('navigation'),
+        StreamFieldPanel('stream'),
         InlinePanel('child_images', label="Child images"),
     ]
 

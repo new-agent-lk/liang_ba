@@ -39,7 +39,8 @@
             </div>
             <div class="subright fr">
                 <!--单页内容开始-->
-                {{ page.content|richtext }}
+                {% include_block page.stream %}
+                {{ page.stream.source_code }}
                 <!--单页内容结束-->
             </div>
         </div>
