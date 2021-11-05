@@ -27,32 +27,13 @@
                     <div class="comt">
                         <ul>
                             <li class="{% ifequal request.GET.category 'gsxw' %}hover{% endifequal %}">
-                                <a href="{%
-                                 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
-                            </li>
-                            <li class="{% ifequal request.GET.category 'mtbd' %}hover{% endifequal %}">
-                                <a href="{% slugurl 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
-                            </li>
-                            <li class="{% ifequal request.GET.category 'yggh' %}hover{% endifequal %}">
-                                <a href="{% slugurl 'news' %}?category=yggh" title="员工关怀">员工关怀</a>
+                                <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <!--栏目分类结束-->
 
-                <!--联系我们开始-->
-                <div class="leftnews bor9">
-                    <div class="title"><i>联系我们</i></div>
-                    <div class="leftcont">
-                        <h2>{{ companyinfo.name }}</h2>
-                        <span>
-                            地址：{{ companyinfo.address }}<br>
-                            电话：{{ companyinfo.telephone }}<br>
-                        </span>
-                        <p>咨询热线<i>{{ companyinfo.phone }}</i></p></div>
-                </div>
-                <!--联系我们结束-->
             </div>
             <div class="subright fr">
                 <!--文章内容开始-->
