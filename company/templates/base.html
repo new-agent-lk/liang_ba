@@ -29,6 +29,25 @@
 </head>
 <body>
 
+<!--浮动客服开始-->
+<dl class="toolbar" id="toolbar">
+    <dd><a class="slide tel slide-tel" href="javascript:;" title="咨询热线"><i><span></span></i>{{ companyinfo.phone }}</a>
+    </dd>
+    <dd>
+        <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes& Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45"
+           title="在线QQ"><i class="qq"><span></span></i></a></dd>
+    <dd><i class="code"><span></span></i>
+        <ul class="pop pop-code">
+            <li>
+
+                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/>
+                <h3><b>微信号：{{ companyinfo.weichat }}</b>微信二维码</h3></li>
+        </ul>
+    </dd>
+    <dd><a href="javascript:;"><i id="top" class="top"><span></span></i></a></dd>
+</dl>
+<!--浮动客服结束-->
+
 
 <div class="header_main">
     <div class="header w1200 clearfix"><a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}"
@@ -116,11 +135,14 @@
             <div class="item"><h3><a href="{% slugurl 'news' %}" title="新闻动态">新闻动态</a></h3>
                 <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
 
+            </div>
             <div class="item"><h3><a href="{% slugurl 'recruits' %}" title="人才招聘">加入量霸</a></h3>
                 <a href="{% slugurl 'recruits' %}" title="人才理念">人才理念</a>
+            </div>
             <div class="item"><h3><a href="{% slugurl 'contact' %}" title="联系我们">联系量霸</a></h3>
+            </div>
         </div>
-        <!--底部导航结束-->
+    <!--底部导航结束-->
     </div>
 </div>
 <!--页尾结束-->
@@ -136,24 +158,7 @@
 </div>
 <!--版权结束-->
 
-<!--浮动客服开始-->
-<dl class="toolbar" id="toolbar">
-    <dd><a class="slide tel slide-tel" href="javascript:;" title="咨询热线"><i><span></span></i>{{ companyinfo.phone }}</a>
-    </dd>
-    <dd>
-        <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes& Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45"
-           title="在线QQ"><i class="qq"><span></span></i></a></dd>
-    <dd><i class="code"><span></span></i>
-        <ul class="pop pop-code">
-            <li>
 
-                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/>
-                <h3><b>微信号：{{ companyinfo.weichat }}</b>微信二维码</h3></li>
-        </ul>
-    </dd>
-    <dd><a href="javascript:;"><i id="top" class="top"><span></span></i></a></dd>
-</dl>
-<!--浮动客服结束-->
 {% block footjs %}
 {% endblock %}
 <script src="{% static '/js/aos.js' %}"></script>

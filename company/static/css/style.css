@@ -48,7 +48,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .header_main .logo{width: 540px;height: 60px;display: block;margin-top: 28px;}
 .header_main .logo img{ height: 100%; display: block;margin: 0 auto;}
 .header_main .tel{width: 300px;padding: 32px 0 0 0;line-height: 26px;margin-left: 30px;}
-.header_main .tel span{font-size: 30px;font-weight: bold;color: #0185d0;font-family: arial;}
+.header_main .tel span{font-size: 30px;font-weight: bold;color: #35d2ff;font-family: arial;}
 .header_main .tel s{width: 57px; height: 57px; float: left; margin-right: 10px; background-position: 0 0;}
 .header_main .search{width: 300px;height: 41px;line-height: 41px;margin-top: 38px;border: 2px solid #0083fe;position: relative;float: right;}
 .header_main .search *{font-family: arial;}
@@ -92,7 +92,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 #banner #btn_prev:hover{opacity:.8;filter:alpha(opacity=80);transition: all 600ms ease;left: 11.6%;}
 #banner #btn_next:hover{opacity:.8;filter:alpha(opacity=80);transition: all 600ms ease;right: 11.6%;}
 /*footer*/
-.footer{width: 100%;color: #fff;padding: 30px 0 20px;background: #191919;}
+.footer{width: 100%;color: #fff;padding: 30px 0 50px;background: #191919;}
 .footer .links{padding-bottom: 30px;margin-bottom: 30px;font-size: 16px;border-bottom: 1px solid #434343;}
 .footer .links span{color:#f9f9f9;display:inline-block;}
 .footer .links a{display:inline-block;color:#f9f9f9;padding-right: 10px;}
@@ -162,7 +162,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 #floor_2_main .proCenter .list li:hover em{width: 100px;height:26px;background:url("../images/em1.png") no-repeat;transition:all .5s;}
 #floor_2_main .proCenter .list li:hover img{-webkit-filter:brightness(105%);filter:brightness(105%);}
 /*slip*/
-.index_slip{height:180px;background:url("../images/ixbannerbg1.png") no-repeat center center;}
+.index_slip{height:180px;background:url("../images/ixbannerbg.jpg") no-repeat center center;}
 .index_slip .slip_tit{width:772px;}
 .index_slip .slip_tit .tit1{padding-top:50px;font:bold 32px "microsoft yahei";color:#64c5ff;}
 .index_slip .slip_tit .tit2{margin-top:14px;font-size:24px;color:#fff;}
