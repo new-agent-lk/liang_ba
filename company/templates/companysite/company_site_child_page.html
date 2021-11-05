@@ -39,8 +39,16 @@
             </div>
             <div class="subright fr">
                 <!--单页内容开始-->
-                {% include_block page.stream %}
-                {{ page.stream.source_code }}
+                {% for block in page.stream %}
+                    {% if block.block_type == 'source_code' %}
+                        {% include_block block %}
+                    {% elif block.block_type == 'info'  %}
+                        {% include_block block %}
+                    {% else %}
+                        {% image block.value width-400 %}
+                    {% endif %}
+
+                {% endfor %}
                 <!--单页内容结束-->
             </div>
         </div>
