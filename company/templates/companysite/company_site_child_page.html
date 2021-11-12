@@ -14,9 +14,14 @@
     <!--内页大图结束-->
     <div class="submian">
         <div class="w1200 clearfix">
-            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% slugurl 'index' %}" title="首页">首页</a> > <a
-                    href="{% pageurl page %}"
-                    title="{{ page.navigation }}">{{ page.navigation }}</a>
+            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% slugurl 'index' %}" title="首页">首页</a> >
+                {% with page.get_parent as parent_page %}
+                    {% ifnotequal parent_page.slug 'root' %}
+                     <a href="{% pageurl parent_page %}" title="{{ parent_page.specific.navigation }}">{{ parent_page.specific.navigation }}</a> >
+                    {% endifnotequal %}
+                {% endwith %}
+                <a href="{% pageurl page %}"
+                title="{{ page.navigation }}">{{ page.navigation }}</a>
             </div>
 
             <div class="subleft fl">
@@ -29,6 +34,11 @@
                             <li class="{% ifnotequal request.GET.flag 'ryzz' %}hover{% endifnotequal %}"><a
                                     href="{% pageurl page %}" title="{{ page.navigation }}">{{ page.navigation }}</a>
                             </li>
+                            {% for p in page.get_children %}
+                            <li>
+                                <a href="{% pageurl p %}" title="{{ p.specific.navigation }}">{{ p.specific.navigation }}</a>
+                            </li>
+                            {% endfor %}
 
                         </ul>
                     </div>

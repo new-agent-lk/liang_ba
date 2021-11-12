@@ -72,7 +72,7 @@ class CompanySitePageAdvantagesImage(Orderable):
 
 class CompanySiteChildPage(Page):
     content = RichTextField(blank=True)
-    navigation = models.CharField(verbose_name='标题', max_length=255, default='关于我们')
+    navigation = models.CharField(verbose_name='页面内标题', max_length=255, default='关于我们')
     stream = StreamField([
         ('source_code', blocks.RawHTMLBlock()),
         ('info', blocks.RichTextBlock()),
