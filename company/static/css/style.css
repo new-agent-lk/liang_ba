@@ -341,6 +341,9 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .submian .subright .mess .right a{color: #333; background: #ffcc00;float:right}
 .submian .subright .mess .right a:hover{background: #cda503;}
 .submian .subright .mess .right input:hover{background: #2bba72;}
+.submian .subright .title1{font-size: 24px;text-align: center;font-weight: bold;margin-bottom: 50px;margin-top: 30px;}
+.submian .subright .title2{font-size: 20px;text-align: left;font-weight: bold;padding: 0 20px;margin-bottom: 20px;}
+.submian .subright .text{font-size:18px;padding: 0 20px;margin: 20px 0;}
 .honorlist ul.list{float: left;width: 100%;padding-left: 0px;}
 .honorlist ul.list li.item{float: left;width:296px;margin-bottom: 30px;margin-right:14px;}
 .honorlist ul.list li.item a:hover img{opacity: 0.8;}
@@ -461,3 +464,5 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 #ThumbPic img{border: 3px solid #ddd;cursor:pointer;background-color: #ddd;margin: 0 5px;width: 135px;height: 108px;display:block;-webkit-transition: all .3s ease-in-out 0s;-moz-transition: all .3s ease-in-out 0s;transition: all .3s ease-in-out 0s;}
 #ThumbPic img.active{border: 3px solid #1048a0;}
 /*↑组图样式↑*/
+
+
