@@ -45,22 +45,23 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .top_main .split{display: inline-block;width: 1px;height: 12px;background: #666;vertical-align: middle;margin: 0;}
 /*header_main*/
 .header_main{width: 100%; height: 120px; z-index: 100; background: #fff;}
-.header_main .logo{width: 540px;height: 60px;display: block;margin-top: 28px;}
-.header_main .logo img{ height: 100%; display: block;margin: 0 auto;}
 .header_main .tel{width: 300px;padding: 32px 0 0 0;line-height: 26px;margin-left: 30px;}
 .header_main .tel span{font-size: 30px;font-weight: bold;color: #35d2ff;font-family: arial;}
 .header_main .tel s{width: 57px; height: 57px; float: left; margin-right: 10px; background-position: 0 0;}
-.header_main .search{width: 300px;height: 41px;line-height: 41px;margin-top: 38px;border: 2px solid #0083fe;position: relative;float: right;}
-.header_main .search *{font-family: arial;}
-.header_main .search .sbtn{width: 100px;height: 45px;font-size: 16px;text-align: center;color: #fff;position: absolute;right: -2px;background: linear-gradient(to right, #0083fe, #00f2e3);top: -2px;cursor:pointer;}
-.header_main .search .stxt{width: 200px;padding-left: 10px;height: 41px;line-height: 41px;border: 0px;background: none;outline:none;color: #999;}
-.nav_main{width:100%;height: 60px;line-height: 60px;background: -webkit-linear-gradient(to right, #0083fe, #00ecdd);background: linear-gradient(180deg, #0083fe, #00f2e3);position: relative;z-index: 3;}
-.nav .list{width: 100%; margin:0 auto;height: 60px; line-height: 60px;position: relative;}
-.nav_main .nav{width: 1200px; margin: 0 auto;}
+.nav_main .search{width: 300px;height: 41px;line-height: 41px;margin-top: 38px;border: 2px solid #0083fe;position: relative;float: right;}
+.nav_main .search *{font-family: arial;}
+.nav_main .search .sbtn{width: 100px;height: 45px;font-size: 16px;text-align: center;color: #fff;position: absolute;right: -2px;background: linear-gradient(to right, #0083fe, #00f2e3);top: -2px;cursor:pointer;}
+.nav_main .search .stxt{width: 200px;padding-left: 10px;height: 41px;line-height: 41px;border: 0px;background: none;outline:none;color: #999;}
+/*.nav_main{width:100%;height: 120px;display: inline-block;line-height: 120px;background: -webkit-linear-gradient(to right, #0083fe, #00ecdd);background: linear-gradient(180deg, #0083fe, #00f2e3);position: relative;z-index: 3;}*/
+.nav_main{width:100%;height: 120px;display: inline-block;line-height: 120px;background-color: #fff;position: relative;z-index: 3;}
+.nav .list{width: 100%;height: 120px; line-height: 120px;position: relative; float: right;}
+.nav_main .nav{width: 600px; display: inline-block; margin-left: 80px; float: right;margin-right: 50px;}
 .nav_main .nav li{float:left;width: 20%;display: block;position: relative;z-index: 10;font-size: 20px;text-align: center;font-weight: bold;}
 .nav_main .nav li:first-child{background: none;}
 /*.nav_main .nav li:hover{background-color:#0185d0;}*/
-.nav_main .nav li a{display: block;color:#fff;font-size:16px;}
+.nav_main .nav li a{display: block;color:#4c4c4c;font-size:16px;}
+.nav_main .logo{width: 540px;height: 60px;margin-top: 28px;float: left;}
+.nav_main .logo img{ height: 100%; display: block;margin: 0 auto;}
 /*.nav_main .nav li a:hover, .nav_main .nav li a.hover, .nav_main .nav li #hover2{background: #0185d0;}*/
 .nav_main .nav dl{width: 240px;background: #fff;position: absolute;left: 0;top: 60px;z-index: 12;border: 1px solid #0185d0;}
 .nav_main .nav dl{position: absolute;filter: progid:DXImageTransform.Microsoft.Shadow(color=#4c91c0,direction=120,strength=5);opacity: 0;visibility: hidden;transition: all .6s ease 0s;transform: translate3d(0, 10px, 0);-moz-transform: translate3d(0, 10px, 0);-webkit-transform: translate3d(0, 10px, 0);}
@@ -91,6 +92,8 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 #banner #btn_next{background-position:-92px 0;right:12%;transition: all 600ms ease;}
 #banner #btn_prev:hover{opacity:.8;filter:alpha(opacity=80);transition: all 600ms ease;left: 11.6%;}
 #banner #btn_next:hover{opacity:.8;filter:alpha(opacity=80);transition: all 600ms ease;right: 11.6%;}
+#banner .text{position: absolute;top: 25%;left: 50%;text-align: center;color: #fff;font-size: 28px;z-index: 10;font-weight: bold;}
+#banner .text p{margin: 20px;max-width: 500px;line-height: 40px;}
 /*footer*/
 .footer{width: 100%;color: #fff;padding: 30px 0 50px;background: #191919;}
 .footer .links{padding-bottom: 30px;margin-bottom: 30px;font-size: 16px;border-bottom: 1px solid #434343;}

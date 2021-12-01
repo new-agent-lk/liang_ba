@@ -49,27 +49,28 @@
 <!--浮动客服结束-->
 
 
-<div class="header_main">
-    <div class="header w1200 clearfix"><a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}"
-                                          aos="fade-right"
-                                          aos-easing="ease" aos-duration="700" aos-delay="100" aos-duration="700">
-
-        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>
-        <div class="tel fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100"><s
-                class="ico"></s><span>{{ companyinfo.phone }}</span><br/><span>{{ companyinfo.telephone }}</span></div>
-        <!--搜索栏开始-->
-        <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">
-            <form action="{% slugurl 'products' %}" method="get">
-                <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>
-                <input type="submit" class="sbtn" value="搜索"/></form>
-        </div>
-        <!--搜索栏结束-->
-    </div>
-</div>
+{#<div class="header_main">#}
+{#    <div class="header w1200 clearfix"><a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}"#}
+{#                                          aos="fade-right"#}
+{#                                          aos-easing="ease" aos-duration="700" aos-delay="100" aos-duration="700">#}
+{##}
+{#        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>#}
+{#        <div class="tel fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100"><s#}
+{#                class="ico"></s><span>{{ companyinfo.phone }}</span><br/><span>{{ companyinfo.telephone }}</span></div>#}
+{#        <!--搜索栏开始-->#}
+{#        <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">#}
+{#            <form action="{% slugurl 'products' %}" method="get">#}
+{#                <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>#}
+{#                <input type="submit" class="sbtn" value="搜索"/></form>#}
+{#        </div>#}
+{#        <!--搜索栏结束-->#}
+{#    </div>#}
+{#</div>#}
 <!--页头结束-->
 <!--导航开始-->
 
 <div class="nav_main" aos="fade-down" aos-easing="ease" aos-duration="700">
+    <a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}" ><img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>
     <div class="nav w1200">
         <ul class="list clearfix" id="nav">
             <li><a href="{% slugurl 'index' %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>
@@ -92,6 +93,11 @@
 
             </li>
         </ul>
+    </div>
+    <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">
+        <form action="{% slugurl 'products' %}" method="get">
+            <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>
+            <input type="submit" class="sbtn" value="搜索"/></form>
     </div>
 </div>
 <!--导航结束-->
