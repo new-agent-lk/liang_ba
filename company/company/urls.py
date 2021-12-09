@@ -4,6 +4,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from django.conf import settings
 from django.views.static import serve
+from django.views.generic import RedirectView
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url  # 添加include方法
@@ -24,7 +25,7 @@ urlpatterns = [
     # path('products/', ProductsView.as_view(), name='products'),  # 产品中心
     # path('productdetail/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),  # 产品详情
     # path('news/', NewsView.as_view(), name='news'),  # 新闻动态
-    path('newsdetail/<int:pk>/', NewsDetailView.as_view(), name='news_detail'),  # 新闻详情
+    # path('newsdetail/<int:pk>/', NewsDetailView.as_view(), name='news_detail'),  # 新闻详情
     # path('demos/', DemosView.as_view(), name='demos'),  # 工程案例
     # path('demodetail/<int:pk>/', DemoDetailView.as_view(), name='demo_detail'),  # 案例详情
     # path('recruits/', RecruitsView.as_view(), name='recruits'),  # 人才招聘
@@ -34,6 +35,7 @@ urlpatterns = [
 
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicon.ico')),
 
     re_path(r'', include(wagtail_urls)),
 ]

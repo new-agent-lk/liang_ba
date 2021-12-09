@@ -28,9 +28,9 @@ class CompanySitePage(Page):
         context = super().get_context(request)
         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
-        news = News.objects.all().order_by('-add_time')
-        news = news[:8] if len(news) > 8 else news
-        context['news'] = news
+        # news = News.objects.all().order_by('-add_time')
+        # news = news[:8] if len(news) > 8 else news
+        # context['news'] = news
         return context
 
 
@@ -77,7 +77,7 @@ class CompanySiteChildPage(Page):
         ('source_code', blocks.RawHTMLBlock()),
         ('info', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
-    ], blank=True)
+    ], blank=True, null=True)
 
     def top_image(self):
 

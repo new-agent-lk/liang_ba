@@ -146,58 +146,6 @@
         </div>
         <!--关于我们结束-->
 
-{#        <!--新闻动态开始-->#}
-{#        <div id="floor_5_main">#}
-{#            <div class="floor_5 w1200">#}
-{##}
-{##}
-{#                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">NEWS CENTER</p>#}
-{#                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em#}
-{#                            class="line fl"></em><span class="word">新闻动态</span><em class="line fr"></em></h3></div>#}
-{#                <!--新闻分类开始-->#}
-{#                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{##}
-{#                    <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>#}
-{##}
-{#                    <a href="{% slugurl 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>#}
-{##}
-{#                    <a href="{% slugurl 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>#}
-{#                <!--新闻分类结束-->#}
-{#                <div class="inews" id="inews" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{#                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>#}
-{#                    <div class="bd">#}
-{#                        <div class="ulWrap clearfix">#}
-{#                            <div class="list">#}
-{#                                {% for new_ in news %}#}
-{#                                    <li class="clearfix" style="{% if forloop.counter|divisibleby:"2" %}margin-right: 0;{% endif %}">#}
-{#                                        <a href="{% url 'news_detail' new_.id %}" title="{{ new_.title }}">#}
-{#                                            <div class="time fl"><p class="day">{{ new_.add_time|date:'d' }}</p>#}
-{#                                                <p class="year">{{ new_.add_time|date:'Y/m' }}</p></div>#}
-{#                                            <div class="title fl"><h3 class="tit">#}
-{#                                                {% if new_.title|length > 19 %}#}
-{#                                                    {{ new_.title|slice:':19' }}...#}
-{#                                                {% else %}#}
-{#                                                    {{ new_.title }}#}
-{#                                                {% endif %}#}
-{#                                            </h3>#}
-{#                                                <p class="cont">#}
-{#                                                    {{ new_.digest }}…</p>#}
-{#                                            </div>#}
-{#                                        </a>#}
-{#                                    </li>#}
-{#                                {% endfor %}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <div class="line fl"></div>#}
-{#                    <a class="look_more fl" href="{% slugurl 'news' %}" title="查看更多>>">查看更多>></a>#}
-{#                    <div class="line fl"></div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        <!--新闻动态结束-->#}
+
     </div>
 {% endblock %}
