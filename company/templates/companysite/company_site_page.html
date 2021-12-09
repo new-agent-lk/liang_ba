@@ -16,54 +16,104 @@
             </ul>
             <div class="tip"></div>
             <div class="text">
-                <p>打造量化交易的标杆</p>
-                <p>数据包含一切,算法解决一切, AI就是未来,量化重塑交易。</p>
-                <p>量霸科技</p>
+                <p>量霸愿景</p>
+                <p>助推金融科技进步，助力国家伟大复兴！</p>
             </div>
 {#            <a href="javascript:;" id="btn_prev" class="ico"></a> <a href="javascript:;" id="btn_next" class="ico"></a>#}
         </div>
     </div>
     <!--幻灯片大图结束-->
+
     <div class="index">
-        <!--产品优势开始-->
-        <div id="floor_3_main">
-            <div class="floor_3 ">
-                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
-                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">OUR ADVATAGES</p>
-                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
-                            class="line fl"></em><span class="word">产品优势</span><em class="line fr"></em></h3></div>
-                <div class="proAdvant clearfix">
-                    <ul class="list">
-                        {% for advantage in page.advantages_images.all %}
-                            <li aos="fade-up" aos-easing="ease" aos-duration="700"
-                                    {% if forloop.counter == 2 %}
-                                aos-delay="300"
-                                    {% elif forloop.counter == 3 %}
-                                aos-delay="500"
-                                    {% endif %}>
-                                <a href="javascript:;">
-<!--                                    <img class="img" src="{{ MEDIA_URL }}{{ advantage.img }}"-->
-<!--                                         alt="{{ advantage.title }}"/>-->
-                                    {% image advantage.advantages_image fill-134x150 class="img" %}
-                                    <div class="title">
-                                        <h3 class="tit">{{ advantage.title }}</h3>
-                                        <p class="cont">{{ advantage.info }}</p>
-                                    </div>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+        <!--最新观点开始-->
+        <div class="point" aos="fade-up" aos-easing="ease" aos-duration="700">
+            <!--模板1-->
+            <div class="row w1200">
+                <div class="col-two col-md-8 col-xs-12">
+                    <img src="{% static 'images/point.png'  %}" alt="">
+                    <div class="content-main">
+                        <h3>用中国量化智慧点亮全球资本市场</h3>
+                        <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                    </div>
+                </div>
+                <div class="col-one col-md-4 col-xs-12">
+                    <div class="main">
+                        <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                        <div class="content-main">
+                            <span>思想</span>
+                            <h3>用中国量化智慧点亮全球资本市场</h3>
+                            <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--模板2-->
+            <div class="row w1200">
+                <div class="col-one col-md-4 col-xs-12">
+                    <div class="main">
+                        <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                        <div class="content-main">
+                            <span>思想</span>
+                            <h3>用中国量化智慧点亮全球资本市场</h3>
+                            <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-two col-md-8 col-xs-12">
+                    <img src="{% static 'images/point.png' %}" alt="">
+                    <div class="content-main">
+                        <h3>用中国量化智慧点亮全球资本市场</h3>
+                        <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--模板3-->
+            <div class="row w1200">
+                <div class="col-one col-md-4 col-xs-12">
+                    <div class="main">
+                        <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                        <div class="content-main">
+                            <span>思想</span>
+                            <h3>用中国量化智慧点亮全球资本市场</h3>
+                            <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-three col-md-8 col-xs-12">
+                    <div class="column_main">
+                         <div class="content-main col-md-6">
+                            <span>思想</span>
+                            <h3>用中国量化智慧点亮全球资本市场</h3>
+                            <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                        </div>
+                        <div class="col-md-6" style="padding: 0 !important;">
+                            <img src="{% static 'images/about.jpg' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="column_main mt">
+                        <div class="col-md-6" style="padding: 0 !important;">
+                            <img src="{% static 'images/about.jpg' %}" alt="">
+                        </div>
+                         <div class="content-main col-md-6">
+                            <span>思想</span>
+                            <h3>用中国量化智慧点亮全球资本市场</h3>
+                            <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!--产品优势结束-->
+
+        <!--最新观点结束-->
 
         <!--小banner开始-->
         <div class="index_slip index_slip1" aos="fade-up" aos-easing="ease" aos-duration="700">
             <div class="slip w1200">
                 <div class="slip_tit fl">
-                    <h3 class="tit1" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">
-                        {{ page.index_ask_title }}</h3>
                     <p class="tit2" aos="fade-up" aos-easing="ease" aos-duration="700"
                        aos-delay="700">{{ page.index_ask_info }}</p></div>
                 <a class="slip_btn fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="400"
@@ -77,7 +127,7 @@
                 <div class="about clearfix">
                     <a class="item fl" href="javascript:;" aos="fade-right" aos-easing="ease" aos-duration="700">
 
-                        <img src="{% static '/images/about.jpg' %}" alt="{{ companyinfo.name }}"/></a>
+                        <img src="{% static '/images/关于我们.png' %}" alt="{{ companyinfo.name }}"/></a>
                     <div class="contW fl">
 
 
@@ -96,58 +146,58 @@
         </div>
         <!--关于我们结束-->
 
-        <!--新闻动态开始-->
-        <div id="floor_5_main">
-            <div class="floor_5 w1200">
-
-
-                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
-                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">NEWS CENTER</p>
-                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em
-                            class="line fl"></em><span class="word">新闻动态</span><em class="line fr"></em></h3></div>
-                <!--新闻分类开始-->
-                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
-
-                    <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>
-
-                    <a href="{% slugurl 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>
-
-                    <a href="{% slugurl 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>
-                <!--新闻分类结束-->
-                <div class="inews" id="inews" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">
-                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>
-                    <div class="bd">
-                        <div class="ulWrap clearfix">
-                            <div class="list">
-                                {% for new_ in news %}
-                                    <li class="clearfix" style="{% if forloop.counter|divisibleby:"2" %}margin-right: 0;{% endif %}">
-                                        <a href="{% url 'news_detail' new_.id %}" title="{{ new_.title }}">
-                                            <div class="time fl"><p class="day">{{ new_.add_time|date:'d' }}</p>
-                                                <p class="year">{{ new_.add_time|date:'Y/m' }}</p></div>
-                                            <div class="title fl"><h3 class="tit">
-                                                {% if new_.title|length > 19 %}
-                                                    {{ new_.title|slice:':19' }}...
-                                                {% else %}
-                                                    {{ new_.title }}
-                                                {% endif %}
-                                            </h3>
-                                                <p class="cont">
-                                                    {{ new_.digest }}…</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">
-                    <div class="line fl"></div>
-                    <a class="look_more fl" href="{% slugurl 'news' %}" title="查看更多>>">查看更多>></a>
-                    <div class="line fl"></div>
-                </div>
-            </div>
-        </div>
-        <!--新闻动态结束-->
+{#        <!--新闻动态开始-->#}
+{#        <div id="floor_5_main">#}
+{#            <div class="floor_5 w1200">#}
+{##}
+{##}
+{#                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
+{#                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">NEWS CENTER</p>#}
+{#                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em#}
+{#                            class="line fl"></em><span class="word">新闻动态</span><em class="line fr"></em></h3></div>#}
+{#                <!--新闻分类开始-->#}
+{#                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
+{##}
+{#                    <a href="{% slugurl 'news' %}?category=gsxw" title="公司新闻">公司新闻</a>#}
+{##}
+{#                    <a href="{% slugurl 'news' %}?category=mtbd" title="媒体报道">媒体报道</a>#}
+{##}
+{#                    <a href="{% slugurl 'news' %}?category=yggh" title="员工关怀">员工关怀</a></div>#}
+{#                <!--新闻分类结束-->#}
+{#                <div class="inews" id="inews" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
+{#                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>#}
+{#                    <div class="bd">#}
+{#                        <div class="ulWrap clearfix">#}
+{#                            <div class="list">#}
+{#                                {% for new_ in news %}#}
+{#                                    <li class="clearfix" style="{% if forloop.counter|divisibleby:"2" %}margin-right: 0;{% endif %}">#}
+{#                                        <a href="{% url 'news_detail' new_.id %}" title="{{ new_.title }}">#}
+{#                                            <div class="time fl"><p class="day">{{ new_.add_time|date:'d' }}</p>#}
+{#                                                <p class="year">{{ new_.add_time|date:'Y/m' }}</p></div>#}
+{#                                            <div class="title fl"><h3 class="tit">#}
+{#                                                {% if new_.title|length > 19 %}#}
+{#                                                    {{ new_.title|slice:':19' }}...#}
+{#                                                {% else %}#}
+{#                                                    {{ new_.title }}#}
+{#                                                {% endif %}#}
+{#                                            </h3>#}
+{#                                                <p class="cont">#}
+{#                                                    {{ new_.digest }}…</p>#}
+{#                                            </div>#}
+{#                                        </a>#}
+{#                                    </li>#}
+{#                                {% endfor %}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
+{#                    <div class="line fl"></div>#}
+{#                    <a class="look_more fl" href="{% slugurl 'news' %}" title="查看更多>>">查看更多>></a>#}
+{#                    <div class="line fl"></div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <!--新闻动态结束-->#}
     </div>
 {% endblock %}
