@@ -71,13 +71,23 @@ class CompanySitePageAdvantagesImage(Orderable):
 
 
 class CompanySiteChildPage(Page):
-    content = RichTextField(blank=True)
     navigation = models.CharField(verbose_name='页面内标题', max_length=255, default='关于我们')
-    stream = StreamField([
+    content_stream = StreamField([
         ('source_code', blocks.RawHTMLBlock()),
-        ('info', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock()),
-    ], blank=True, null=True)
+        ('big_title', blocks.CharBlock(max_length=512, help_text='大标题')),
+        ('content', blocks.ListBlock(blocks.RichTextBlock(help_text='内容'), help_text='这里可以填入多个内容，也可以只填写一个')),
+
+        ('author_info', blocks.StructBlock([
+            ('ico_image', ImageChooserBlock(help_text='头像')),
+            ('author_name', blocks.CharBlock(max_length=255, help_text='作者')),
+            ('author_intro', blocks.CharBlock(max_length=255, help_text='作者介绍')),
+        ], null=True, blank=True, max_num=1, help_text='作者信息')),
+
+    ], blank=True, null=True, block_counts={
+        'big_title': {'max_num': 1},
+        'content': {'max_num': 1},
+        'author_info': {'max_num': 1},
+    })
 
     def top_image(self):
 
@@ -90,9 +100,8 @@ class CompanySiteChildPage(Page):
             return None
 
     content_panels = Page.content_panels + [
-        FieldPanel('content', classname="full"),
         FieldPanel('navigation'),
-        StreamFieldPanel('stream'),
+        StreamFieldPanel('content_stream'),
         InlinePanel('child_images', label="Child images"),
     ]
 
