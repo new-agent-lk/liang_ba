@@ -2,7 +2,7 @@
 
 {% load wagtailcore_tags static wagtailimages_tags %}
 
-{% block body_class %}template-companysitepage{% endblock %}
+{% block body_class %}template-companyindexpage{% endblock %}
 
 {% block content %}
     <!--幻灯片大图开始-->
@@ -23,11 +23,121 @@
     </div>
     <!--幻灯片大图结束-->
 
-    {% for chilren in page.get_chrilren() %}
-
     <div class="index">
         <!--最新观点开始-->
         <div class="point" aos="fade-up" aos-easing="ease" aos-duration="700">
+            {% if content_page_count > 0 %}</p>
+                <div class="row w1200">
+                {% for content in page.get_children %}
+                    {% with content.specific as content %}
+                        {% if forloop.counter == 1  %}
+                        <!--模板1-->
+                        <div class="col-two col-md-8 col-xs-12">
+                            <img src="{% static 'images/point.png' %}" alt="">
+                            <div class="content-main">
+                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                <p>{{ content.page_intro }}</p>
+                            </div>
+                        </div>
+                        {% elif forloop.counter == 2 %}
+                        <div class="col-one col-md-4 col-xs-12">
+                            <div class="main">
+                                <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                                <div class="content-main">
+                                    <span>思想</span>
+                                    <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                    <p>{{ content.page_intro }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% if content_page_count > 2 %}
+
+                <div class="row w1200">
+                {% for content in page.get_children %}
+                    {% with content.specific as content %}
+                        {% if forloop.counter == 3  %}
+                        <div class="col-one col-md-4 col-xs-12">
+                            <div class="main">
+                                <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                                <div class="content-main">
+                                    <span>思想</span>
+                                    <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                    <p>{{ content.page_intro }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif forloop.counter == 4 %}
+                        <div class="col-two col-md-8 col-xs-12">
+                            <img src="{% static 'images/point.png' %}" alt="">
+                            <div class="content-main">
+                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                <p>{{ content.page_intro }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% if content_page_count > 4 %}
+                <!--模板3-->
+                <div class="row w1200">
+                    {% for content in page.get_children %}
+                        {% with content.specific as content %}
+                            {% if forloop.counter == 5 %}
+
+                                <div class="col-one col-md-4 col-xs-12">
+                                    <div class="main">
+                                        <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                                        <div class="content-main">
+                                            <span>思想</span>
+                                            <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                            <p>{{ content.page_intro }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% elif forloop.counter == 6 %}
+                            <div class="col-three col-md-8 col-xs-12">
+
+                                <div class="column_main">
+                                     <div class="content-main col-md-6">
+                                        <span>思想</span>
+                                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                        <p>{{ content.page_intro }}</p>
+                                    </div>
+                                    <div class="col-md-6" style="padding: 0 !important;">
+                                        <img src="{% static 'images/about.jpg' %}" alt="">
+                                    </div>
+                                </div>
+                            {% if content_page_count == 6 %}</div>{% endif %}
+                            {% elif forloop.counter == 7 %}
+                                <div class="column_main mt">
+                                    <div class="col-md-6" style="padding: 0 !important;">
+                                        <img src="{% static 'images/about.jpg' %}" alt="">
+                                    </div>
+                                     <div class="content-main col-md-6">
+                                        <span>思想</span>
+                                        <h3>用中国量化智慧点亮全球资本市场</h3>
+                                        <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+
+            <p>-----------------------------------------------------------------</p>
             <!--模板1-->
             <div class="row w1200">
                 <div class="col-two col-md-8 col-xs-12">
@@ -107,6 +217,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!--最新观点结束-->

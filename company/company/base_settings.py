@@ -33,6 +33,10 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'company_index_page',
+    'company_content_page',
+    'company_second_page',
+
     'companyinfo',  # 新创建的应用
     'companysite',
 
