@@ -30,9 +30,6 @@ class CompanyIndexPage(Page):
         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
         context['content_page_count'] = len(self.get_children())
 
-        # news = News.objects.all().order_by('-add_time')
-        # news = news[:8] if len(news) > 8 else news
-        # context['news'] = news
         return context
 
 
