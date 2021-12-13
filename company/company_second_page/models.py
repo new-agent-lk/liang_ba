@@ -12,7 +12,7 @@ from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
 from companyinfo.models import City
 
 
-class CompanyIndexPage(Page):
+class CompanySecondPage(Page):
     body = RichTextField()
 
     content_panels = Page.content_panels + [
