@@ -9,15 +9,15 @@
     <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
         <div id="banner" class="banner">
             <ul class="list clearfix">
-                {% for item in page.banner_images.all %}
-                    <li><a href="javascript:;">{% image item.banner_image fill-1920x550 %}</a></li>
-                {% endfor %}
+                {% with page.top_image as content %}
+                    <li><a href="javascript:;">{% if content %}{% image item.banner_image fill-1920x550 %}{% endif %}</a></li>
             </ul>
             <div class="tip"></div>
             <div class="text">
-                <p>量霸愿景</p>
-                <p>助推金融科技进步，助力国家伟大复兴！</p>
+                <p>{{ content.info }}</p>
+                <p>{{ content.title }}</p>
             </div>
+            {% endwith %}
 
         </div>
     </div>

@@ -8,6 +8,7 @@ from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+from company_content_page.models import CompanyContentPage
 from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
 from companyinfo.models import City
 
@@ -20,11 +21,22 @@ class CompanySecondPage(Page):
         InlinePanel('banner_images', label="Banner images"),
     ]
 
+    def top_image(self):
+        top_image = self.banner_images.first()
+        if top_image:
+            content = {'image': top_image.child_image, 'info': top_image.info, 'info_title': top_image.info_title}
+            return content
+        else:
+            return None
+
     def get_context(self, request):
         context = super().get_context(request)
         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
 
+        query_set = CompanyContentPage.objects.filter(category='Our Advantages').live().order_by('first_published_at')
+        context['content_page_count'] = len(query_set)
+        context['content_pages'] = query_set
         return context
 
 
@@ -38,8 +50,10 @@ class CompanySecondPageBannerImage(Orderable):
         related_name='+'
     )
     info = models.CharField(blank=True, max_length=250)
+    info_title = models.CharField(blank=True, max_length=250)
 
     panels = [
         ImageChooserPanel('banner_image'),
         FieldPanel('info'),
+        FieldPanel('info_title'),
     ]

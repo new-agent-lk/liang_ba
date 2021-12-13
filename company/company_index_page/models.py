@@ -24,6 +24,14 @@ class CompanyIndexPage(Page):
         InlinePanel('banner_images', label="Banner images"),
     ]
 
+    def top_image(self):
+        top_image = self.banner_images.first()
+        if top_image:
+            content = {'image': top_image.child_image, 'info': top_image.info, 'info_title': top_image.info_title}
+            return content
+        else:
+            return None
+
     def get_context(self, request):
         context = super().get_context(request)
         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
@@ -46,8 +54,10 @@ class CompanyIndexPageBannerImage(Orderable):
         related_name='+'
     )
     info = models.CharField(blank=True, max_length=250)
+    info_title = models.CharField(blank=True, max_length=250)
 
     panels = [
         ImageChooserPanel('banner_image'),
         FieldPanel('info'),
+        FieldPanel('info_title'),
     ]
