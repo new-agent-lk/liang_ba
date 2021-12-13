@@ -14,10 +14,8 @@ from companyinfo.models import City
 
 
 class CompanySecondPage(Page):
-    body = RichTextField()
 
     content_panels = Page.content_panels + [
-        FieldPanel('body', classname="full"),
         InlinePanel('banner_images', label="Banner images"),
     ]
 

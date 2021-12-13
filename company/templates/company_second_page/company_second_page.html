@@ -27,70 +27,44 @@
     <div class="bg-color">
         <div class="container section">
             <!--第一行-->
+            {% if content_page_count > 0 %}
             <div class="row">
+                {% for content in content_pages|slice:":3" %}
                 <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
+                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    {% with content.specific as content %}
                     <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
+                        <a href="{% pageurl content %}">
+                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                        </a>
+                        <p>{{ content.page_intro }}</p>
                     </div>
+                    {% endwith %}
                 </div>
-                <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
-                    <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
-                    </div>
-                </div>
-                <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
-                    <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            {% endif %}
 
+            {% if content_page_count > 3 %}
             <!--第二行-->
             <div class="row">
+                {% for content in content_pages|slice:"3:6" %}
                 <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
+                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    {% with content.specific as content %}
                     <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
+                        <a href="{% pageurl content %}">
+                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                        </a>
+                        <p>{{ content.page_intro }}</p>
                     </div>
+                    {% endwith %}
                 </div>
-                <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
-                    <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
-                    </div>
-                </div>
-                <div class="item-box">
-                    <div>
-                        <img src="{% static 'images/point.png' %}" alt="">
-                    </div>
-                    <div class="content-main"><span>观点</span>
-                        <h3>标题标题</h3>
-                        <p>111111111111111111111</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </div>
     <!--卡片式盒子结束-->
-
-    {{ page.body|richtext }}
 
 {% endblock %}

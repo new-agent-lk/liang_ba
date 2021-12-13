@@ -47,11 +47,13 @@
                     {% elif forloop.counter == 2 %}
                     <div class="col-one col-md-4 col-xs-12">
                         <div class="main">
-                            <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                            <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
                             {% with content.specific as content %}
                             <div class="content-main">
                                 <span>思想</span>
+                                <a href="{% pageurl content %}">
                                 <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                </a>
                                 <p>{{ content.page_intro }}</p>
                             </div>
                             {% endwith %}
@@ -69,19 +71,23 @@
                         {% if forloop.counter == 3  %}
                         <div class="col-one col-md-4 col-xs-12">
                             <div class="main">
-                                <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                                <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
                                 <div class="content-main">
                                     <span>思想</span>
+                                    <a href="{% pageurl content %}">
                                     <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                    </a>
                                     <p>{{ content.page_intro }}</p>
                                 </div>
                             </div>
                         </div>
                         {% elif forloop.counter == 4 %}
                         <div class="col-two col-md-8 col-xs-12">
-                            <img src="{% static 'images/point.png' %}" alt="">
+                            {% image content.page_intro_image fill-760x570 %}
                             <div class="content-main">
+                                <a href="{% pageurl content %}">
                                 <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                </a>
                                 <p>{{ content.page_intro }}</p>
                             </div>
                         </div>
@@ -99,11 +105,12 @@
 
                                 <div class="col-one col-md-4 col-xs-12">
                                     <div class="main">
-                                        <div class="img-warp"><img src="{% static 'images/图片1.png' %}" alt=""></div>
+                                        <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
                                         <div class="content-main">
                                             <span>思想</span>
+                                            <a href="{% pageurl content %}">
                                             <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                            <p>{{ content.page_intro }}</p>
+                                            </a><p>{{ content.page_intro }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -114,23 +121,27 @@
                                 <div class="column_main">
                                      <div class="content-main col-md-6">
                                         <span>思想</span>
+                                        <a href="{% pageurl content %}">
                                         <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                        </a>
                                         <p>{{ content.page_intro }}</p>
                                     </div>
                                     <div class="col-md-6" style="padding: 0 !important;">
-                                        <img src="{% static 'images/about.jpg' %}" alt="">
+                                        {% image content.page_intro_image fill-380x269 %}
                                     </div>
                                 </div>
                             {% if content_page_count == 6 %}</div>{% endif %}
                             {% elif forloop.counter == 7 %}
                                 <div class="column_main mt">
                                     <div class="col-md-6" style="padding: 0 !important;">
-                                        <img src="{% static 'images/about.jpg' %}" alt="">
+                                        {% image content.page_intro_image fill-380x269 %}
                                     </div>
                                      <div class="content-main col-md-6">
                                         <span>思想</span>
-                                        <h3>用中国量化智慧点亮全球资本市场</h3>
-                                        <p>坚持盈利增长，坚持技术先进，坚持社会奉献；坚持长期主义！</p>
+                                        <a href="{% pageurl content %}">
+                                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                        </a>
+                                        <p>{{ content.page_intro }}</p>
                                     </div>
                                 </div>
                             </div>
