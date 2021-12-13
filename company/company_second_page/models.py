@@ -24,7 +24,7 @@ class CompanySecondPage(Page):
     def top_image(self):
         top_image = self.banner_images.first()
         if top_image:
-            content = {'image': top_image.child_image, 'info': top_image.info, 'info_title': top_image.info_title}
+            content = {'image': top_image.banner_image, 'info': top_image.info, 'info_title': top_image.info_title}
             return content
         else:
             return None
