@@ -11,3 +11,10 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
 from companyinfo.models import City
 
+
+class CompanyIndexPage(Page):
+    body = RichTextField()
+
+    content_panels = Page.content_panels + [
+        FieldPanel('body', classname="full")
+    ]
