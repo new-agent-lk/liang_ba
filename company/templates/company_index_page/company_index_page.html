@@ -10,7 +10,7 @@
         <div id="banner" class="banner">
             <ul class="list clearfix">
                 {% with page.top_image as content %}
-                    <li><a href="javascript:;">{% if content %}{% image item.banner_image fill-1920x550 %}{% endif %}</a></li>
+                    <li><a href="javascript:;">{% if content %}{% image content.banner_image fill-1920x550 %}{% endif %}</a></li>
             </ul>
             <div class="tip"></div>
             <div class="text">
