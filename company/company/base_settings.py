@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'company_second_page',
 
     'companyinfo',  # 新创建的应用
-    'companysite',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
