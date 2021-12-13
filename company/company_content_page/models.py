@@ -4,7 +4,7 @@ from modelcluster.fields import ParentalKey
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core import blocks
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, StreamFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, StreamFieldPanel, BaseChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -16,6 +16,13 @@ from companyinfo.models import City
 
 
 class CompanyContentPage(Page):
+    CONTENT_PAGE_CATEGORIES = (
+        ('Our Opinions', 'Our Opinions'),
+        ('Our Advantages', 'Our Advantages'),
+        ('Our Future', 'Our Future'),
+    )
+    category = models.CharField(verbose_name='文章分类', max_length=255, default='Our Opinions',
+                                choices=CONTENT_PAGE_CATEGORIES)
     navigation = models.CharField(verbose_name='页面内标题', max_length=255, default='关于我们')
     page_intro = models.CharField(verbose_name='页面简要介绍', max_length=512, default='简要介绍')
     page_intro_image = models.ForeignKey(
@@ -45,9 +52,7 @@ class CompanyContentPage(Page):
     })
 
     def top_image(self):
-
         top_image = self.child_images.first()
-
         if top_image:
             content = {'image': top_image.child_image, 'info': top_image.info}
             return content
@@ -55,16 +60,12 @@ class CompanyContentPage(Page):
             return None
 
     content_panels = Page.content_panels + [
+        FieldPanel('category'),
         FieldPanel('navigation'),
         FieldPanel('page_intro'),
         ImageChooserPanel('page_intro_image'),
         StreamFieldPanel('content_stream'),
         InlinePanel('child_images', label="Child images"),
-    ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-        ImageChooserPanel('page_intro_image'),
     ]
 
     def get_context(self, request):
