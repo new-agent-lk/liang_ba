@@ -27,8 +27,8 @@ class CompanyIndexPage(Page):
     def top_image(self):
         top_image = self.banner_images.first()
         if top_image:
-            content = {'image': top_image.banner_image, 'info': top_image.info, 'info_title': top_image.info_title}
-            return content
+            private_context = {'banner_image': top_image.banner_image, 'info': top_image.info, 'info_title': top_image.info_title}
+            return private_context
         else:
             return None
 
