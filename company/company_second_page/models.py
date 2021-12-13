@@ -16,5 +16,23 @@ class CompanySecondPage(Page):
     body = RichTextField()
 
     content_panels = Page.content_panels + [
-        FieldPanel('body', classname="full")
+        FieldPanel('body', classname="full"),
+        InlinePanel('banner_images', label="Banner images"),
+    ]
+
+
+class CompanySecondPageBannerImage(Orderable):
+    page = ParentalKey(CompanySecondPage, on_delete=models.CASCADE, related_name='banner_images')
+    banner_image = models.ForeignKey(
+        'wagtailimages.Image',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='+'
+    )
+    info = models.CharField(blank=True, max_length=250)
+
+    panels = [
+        ImageChooserPanel('banner_image'),
+        FieldPanel('info'),
     ]
