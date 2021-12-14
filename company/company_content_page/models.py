@@ -85,8 +85,8 @@ class CompanyContentPageImage(Orderable):
         on_delete=models.CASCADE,
         related_name='+'
     )
-    info = models.CharField(verbose_name='介绍', blank=True, null=True, max_length=250)
-    title = models.CharField(verbose_name='标题', max_length=10, null=True, blank=True)
+    info = models.CharField(verbose_name='介绍', blank=True, null=True, max_length=255)
+    title = models.CharField(verbose_name='标题', max_length=255, null=True, blank=True)
 
     panels = [
         ImageChooserPanel('child_image'),
