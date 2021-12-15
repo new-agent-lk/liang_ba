@@ -21,6 +21,7 @@ table{border-collapse: collapse; border-spacing: 0;}
 .hidden{display: none;}
 .w1200{width: 1200px; margin: 0 auto;}
 .ico{background: url(../images/icon.png) no-repeat; display: inline-block; vertical-align: middle;}
+.big-title{font-size: 46px;color: #000000;font-weight: normal;width: 100%;text-align: center;display: block;background-color: #f2f2f2;padding-top: 20px;}
 a{color: #333333; text-decoration: none !important;}
 a:hover{color: #1048a0; text-decoration: none;}
 a:visited{text-decoration: none;}
@@ -238,7 +239,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 @media (max-width: 915px) {
     #floor_3_main .proAdvant .list li{width:278px;margin-right: 0px}
 }
-.point {background-color: #f2f2f2;padding: 100px 0;}
+.point {background-color: #f2f2f2;padding-top: 50px;padding-bottom: 100px;}
 .point .row {display: flex;flex-wrap: wrap;margin-left: auto;margin-right: auto;margin-bottom: 80px;}
 .point .row .col-two {display: flex;position: relative;cursor: pointer;padding: 0 20px;}
 .point .row .col-two img {width: 100%;height: 100%}
