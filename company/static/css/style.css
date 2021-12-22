@@ -21,7 +21,7 @@ table{border-collapse: collapse; border-spacing: 0;}
 .hidden{display: none;}
 .w1200{width: 1200px; margin: 0 auto;}
 .ico{background: url(../images/icon.png) no-repeat; display: inline-block; vertical-align: middle;}
-.big-title{font-size: 46px;color: #000000;font-weight: 100;width: 100%;text-align: center;display: block;background-color: #f2f2f2;padding-top: 20px;}
+.big-title{font-size: 44px;color: #000000;font-weight: 100;width: 100%;text-align: center;display: block;background-color: #f2f2f2;padding-top: 20px;}
 a{color: #333333; text-decoration: none !important;}
 a:hover{color: #1048a0; text-decoration: none;}
 a:visited{text-decoration: none;}
@@ -162,7 +162,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .index .more .line{display:block;width:500px;height:1px;margin-top:24px;background:#ccc;}
 .index .more .look_more{display:block;width:198px;height:48px;font-size:16px;line-height:48px;text-align:center;border:1px solid #ccc;transition:all .5s;}
 .index .more .look_more:hover{background:#1048a0;color:#fff;transition:all .5s;border:1px solid #1048a0;}
-.index #floor_1_main{background:#f6f6f6;padding-bottom: 130px;}
+.index #floor_1_main{background:#f6f6f6;}
 #floor_1_main .about{padding-top:80px;}
 #floor_1_main .about .item{display:block;width:600px;height:424px;}
 #floor_1_main .about img{display:block;width:100%;height:100%;}
@@ -172,7 +172,7 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 #floor_1_main .contW .title .entit{font: normal 45px "AvantGarde Bk BT";color:#666;}
 #floor_1_main .contW .title .tit{font:bold 30px "microsoft yahei";color:#1048a0;}
 #floor_1_main .contW .cont{width:484px;margin-top:30px;margin-left:50px;font-size:14px;color:#666;line-height:30px;text-align: justify;max-height: 120px;}
-#floor_1_main .contW .view_detail{position:absolute;bottom:0px;left:50px;display:block;width:150px;height:38px;font-size:14px;line-height:38px;text-align:center;color:#fff;background:#1048a0;}
+#floor_1_main .contW .view_detail{position:absolute;bottom:100px;left:50px;display:block;width:150px;height:38px;font-size:14px;line-height:38px;text-align:center;color:#fff;background:#1048a0;}
 #floor_1_main .contW .view_detail:hover{background:#0185d0;transition:all .5s;}
 @media (max-width: 1160px) {
     .floor_1 {width: 100%;height: 800px;}
