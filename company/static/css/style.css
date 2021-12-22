@@ -21,7 +21,7 @@ table{border-collapse: collapse; border-spacing: 0;}
 .hidden{display: none;}
 .w1200{width: 1200px; margin: 0 auto;}
 .ico{background: url(../images/icon.png) no-repeat; display: inline-block; vertical-align: middle;}
-.big-title{font-size: 44px;color: #000000;font-weight: 100;width: 100%;text-align: center;display: block;background-color: #f2f2f2;padding-top: 20px;}
+.big-title{font-size: 42px;color: #000000;font-weight: 100;width: 100%;text-align: center;display: block;background-color: #f2f2f2;padding-top: 20px;}
 a{color: #333333; text-decoration: none !important;}
 a:hover{color: #1048a0; text-decoration: none;}
 a:visited{text-decoration: none;}
