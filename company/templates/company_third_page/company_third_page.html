@@ -31,7 +31,7 @@
             <div class="row">
                 {% for content in content_pages|slice:":3" %}
                 <div class="item-box">
-                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
                     <div class="content-main"><span>观点</span>
                         <a href="{% pageurl content %}">
@@ -50,7 +50,7 @@
             <div class="row">
                 {% for content in content_pages|slice:"3:6" %}
                 <div class="item-box">
-                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
                     <div class="content-main"><span>观点</span>
                         <a href="{% pageurl content %}">

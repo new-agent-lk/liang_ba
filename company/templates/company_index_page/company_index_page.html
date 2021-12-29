@@ -73,7 +73,7 @@
                         {% if forloop.counter == 3  %}
                         <div class="col-one col-md-4 col-xs-12">
                             <div class="main">
-                                <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
+                                <div class="img-warp">{% with content.specific as content %}</div>
                                 <div class="content-main">
                                     <span>思想</span>
                                     <a href="{% pageurl content %}">
