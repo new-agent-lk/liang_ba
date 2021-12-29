@@ -7,6 +7,7 @@ from wagtail.core import blocks
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, StreamFieldPanel, BaseChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 
 from companyinfo.models import CompanyInfo, ProductCats, FriendlyLinks, News
 from companyinfo.models import City
@@ -50,6 +51,10 @@ class CompanyContentPage(Page):
         'content': {'max_num': 1},
         'author_info': {'max_num': 1},
     })
+
+    search_fields = [
+        index.SearchField('navigation'),
+    ]
 
     def top_image(self):
         top_image = self.child_images.first()

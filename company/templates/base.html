@@ -49,58 +49,10 @@
     <dd><a href="javascript:;"><i id="top" class="top"><span></span></i></a></dd>
 </dl>
 <!--浮动客服结束-->
-
-
-{#<div class="header_main">#}
-{#    <div class="header w1200 clearfix"><a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}"#}
-{#                                          aos="fade-right"#}
-{#                                          aos-easing="ease" aos-duration="700" aos-delay="100" aos-duration="700">#}
-{##}
-{#        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>#}
-{#        <div class="tel fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100"><s#}
-{#                class="ico"></s><span>{{ companyinfo.phone }}</span><br/><span>{{ companyinfo.telephone }}</span></div>#}
-{#        <!--搜索栏开始-->#}
-{#        <div class="search fr" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">#}
-{#            <form action="{% slugurl 'products' %}" method="get">#}
-{#                <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>#}
-{#                <input type="submit" class="sbtn" value="搜索"/></form>#}
-{#        </div>#}
-{#        <!--搜索栏结束-->#}
-{#    </div>#}
-{#</div>#}
 <!--页头结束-->
 <!--导航开始-->
 
 <div class="navbar" aos="fade-down" aos-easing="ease" aos-duration="700">
-{#    <a class="logo fl" href="{% slugurl 'index' %}" title="{{ companyinfo.name }}" ><img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}"></a>#}
-{#    <div class="nav w1200">#}
-{#        <ul class="list clearfix" id="nav">#}
-{#            <li><a href="{% slugurl 'index' %}" title="网站首页" class="{% ifequal request.path '/' %}hover{% endifequal %}">首页</a>#}
-{#            </li>#}
-{#            <li><a href="{% slugurl 'about' %}" title="关于我们"#}
-{#                   class="{% ifequal request.path|slice:'6' '/about' %}hover{% endifequal %}">我们是谁</a>#}
-{##}
-{#            </li>#}
-{#            <li><a href="{% slugurl 'news' %}" title="新闻动态"#}
-{#                   class="{% ifequal request.path|slice:'5' '/news' %}hover{% endifequal %}">新闻动态</a>#}
-{##}
-{#            </li>#}
-{##}
-{#            <li><a href="{% slugurl 'recruits' %}" title="人才招聘"#}
-{#                   class="{% ifequal request.path|slice:'9' '/recruits' %}hover{% endifequal %}">加入量霸</a>#}
-{##}
-{#            </li>#}
-{#            <li><a href="{% slugurl 'contact' %}" title="联系我们"#}
-{#                   class="{% ifequal request.path|slice:'8' '/contact' %}hover{% endifequal %}">联系量霸</a>#}
-{##}
-{#            </li>#}
-{#        </ul>#}
-{#    </div>#}
-{#    <div class="search f" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="100">#}
-{#        <form action="{% slugurl 'products' %}" method="get">#}
-{#            <input class="stxt" type="text" name="keywords" placeholder="请输入关键字" required/>#}
-{#            <input type="submit" class="sbtn" value="搜索"/></form>#}
-{#    </div>#}
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->

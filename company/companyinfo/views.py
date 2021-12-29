@@ -11,6 +11,9 @@ from django.shortcuts import render, HttpResponse  # 用于后台渲染页面
 from django.views.generic import View  # 使用django的视图类
 from django.core.paginator import Paginator  # 分页器
 from django.shortcuts import get_object_or_404  # 404报错模式获取对象
+from wagtail.search.utils import parse_query_string
+from company_content_page.models import CompanyContentPage
+
 
 from .models import *
 
@@ -586,3 +589,19 @@ class FavOpposeView(View):
                 return HttpResponse('failed')
         except BaseException as e:
             return HttpResponse('failed')
+
+
+class SearchView(View):
+
+    def get(self, request):
+        query_string = request.GET.get('q')
+
+        filters, query = parse_query_string(query_string)
+        published_filter = filters.get('published')
+        if published_filter in ['yes', 'true']:
+            pages = CompanyContentPage.filter(live=True)
+
+        pages = pages.search(query)
+
+        return render(request, 'new_list.html', {'pages': pages})
+
