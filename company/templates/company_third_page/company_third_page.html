@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags static wagtailimages_tags %}
+
+{% block body_class %}template-companysecondpage{% endblock %}
+
+{% block content %}
+    <!--幻灯片大图开始-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+        <div id="banner" class="banner">
+            {% with page.top_image as private_context %}
+            <ul class="list clearfix">
+                <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
+            </ul>
+            <div class="tip"></div>
+            <div class="text">
+                <p>{{ private_context.info_title }}</p>
+                <p>{{ private_context.info }}</p>
+            </div>
+            {% endwith %}
+
+        </div>
+    </div>
+    <!--幻灯片大图结束-->
+
+    <!--卡片式盒子-->
+    <div class="bg-color">
+        <div class="container section">
+            <!--第一行-->
+            {% if content_page_count > 0 %}
+            <div class="row">
+                {% for content in content_pages|slice:":3" %}
+                <div class="item-box">
+                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    {% with content.specific as content %}
+                    <div class="content-main"><span>观点</span>
+                        <a href="{% pageurl content %}">
+                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                        </a>
+                        <p>{{ content.page_intro }}</p>
+                    </div>
+                    {% endwith %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if content_page_count > 3 %}
+            <!--第二行-->
+            <div class="row">
+                {% for content in content_pages|slice:"3:6" %}
+                <div class="item-box">
+                    <div><img src="{% static 'images/point.png' %}" alt=""></div>
+                    {% with content.specific as content %}
+                    <div class="content-main"><span>观点</span>
+                        <a href="{% pageurl content %}">
+                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                        </a>
+                        <p>{{ content.page_intro }}</p>
+                    </div>
+                    {% endwith %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!--卡片式盒子结束-->
+
+{% endblock %}
