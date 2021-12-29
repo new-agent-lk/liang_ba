@@ -6,6 +6,12 @@ $(function () {
     /*k_menu();*/
     nav();
     toolbar();
+
+    $('.navbar-form .btn').click(function () {
+       var query = $('.form-control').val();
+       var url ='/search/?q=' + query;
+       window.open(url);
+    });
     
     $('#scroll').slide({ titCell:'.hd ul', mainCell:'.bd ul', autoPlay:true, autoPage:true, delayTime:500,interTime:2000, effect:'leftLoop',trigger:"click",vis:3});
 
