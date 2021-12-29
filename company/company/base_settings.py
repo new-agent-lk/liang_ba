@@ -262,6 +262,6 @@ WAGTAIL_ENABLE_UPDATE_CHECK = False
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
-        'BACKEND': 'wagtail.search.backends.mysql',
+        'BACKEND': 'wagtail.search.backends.database',
     }
 }

@@ -596,12 +596,12 @@ class SearchView(View):
     def get(self, request):
         query_string = request.GET.get('q')
 
-        filters, query = parse_query_string(query_string)
-        published_filter = filters.get('published')
-        if published_filter in ['yes', 'true']:
-            pages = CompanyContentPage.filter(live=True)
 
-        pages = pages.search(query)
+        if query_string:
+            pages = CompanyContentPage.objects.live().search(query_string)
+            CompanyContentPage.get(query_string).add_hit()
+        else:
+            pages = CompanyContentPage.objects.none()
 
         return render(request, 'new_list.html', {'pages': pages})
 
