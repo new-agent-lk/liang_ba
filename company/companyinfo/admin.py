@@ -68,12 +68,12 @@ class CompanyInfoAdmin(admin.ModelAdmin):
 #     readonly_fields = ['click_nums', 'fav_nums', 'oppose_nums']
 
 
-# @admin.register(Recruits)
-# class RecruitsAdmin(admin.ModelAdmin):
-#     """配置后台人才招聘"""
-#     list_display = ['id', 'category']
-#     list_filter = ['category']
-#     search_fields = ['category']
+@admin.register(Recruits)
+class RecruitsAdmin(admin.ModelAdmin):
+    """配置后台人才招聘"""
+    list_display = ['id', 'category']
+    list_filter = ['category']
+    search_fields = ['category']
 
 
 # @admin.register(Carousls)
@@ -108,12 +108,12 @@ class FriendlyLinksAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
-# @admin.register(GetMessages)
-# class GetMessagesAdmin(admin.ModelAdmin):
-#     """配置后台游客留言"""
-#     list_display = ['name', 'phone', 'email', 'is_handle']
-#     list_filter = ['name', 'phone']
-#     search_fields = ['name', 'phone']
+@admin.register(GetMessages)
+class GetMessagesAdmin(admin.ModelAdmin):
+    """配置后台游客留言"""
+    list_display = ['name', 'phone', 'email', 'is_handle']
+    list_filter = ['name', 'phone']
+    search_fields = ['name', 'phone']
 #
 #
 # @admin.register(Comments)
