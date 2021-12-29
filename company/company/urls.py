@@ -21,15 +21,15 @@ urlpatterns = [
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
     # path('index/', IndexView.as_view(), name='index'),  # 定义首页路由
-    # path('about/', AboutView.as_view(), name='about'),  # 关于我们
+    path('about/', AboutView.as_view(), name='about'),  # 关于我们
     # path('products/', ProductsView.as_view(), name='products'),  # 产品中心
     # path('productdetail/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),  # 产品详情
     # path('news/', NewsView.as_view(), name='news'),  # 新闻动态
     # path('newsdetail/<int:pk>/', NewsDetailView.as_view(), name='news_detail'),  # 新闻详情
     # path('demos/', DemosView.as_view(), name='demos'),  # 工程案例
     # path('demodetail/<int:pk>/', DemoDetailView.as_view(), name='demo_detail'),  # 案例详情
-    # path('recruits/', RecruitsView.as_view(), name='recruits'),  # 人才招聘
-    # path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
+    path('recruits/', RecruitsView.as_view(), name='recruits'),  # 人才招聘
+    path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
     # path('getmsg/', GetMsgView.as_view(), name='getmsg'),  # 留言
     # path('fav_oppose/<slug:flag>/<slug:chose>/<int:pk>/', FavOpposeView.as_view(), name='fav_oppose'),  # 游客点赞或踩一下
 

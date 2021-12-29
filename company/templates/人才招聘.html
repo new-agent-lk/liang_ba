@@ -7,33 +7,7 @@
     <!--内页大图结束-->
     <div class="submian">
         <div class="w1200 clearfix">
-            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% url 'index' %}" title="首页">首页</a> > <a
-                    href="javascript:;"
-                    title="人才招聘">人才招聘</a>
-            </div>
 
-            <div class="subleft fl">
-                <!--栏目分类开始-->
-                <div class="lefta bor9">
-
-                    <div class="title"><h2>人才招聘</h2></div>
-                    <div class="comt">
-                        <ul>
-
-
-                            <li class="{% ifnotequal request.GET.category 'zwfb' %}hover{% endifnotequal %}">
-                                <a href="{% url 'recruits' %}" title="人才理念">人才理念</a>
-                            </li>
-
-                            <li class="{% ifequal request.GET.category 'zwfb' %}hover{% endifequal %}">
-                                <a href="{% url 'recruits' %}?category=zwfb" title="职位发布">职位发布</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!--栏目分类结束-->
-
-            </div>
             <div class="subright fr">
                 <!--单页内容开始-->
                 {{ recruit.info|safe }}

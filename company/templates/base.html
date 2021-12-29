@@ -128,7 +128,6 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{% slugurl 'liang-ba' %}">我们的观点</a></li>
                     <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
-{#                    <li><a href="{% slugurl 'news' %}">新闻动态</a></li>#}
                     <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
                     <li><a href="{% slugurl 'join-us' %}">加入我们</a></li>
                 </ul>
@@ -171,17 +170,13 @@
             <!--底部导航开始-->
             <div class="bNav col-md-8 col-xs-12" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="300">
 
-                <div class="item"><h3><a href="{% slugurl 'about' %}" title="关于我们">我们是谁</a></h3>
+                <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">我们是谁</a></h3>
                 </div>
-
-
                 <div class="item"><h3><a href="{% slugurl 'news' %}" title="新闻动态">新闻动态</a></h3>
-
-
                 </div>
-                <div class="item"><h3><a href="{% slugurl 'join-us' %}" title="人才招聘">加入量霸</a></h3>
+                <div class="item"><h3><a href="{% url 'recruits' %}" title="人才招聘">加入量霸</a></h3>
                 </div>
-                <div class="item"><h3><a href="{% slugurl 'contact' %}" title="联系我们">联系量霸</a></h3>
+                <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系量霸</a></h3>
                 </div>
             </div>
             <!--底部导航结束-->

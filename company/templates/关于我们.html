@@ -7,32 +7,8 @@
     <!--内页大图结束-->
     <div class="submian">
         <div class="w1200 clearfix">
-            <div class="sobtitle"><s class="ico"></s>您的位置：<a href="{% url 'index' %}" title="首页">首页</a> > <a
-                    href="javascript:;"
-                    title="关于我们">关于我们</a>
-            </div>
-
-            <div class="subleft fl">
-                <!--栏目分类开始-->
-                <div class="lefta bor9">
-
-                    <div class="title"><h2>关于我们</h2></div>
-                    <div class="comt">
-                        <ul>
-                            <li class="{% ifnotequal request.GET.flag 'ryzz' %}hover{% endifnotequal %}"><a
-                                    href="{% url 'about' %}" title="公司简介">公司简介</a>
-                            </li>
-
-{#                            <li class="{% ifequal request.GET.flag 'ryzz' %}hover{% endifequal %}"><a#}
-{#                                    href="{% url 'about' %}?flag=ryzz" title="荣誉资质">荣誉资质</a>#}
-{#                            </li>#}
-                        </ul>
-                    </div>
-                </div>
-                <!--栏目分类结束-->
 
 
-            </div>
             <div class="subright fr">
                 <div id="main" style="height: 450px;">
 
