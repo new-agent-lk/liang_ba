@@ -77,19 +77,19 @@ class AboutView(View):
     def get(self, request):
         try:
             companyinfo = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
-            product_cats = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
+            # product_cats = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
             friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
 
-            left_products = Products.objects.all()  # 默认按照id排序
-            if len(left_products) > 4: left_products = left_products[:4]  # 只获取前4个产品
-            for product in left_products:
-                if len(product.name) > 6: product.name = product.name[:6] + '...'
+            # left_products = Products.objects.all()  # 默认按照id排序
+            # if len(left_products) > 4: left_products = left_products[:4]  # 只获取前4个产品
+            # for product in left_products:
+            #     if len(product.name) > 6: product.name = product.name[:6] + '...'
 
             context = {
                 'companyinfo': companyinfo,
-                'product_cats': product_cats,
+                # 'product_cats': product_cats,
                 'friendly_links': friendly_links,
-                'left_products': left_products,
+                # 'left_products': left_products,
             }
 
             return render(request, '关于我们.html', context)
