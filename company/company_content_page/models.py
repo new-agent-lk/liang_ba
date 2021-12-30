@@ -67,7 +67,7 @@ class CompanyContentPage(Page):
             return None
 
     def digest(self):
-
+        match_list = []
         for block in self.content_stream:
             if block.block_type == 'content':
                 match_list = re.findall(r"(?<=>)[^}]+(?=<)", str(block.value[0]), re.S)
