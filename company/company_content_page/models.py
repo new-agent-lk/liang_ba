@@ -67,13 +67,14 @@ class CompanyContentPage(Page):
             return None
 
     def digest(self):
-        match_list = []
+        content_str = ""
         for block in self.content_stream:
             if block.block_type == 'content':
-                match_list = re.findall(r"(?<=>)[^}]+(?=<)", str(block.value[0]), re.S)
-        if match_list:
-            return match_list[0][:50]
-        return ""
+                # match_list = re.findall(r"(?<=>)[^}]+(?=<)", str(block.value[0]), re.S)
+                content_str = re.sub(r"<[^<]+?>", '', str(block.value[0])).replace('\n', '').strip()
+                if content_str:
+                    return content_str[:50]
+        return content_str
 
     content_panels = Page.content_panels + [
         FieldPanel('category'),
