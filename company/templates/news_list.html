@@ -15,6 +15,10 @@
                         {% for page in pages %}
                             <li class="item"><a class="clearfix" href="{% pageurl page %}">
                                 <div class="txt fr"><h3>{{ page.page_intro }}</h3>
+                                    {% with page.specific as content %}
+                                    <p class="desc">
+                                        {% for block in content.content_stream %}{% if block.block_type == 'content' %}{% include_block block|slice:":30" %}{% endif %}{% endfor %}…</p>
+                                    {% endwith %}
                                 </div>
                                 <div class="img">{% image page.page_intro_image fill-440x330 %}</div>
                             </a></li>
