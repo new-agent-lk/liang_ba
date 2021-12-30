@@ -595,13 +595,18 @@ class SearchView(View):
 
     def get(self, request):
         query_string = request.GET.get('q')
-
-
         if query_string:
-            pages = CompanyContentPage.objects.live().search(query_string)
-            CompanyContentPage.get(query_string).add_hit()
+            pages = CompanyContentPage.objects.live().filter(navigation__contains=query_string)
         else:
             pages = CompanyContentPage.objects.none()
 
-        return render(request, 'new_list.html', {'pages': pages})
+        companyinfo = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+        friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+        context = {
+            'companyinfo': companyinfo,
+            'friendly_links': friendly_links,
+            'pages': pages,
+        }
+
+        return render(request, 'news_list.html', context)
 

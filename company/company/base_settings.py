@@ -260,8 +260,3 @@ TAGGIT_CASE_INSENSITIVE = True
 
 WAGTAIL_ENABLE_UPDATE_CHECK = False
 
-WAGTAILSEARCH_BACKENDS = {
-    'default': {
-        'BACKEND': 'wagtail.search.backends.database',
-    }
-}
