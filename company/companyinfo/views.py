@@ -610,3 +610,22 @@ class SearchView(View):
 
         return render(request, 'news_list.html', context)
 
+
+class NewsListView(View):
+    """新闻动态"""
+
+    def get(self, request):
+        try:
+            companyinfo = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+            friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+            pages = CompanyContentPage.objects.all()
+
+            context = {
+                'companyinfo': companyinfo,
+                'friendly_links': friendly_links,
+                'pages': pages,
+            }
+
+            return render(request, 'news_list.html', context)
+        except BaseException as e:
+            return render(request, 'news_list.html', {})
