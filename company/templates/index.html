@@ -18,57 +18,6 @@
     <!--幻灯片大图结束-->
 
     <div class="index">
-        <!--产品中心开始-->
-{#        <div id="floor_2_main">#}
-{#            <div class="floor_2 w1200">#}
-{##}
-{##}
-{#                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">PRODUCT CENTER</p>#}
-{#                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em#}
-{#                            class="line fl"></em><span class="word">产品中心</span><em class="line fr"></em></h3></div>#}
-{#                <!--产品分类开始-->#}
-{#                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{#                    {% for product_cat in product_cats %}#}
-{#                        <a href="{% url 'products' %}?category={{ product_cat.id }}"#}
-{#                           title="{{ product_cat.name }}">{{ product_cat.name }}</a>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#                <!--产品分类结束-->#}
-{#                <div class="proCenter" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{#                    <ul class="list clearfix">#}
-{#                        {% for product in products %}#}
-{#                            <li><a href="{% url 'product_detail' product.id %}" title="{{ product.name }}"><img#}
-{#                                    src="{{ MEDIA_URL }}{{ product.img }}"#}
-{#                                    alt="{{ product.name }}"/>#}
-{#                                <div class="title clearfix"><h3 class="tit fl">{{ product.name }}</h3><em#}
-{#                                        class="icon fr"></em></div>#}
-{#                            </a></li>#}
-{#                        {% endfor %}#}
-{#                    </ul>#}
-{#                </div>#}
-{#                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <div class="line fl"></div>#}
-{#                    <a class="look_more fl" href="{% url 'products' %}" title="查看更多>>">查看更多>></a>#}
-{#                    <div class="line fl"></div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-        <!--产品中心结束-->
-
-        <!--小banner开始-->
-{#        <div class="index_slip" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#            <div class="slip w1200">#}
-{#                <div class="slip_tit fl">#}
-{#                    <h3 class="tit1" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">#}
-{#                        {{ indexask_1.title }}</h3>#}
-{#                    <p class="tit2" aos="fade-up" aos-easing="ease" aos-duration="700"#}
-{#                       aos-delay="700">{{ indexask_1.info }}</p></div>#}
-{#                <a class="slip_btn fl" aos="fade-left" aos-easing="ease" aos-duration="700" aos-delay="400"#}
-{#                   href="{% url 'contact' %}">立即咨询</a>#}
-{#            </div>#}
-{#        </div>#}
-        <!--小banner结束-->
 
         <!--产品优势开始-->
         <div id="floor_3_main">
@@ -102,49 +51,6 @@
         </div>
         <!--产品优势结束-->
 
-        <!--工程案例开始-->
-{#        <div id="floor_4_main">#}
-{#            <div class="floor_4 w1200">#}
-{#                <div class="in_title clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700">PROJECT CASE</p>#}
-{#                    <h3 class="tit clearfix" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100"><em#}
-{#                            class="line fl"></em><span class="word">工程案例</span><em class="line fr"></em></h3></div>#}
-{#                <!--案例分类开始-->#}
-{#                <div class="tab" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{##}
-{##}
-{#                    <a href="{% url 'demos' %}?category=trxf" title="土壤修复类">土壤修复类</a>#}
-{##}
-{#                    <a href="{% url 'demos' %}?category=wszl" title="污水治理类">污水治理类</a>#}
-{##}
-{#                    <a href="{% url 'demos' %}?category=shlj" title="生活垃圾发电类">生活垃圾发电类</a></div>#}
-{#                <!--案例分类结束-->#}
-{#                <div class="proCase" id="scroll" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="200">#}
-{#                    <div class="bd">#}
-{#                        <ul class="list clearfix">#}
-{#                            {% for project in projects %}#}
-{#                                <li><a href="{% url 'demo_detail' project.id %}" title="{{ project.title }}">#}
-{#                                    <img class="img" src="{{ MEDIA_URL }}{{ project.img }}" alt="{{ project.title }}"/>#}
-{#                                    <div class="title"><h3 class="tit">{{ project.title }}</h3>#}
-{#                                        <p class="cont">#}
-{#                                            {{ project.digest }}...#}
-{#                                        </p>#}
-{#                                    </div>#}
-{#                                    <p class="view_detail">详情>></p></a>#}
-{#                                </li>#}
-{#                            {% endfor %}#}
-{#                        </ul>#}
-{#                    </div>#}
-{#                    <div class="hd"><span class="prev ico"></span><span class="next ico"></span></div>#}
-{#                </div>#}
-{#                <div class="more clearfix" aos="fade-up" aos-easing="ease" aos-duration="700">#}
-{#                    <div class="line fl"></div>#}
-{#                    <a class="look_more fl" href="{% url 'demos' %}" title="查看更多>>">查看更多>></a>#}
-{#                    <div class="line fl"></div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-        <!--工程案例结束-->
 
         <!--小banner开始-->
         <div class="index_slip index_slip1" aos="fade-up" aos-easing="ease" aos-duration="700">

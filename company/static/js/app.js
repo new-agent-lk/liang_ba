@@ -317,7 +317,7 @@ function toolbar() {
         'mouseenter': function () {
             if ($(this).children('.slide').length) {
                 var _this = $(this).children('.slide');
-                _this.stop(true, true).animate({ 'width': 180 }, 200);
+                _this.stop(true, true).animate({ 'width': 260 }, 200);
             } else if ($(this).children('.pop').length) {
                 var _this = $(this).children('.pop');
                 _this.show().animate({ 'right': 65 }, 200);
