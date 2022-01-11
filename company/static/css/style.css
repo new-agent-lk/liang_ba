@@ -242,8 +242,8 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 @media (max-width: 915px) {
     #floor_3_main .proAdvant .list li{width:278px;margin-right: 0px}
 }
-.point {background-color: #f2f2f2;padding-top: 50px;padding-bottom: 100px;}
-.point .row {display: flex;flex-wrap: wrap;margin-left: auto;margin-right: auto;margin-bottom: 80px;}
+.point {background-color: #f2f2f2;padding-top: 50px;}
+.point .row {display: flex;flex-wrap: wrap;margin-left: auto;margin-right: auto;padding-bottom: 50px;}
 .point .row .col-two {display: flex;position: relative;cursor: pointer;padding: 0 20px;}
 .point .row .col-two img {width: 100%;height: 100%}
 .point .row .col-two .content-main {color: #fff; width: 320px;position: absolute;top: 0;padding-top: 80px;padding-left: 30px;z-index: 2;}
