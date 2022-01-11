@@ -66,41 +66,7 @@
                 </div>
             {% endif %}
             {% if content_page_count > 2 %}
-
-                <div class="row w1200">
-                {% for content in content_pages %}
-                    {% with content.specific as content %}
-                        {% if forloop.counter == 3  %}
-                        <div class="col-one col-md-4 col-xs-12">
-                            <div class="main">
-                                <div class="img-warp">{% with content.specific as content %}</div>
-                                <div class="content-main">
-                                    <span>思想</span>
-                                    <a href="{% pageurl content %}">
-                                    <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                    </a>
-                                    <p>{{ content.page_intro }}</p>
-                                </div>
-                            </div>
-                        </div>
-                                    {% endwith %}
-                        {% elif forloop.counter == 4 %}
-                        <div class="col-two col-md-8 col-xs-12">
-                            {% image content.page_intro_image fill-760x570 %}
-                            <div class="content-main">
-                                <a href="{% pageurl content %}">
-                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                </a>
-                                <p>{{ content.page_intro }}</p>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endfor %}
-                </div>
-            {% endif %}
-            {% if content_page_count > 4 %}
-                <!--模板3-->
+            <!--模板3-->
                 <div class="row w1200">
                     {% for content in content_pages %}
                         {% with content.specific as content %}
@@ -154,8 +120,39 @@
                     {% endfor %}
                 </div>
             {% endif %}
-
-
+            {% if content_page_count > 5 %}
+                <div class="row w1200">
+                {% for content in content_pages %}
+                    {% with content.specific as content %}
+                        {% if forloop.counter == 3  %}
+                        <div class="col-one col-md-4 col-xs-12">
+                            <div class="main">
+                                <div class="img-warp">{% with content.specific as content %}</div>
+                                <div class="content-main">
+                                    <span>思想</span>
+                                    <a href="{% pageurl content %}">
+                                    <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                    </a>
+                                    <p>{{ content.page_intro }}</p>
+                                </div>
+                            </div>
+                        </div>
+                                    {% endwith %}
+                        {% elif forloop.counter == 4 %}
+                        <div class="col-two col-md-8 col-xs-12">
+                            {% image content.page_intro_image fill-760x570 %}
+                            <div class="content-main">
+                                <a href="{% pageurl content %}">
+                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                </a>
+                                <p>{{ content.page_intro }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                </div>
+            {% endif %}
         <!--最新观点结束-->
 
 
