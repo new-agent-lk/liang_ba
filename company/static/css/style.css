@@ -488,11 +488,11 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .submian .subright .thumblist{}
 .submian .subright .thumblist .list{padding-bottom: 20px;}
 .submian .subright .thumblist .item{width: 880px;border-bottom: 1px solid #eaeaea;display: block;padding: 20px;transition: all .5s;}
-.submian .subright .thumblist .item a{display: block;}
+.submian .subright .thumblist .item a{display: flex;}
 .submian .subright .thumblist .item .img{position:relative;width: 180px;height: 135px;display:block;overflow: hidden;cursor: pointer;}
 .submian .subright .thumblist .item img{width: 100%;height: 100%;transition: all 0.3s ease-out 0s;}
 .submian .subright .thumblist .item a:hover img{transform: scale(1.1, 1.1);}
-.submian .subright .thumblist .item .txt{width: 680px;cursor: pointer;}
+.submian .subright .thumblist .item .txt{width: 680px;cursor: pointer;margin-left: 50px;}
 .submian .subright .thumblist .item .txt h3{font-size: 16px;line-height: 30px;-webkit-transition: all .3s ease-in-out 0s;-moz-transition: all .3s ease-in-out 0s;transition: all .3s ease-in-out 0s;}
 .submian .subright .thumblist .item .txt .mark{color: #999;font-size: 12px;line-height: 30px;padding:0;}
 .submian .subright .thumblist .item .txt .mark span{display: inline-block;padding-right: 18px;}
