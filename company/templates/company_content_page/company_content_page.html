@@ -6,12 +6,26 @@
 
 {% block content %}
     <!--内页大图开始-->
-    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
-        {% with page.top_image as content %}
-        {% if content %}{% image content.image fill-1920x460 alt=content.info %}{% endif %}
-        {% endwith %}
-    </div>
+<!--    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">-->
+<!--        {% with page.top_image as content %}-->
+<!--        {% if content %}{% image content.image fill-1920x460 alt=content.info %}{% endif %}-->
+<!--        {% endwith %}-->
+<!--    </div>-->
     <!--内页大图结束-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+            <div id="banner" class="banner">
+                <ul class="list clearfix">
+                    {% with page.top_image as private_context %}
+                    <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
+                </ul>
+                <div class="tip"></div>
+                <div class="text">
+                    <p>{{ private_context.info_title }}</p>
+                    <p>{{ private_context.info }}</p>
+                </div>
+                    {% endwith %}
+            </div>
+        </div>
 
     <div class="submian">
         <div class="container clearfix">
