@@ -11,6 +11,7 @@
             <div class="subright">
                 <!--文章列表开始-->
                 <div class="thumblist">
+                    {% if pages %}
                     <ul class="list clearfix">
                         {% for page in pages %}
                             <li class="item"><a class="clearfix" href="{% pageurl page %}">
@@ -24,6 +25,9 @@
                         {% endfor %}
 
                     </ul>
+                    {% else %}
+                        <p>未找到您想要的内容······</p>
+                    {% endif %}
                     <div class="clear"></div>
 
                 </div>
