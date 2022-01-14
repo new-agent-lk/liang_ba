@@ -28,6 +28,7 @@ class CompanyContentPage(Page):
                                 choices=CONTENT_PAGE_CATEGORIES)
     navigation = models.CharField(verbose_name='页面内标题', max_length=255, default='关于我们')
     page_intro = models.CharField(verbose_name='页面简要介绍', max_length=512, default='简要介绍')
+    page_type = models.CharField(verbose_name='文章类型', max_length=20, default='观点')
     page_intro_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -80,6 +81,7 @@ class CompanyContentPage(Page):
         FieldPanel('category'),
         FieldPanel('navigation'),
         FieldPanel('page_intro'),
+        FieldPanel('page_type'),
         ImageChooserPanel('page_intro_image'),
         StreamFieldPanel('content_stream'),
         InlinePanel('child_images', label="Child images"),

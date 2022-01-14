@@ -33,7 +33,7 @@
                 <div class="item-box">
                     <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
-                    <div class="content-main"><span>观点</span>
+                    <div class="content-main"><span>{{ content.page_type }}</span>
                         <a href="{% pageurl content %}">
                         <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                         </a>
@@ -52,7 +52,7 @@
                 <div class="item-box">
                     <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
-                    <div class="content-main"><span>观点</span>
+                    <div class="content-main"><span>{{ content.page_type }}</span>
                         <a href="{% pageurl content %}">
                         <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                         </a>

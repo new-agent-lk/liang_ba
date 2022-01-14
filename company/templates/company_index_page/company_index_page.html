@@ -39,6 +39,7 @@
                         {% image content.page_intro_image fill-760x570 %}
                         {% with content.specific as content %}
                         <div class="content-main">
+                            <span>{{ content.page_type }}</span>
                             <a href="{% pageurl content %}">
                             <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                             </a>
@@ -52,7 +53,7 @@
                             <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
                             {% with content.specific as content %}
                             <div class="content-main">
-                                <span>思想</span>
+                                <span>{{ content.page_type }}</span>
                                 <a href="{% pageurl content %}">
                                 <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                 </a>
@@ -76,7 +77,7 @@
                                     <div class="main">
                                         <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
                                         <div class="content-main">
-                                            <span>思想</span>
+                                            <span>{{ content.page_type }}</span>
                                             <a href="{% pageurl content %}">
                                             <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                             </a><p>{{ content.page_intro }}</p>
@@ -89,7 +90,7 @@
 
                                 <div class="column_main">
                                      <div class="content-main col-md-6">
-                                        <span>思想</span>
+                                        <span>{{ content.page_type }}</span>
                                         <a href="{% pageurl content %}">
                                         <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                         </a>
@@ -106,7 +107,7 @@
                                         {% image content.page_intro_image fill-380x269 %}
                                     </div>
                                      <div class="content-main col-md-6">
-                                        <span>思想</span>
+                                        <span>{{ content.page_type }}</span>
                                         <a href="{% pageurl content %}">
                                         <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                         </a>
@@ -129,7 +130,7 @@
                             <div class="main">
                                 <div class="img-warp">{% with content.specific as content %}</div>
                                 <div class="content-main">
-                                    <span>思想</span>
+                                    <span>{{ content.page_type }}</span>
                                     <a href="{% pageurl content %}">
                                     <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                     </a>
@@ -142,6 +143,7 @@
                         <div class="col-two col-md-8 col-xs-12">
                             {% image content.page_intro_image fill-760x570 %}
                             <div class="content-main">
+                                <span>{{ content.page_type }}</span>
                                 <a href="{% pageurl content %}">
                                 <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
                                 </a>
