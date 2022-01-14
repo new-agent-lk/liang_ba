@@ -29,7 +29,7 @@
             <!--第一行-->
             {% if content_page_count > 0 %}
             <div class="row">
-                {% for content in content_pages|slice:":3" %}
+                {% for content in content_pages|slice:":2" %}
                 <div class="item-box">
                     <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
