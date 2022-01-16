@@ -31,7 +31,7 @@ urlpatterns = [
     # path('demodetail/<int:pk>/', DemoDetailView.as_view(), name='demo_detail'),  # 案例详情
     path('recruits/', RecruitsView.as_view(), name='recruits'),  # 人才招聘
     path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
-    path('search/', SearchView.as_view(), name='search'),  # 联系我们
+    path('search/', SearchView.as_view(), name='search'),
     # path('getmsg/', GetMsgView.as_view(), name='getmsg'),  # 留言
     # path('fav_oppose/<slug:flag>/<slug:chose>/<int:pk>/', FavOpposeView.as_view(), name='fav_oppose'),  # 游客点赞或踩一下
 
