@@ -13,8 +13,12 @@ from companyinfo.models import CompanyInfo, FriendlyLinks
 class CompanyRecruitsPage(Page):
 
     info = RichTextField(null=True, blank=True)
+    campus_intro = models.CharField(verbose_name='校园招聘介绍', max_length=255, null=True, blank=True)
+    social_intro = models.CharField(verbose_name='社会招聘介绍', max_length=255, null=True, blank=True)
     content_panels = Page.content_panels + [
         FieldPanel('info', classname='full'),
+        FieldPanel('campus_intro'),
+        FieldPanel('social_intro'),
         InlinePanel('banner_images', label="Banner images")
     ]
 

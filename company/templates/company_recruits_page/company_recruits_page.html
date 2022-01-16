@@ -26,7 +26,7 @@
                 {% with campus_recs.0.specific as content %}
                 <div class="col-md-6 col-xs-12 recruit-item">
                     <h3>校园招聘</h3>
-                    <p>员工的才华、智慧及热忱成就了今天的摩根士丹利，摩根士丹利为你提供与顶尖团队学习和共事的最佳平台。</p>
+                    <p>{{ page.campus_intro }}</p>
                     <a href="{% pageurl content %}">查看详情 ></a>
                 </div>
                 {% endwith %}
@@ -35,7 +35,7 @@
                 {% with social_recs.0.specific as content %}
                 <div class="col-md-6 col-xs-12 recruit-item">
                     <h3>社会招聘</h3>
-                    <p>如果你已练就一身本领，想要和业内最优秀的人才一起改变世界，那么请加入我们。</p>
+                    <p>{{ page.social_intro }}</p>
                     <a href="{% pageurl content %}">查看详情 ></a>
                 </div>
                 {% endwith %}
