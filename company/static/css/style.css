@@ -523,9 +523,9 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 .section .row .item-box{width: 360px;margin: 10px;cursor: pointer;transition: transform 0.5s ease;}
 .section .row .item-box:hover{transition: 0.5s;transform: translateY(-10px);}
 .section .row .item-box img{width: 100%;display: block;}
-.section .row .item-box .content-main{padding: 60px 30px !important;text-align: left;background-color: #fff;min-width: 360px;}
-.section .row .item-box .content-main {color: #333;width: 320px;padding: 30px;float: left;}
-.section .row .item-box .content-main p{color: #4c4c4c}
+.section .row .item-box .content-main{padding: 60px 30px !important;text-align: left;background-color: #fff;min-width: 360px; max-height: 240px;}
+/*.section .row .item-box .content-main {color: #333;width: 320px;padding: 30px;float: left;}*/
+.section .row .item-box .content-main p{color: #4c4c4c;overflow: hidden;text-overflow: ellipsis;word-break: keep-all;white-space: nowrap;}
 .section .row .item-box .content-main span {font-size: 12px;color: #0A6F7A;display: block;margin-bottom: 30px;}
 /********.toolbar*********/
 .toolbar{width: 50px;position: fixed;right: 1%;top: 44%;z-index: 999;}
