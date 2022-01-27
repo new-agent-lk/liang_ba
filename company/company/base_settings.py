@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'company_content_page',
     'company_second_page',
     'company_third_page',
+    'company_recruits_page',
 
     'companyinfo',  # 新创建的应用
 

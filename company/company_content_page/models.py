@@ -23,6 +23,7 @@ class CompanyContentPage(Page):
         ('Our Opinions', 'Our Opinions'),
         ('Our Advantages', 'Our Advantages'),
         ('Our Future', 'Our Future'),
+        ('Recruits', 'Recruits'),
     )
     category = models.CharField(verbose_name='文章分类', max_length=255, default='Our Opinions',
                                 choices=CONTENT_PAGE_CATEGORIES)

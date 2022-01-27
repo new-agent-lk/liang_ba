@@ -29,7 +29,7 @@
             <!--第一行-->
             {% if content_page_count > 0 %}
             <div class="row">
-                {% for content in content_pages|slice:":3" %}
+                {% for content in content_pages|slice:":2" %}
                 <div class="item-box">
                     <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
@@ -45,10 +45,10 @@
             </div>
             {% endif %}
 
-            {% if content_page_count > 3 %}
+            {% if content_page_count > 2 %}
             <!--第二行-->
             <div class="row">
-                {% for content in content_pages|slice:"3:6" %}
+                {% for content in content_pages|slice:"2:5" %}
                 <div class="item-box">
                     <div>{% image content.page_intro_image fill-360x270 %}</div>
                     {% with content.specific as content %}
@@ -62,6 +62,25 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
+
+            {% if content_page_count > 5 %}
+                <!--第二行-->
+                <div class="row">
+                    {% for content in content_pages|slice:"5:8" %}
+                    <div class="item-box">
+                        <div>{% image content.page_intro_image fill-360x270 %}</div>
+                        {% with content.specific as content %}
+                        <div class="content-main"><span>观点</span>
+                            <a href="{% pageurl content %}">
+                            <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                            </a>
+                            <p>{{ content.page_intro }}</p>
+                        </div>
+                        {% endwith %}
+                    </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
     </div>
