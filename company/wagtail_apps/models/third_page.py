@@ -2,18 +2,14 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 
 from wagtail.core.models import Page, Orderable
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core import blocks
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
-from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
-from company_content_page.models import CompanyContentPage
+from wagtail_apps.models.content_page import CompanyContentPage
 from companyinfo.models import CompanyInfo, FriendlyLinks
 
 
 class CompanyThirdPage(Page):
-
     content_panels = Page.content_panels + [
         InlinePanel('banner_images', label="Banner images"),
     ]
@@ -21,7 +17,8 @@ class CompanyThirdPage(Page):
     def top_image(self):
         top_image = self.banner_images.first()
         if top_image:
-            private_context = {'banner_image': top_image.banner_image, 'info': top_image.info, 'info_title': top_image.info_title}
+            private_context = {'banner_image': top_image.banner_image, 'info': top_image.info,
+                               'info_title': top_image.info_title}
             return private_context
         else:
             return None

@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-__author__ = "版权所有@源码商城：https://codes-index.taobao.com/"
-__date__ = "2020/6/13 1:03 下午"
-
 # 常规模块的引入分为三部分，依次为：
 # Python内置模块（如json、datetime）、第三方模块（如Django）、自己写的模块
 
@@ -12,7 +9,7 @@ from django.views.generic import View  # 使用django的视图类
 from django.core.paginator import Paginator  # 分页器
 from django.shortcuts import get_object_or_404  # 404报错模式获取对象
 from wagtail.search.utils import parse_query_string
-from company_content_page.models import CompanyContentPage
+from wagtail_apps.models.content_page import CompanyContentPage
 
 
 from .models import *

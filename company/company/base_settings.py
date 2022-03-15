@@ -9,10 +9,9 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-__author__ = "版权所有@源码商城：https://codes-index.taobao.com/"
-__date__ = "2020/6/13 1:03 下午"
 
-import os, pymysql
+import os
+import pymysql
 
 pymysql.install_as_MySQLdb()
 
@@ -33,12 +32,11 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'company_index_page',
-    'company_content_page',
-    'company_second_page',
-    'company_third_page',
-    'company_recruits_page',
-
+    # 'company_index_page',
+    # 'company_content_page',
+    # 'company_second_page',
+    # 'company_third_page',
+    # 'company_recruits_page',
     'companyinfo',  # 新创建的应用
 
     'wagtail.contrib.forms',
@@ -66,6 +64,8 @@ INSTALLED_APPS = [
 
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器文件上传
+
+    'wagtail_apps',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +116,8 @@ DATABASES = {
         'POST': '3306',
     }
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
