@@ -23,7 +23,6 @@ class GenericStockMarketView(APIView):
                 result[code] = r.json()
             except Exception as e:
                 result[code] = ""
-        print(result)
         return Response(result)
 
 
