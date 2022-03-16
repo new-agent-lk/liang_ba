@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',  # 富文本编辑器文件上传
 
     'wagtail_apps',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -262,4 +263,13 @@ WAGTAIL_SITE_NAME = 'Liang Ba'
 TAGGIT_CASE_INSENSITIVE = True
 
 WAGTAIL_ENABLE_UPDATE_CHECK = False
+
+REST_FRAMEWORK = {
+    # 指定认证
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    ),
+}
 

@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
+    path('data/', include('data_apps.urls')),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
     path('index/', IndexView.as_view(), name='index'),  # 定义首页路由
