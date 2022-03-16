@@ -15,7 +15,7 @@ class GenericStockMarketView(APIView):
         stock_codes = request.query_params.get("stock_codes", "sz399001")
         stock_codes_list = stock_codes.split(',')
         result = {}
-        for code in stock_code_list:
+        for code in stock_codes_list:
             url = 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={}&scale=60&ma=5&datalen=100'.format(code)
             try:
                 r = rq.get(url, timeout=300, verify=False)
