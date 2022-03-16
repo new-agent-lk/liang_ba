@@ -1,5 +1,4 @@
 import requests
-import ast
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,11 +12,11 @@ class GenericStockMarketView(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, request):
-        stock_code_list = request.query_params.get("stock_code", "['sz399001']")
-        code_iter_list = ast.literal_eval(stock_code_list)
+        stock_codes = request.query_params.get("stock_codes", "sz399001")
+        stock_codes_list = stock_codes.split(',')
         result = {}
-        for code in code_iter_list:
-            url = 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={}&scale=60&ma=5&datalen=1023'.format(code)
+        for code in stock_code_list:
+            url = 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={}&scale=60&ma=5&datalen=100'.format(code)
             try:
                 r = rq.get(url, timeout=300, verify=False)
                 result[code] = r.json()
