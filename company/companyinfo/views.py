@@ -5,7 +5,7 @@
 
 import json
 from django.shortcuts import render, HttpResponse  # 用于后台渲染页面
-from django.views.generic import View  # 使用django的视图类
+from django.views.generic import View, TemplateView  # 使用django的视图类
 from django.core.paginator import Paginator  # 分页器
 from django.shortcuts import get_object_or_404  # 404报错模式获取对象
 from wagtail.search.utils import parse_query_string
@@ -15,60 +15,70 @@ from wagtail_apps.models.content_page import CompanyContentPage
 from .models import *
 
 
-class IndexView(View):
-    """首页视图"""
+# class IndexView(View):
+#     """首页视图"""
+#
+#     def get(self, request):
+#         # 处理get请求的函数
+#         try:
+#             companyinfo = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+#             product_cats = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
+#             friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+#             carousels = Carousls.objects.all()  # 获取所有轮播图
+#
+#             # 获取产品信息，最多获取9条
+#             products = Products.objects.all().order_by('-add_time')
+#             products = products[:9] if len(products) > 9 else products
+#
+#             # 获取首页咨询，因为前端有两处内容，所以仅获取最新的两条记录，必须有两条记录
+#             indexasks = IndexAsk.objects.all().order_by('-id')
+#             if indexasks:
+#                 if len(indexasks) > 1:
+#                     indexask_1 = indexasks[0]
+#                     indexask_2 = indexasks[1]
+#                 else:
+#                     indexask_1 = indexask_2 = indexasks[0]
+#             else:
+#                 indexask_1 = indexask_2 = []
+#
+#             # 获取产品优势，最多获取3条
+#             advantages = Advantages.objects.all().order_by('-id')
+#             advantages = advantages[:3] if len(advantages) > 3 else advantages
+#
+#             # 获取工程案例，最多获取9条
+#             projects = Projects.objects.all().order_by('-add_time')
+#             projects = projects[:9] if len(projects) > 9 else projects
+#
+#             # 获取新闻数据，最多获取8条
+#             news = News.objects.all().order_by('-add_time')
+#             news = news[:8] if len(news) > 8 else news
+#
+#             context = {
+#                 'companyinfo': companyinfo,
+#                 'product_cats': product_cats,
+#                 'friendly_links': friendly_links,
+#                 'carousels': carousels,
+#                 'products': products,
+#                 'indexask_1': indexask_1,
+#                 'indexask_2': indexask_2,
+#                 'advantages': advantages,
+#                 'projects': projects,
+#                 'news': news,
+#             }
+#
+#             return render(request, 'index.html', context)
+#         except BaseException as e:
+#             return render(request, 'index.html', {})
 
-    def get(self, request):
-        # 处理get请求的函数
-        try:
-            companyinfo = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
-            product_cats = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
-            friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
-            carousels = Carousls.objects.all()  # 获取所有轮播图
 
-            # 获取产品信息，最多获取9条
-            products = Products.objects.all().order_by('-add_time')
-            products = products[:9] if len(products) > 9 else products
+class IndexView(TemplateView):
+    template_name = 'index.html'
 
-            # 获取首页咨询，因为前端有两处内容，所以仅获取最新的两条记录，必须有两条记录
-            indexasks = IndexAsk.objects.all().order_by('-id')
-            if indexasks:
-                if len(indexasks) > 1:
-                    indexask_1 = indexasks[0]
-                    indexask_2 = indexasks[1]
-                else:
-                    indexask_1 = indexask_2 = indexasks[0]
-            else:
-                indexask_1 = indexask_2 = []
-
-            # 获取产品优势，最多获取3条
-            advantages = Advantages.objects.all().order_by('-id')
-            advantages = advantages[:3] if len(advantages) > 3 else advantages
-
-            # 获取工程案例，最多获取9条
-            projects = Projects.objects.all().order_by('-add_time')
-            projects = projects[:9] if len(projects) > 9 else projects
-
-            # 获取新闻数据，最多获取8条
-            news = News.objects.all().order_by('-add_time')
-            news = news[:8] if len(news) > 8 else news
-
-            context = {
-                'companyinfo': companyinfo,
-                'product_cats': product_cats,
-                'friendly_links': friendly_links,
-                'carousels': carousels,
-                'products': products,
-                'indexask_1': indexask_1,
-                'indexask_2': indexask_2,
-                'advantages': advantages,
-                'projects': projects,
-                'news': news,
-            }
-
-            return render(request, 'index.html', context)
-        except BaseException as e:
-            return render(request, 'index.html', {})
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+        context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+        return context
 
 
 class AboutView(View):

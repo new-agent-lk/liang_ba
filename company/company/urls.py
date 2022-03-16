@@ -20,7 +20,7 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
-    # path('index/', IndexView.as_view(), name='index'),  # 定义首页路由
+    path('index/', IndexView.as_view(), name='index'),  # 定义首页路由
     path('about/', AboutView.as_view(), name='about'),  # 关于我们
     # path('products/', ProductsView.as_view(), name='products'),  # 产品中心
     # path('productdetail/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),  # 产品详情
