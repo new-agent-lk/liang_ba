@@ -32,13 +32,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'company_index_page',
-    # 'company_content_page',
-    # 'company_second_page',
-    # 'company_third_page',
-    # 'company_recruits_page',
-    'companyinfo',  # 新创建的应用
-
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -61,10 +54,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器文件上传
 
+    'django_crontab',
+    'companyinfo',  # 新创建的应用
+    'data_apps',
     'wagtail_apps',
     'rest_framework'
 ]
@@ -272,4 +267,14 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+# 定时器配置
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    ('*/1 * * * *', 'data_apps.crons.get_daily_stock_data', '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
+]
+
+# 指定中文编码格式
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
+
 
