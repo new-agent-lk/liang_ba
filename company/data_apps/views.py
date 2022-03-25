@@ -14,6 +14,9 @@ rq = requests.session()
 
 
 class GenericStockMarketView(APIView):
+    """
+    返回 一串 股票数据
+    """
     permission_classes = (AllowAny, )
 
     def get(self, request):
@@ -31,6 +34,9 @@ class GenericStockMarketView(APIView):
 
 
 class GenericHistoryStockMarketView(APIView):
+    """
+    返回当前股票历史数据
+    """
     permission_classes = (AllowAny, )
 
     def get(self, request):
@@ -48,6 +54,9 @@ class GenericHistoryStockMarketView(APIView):
 
 
 class CurrentStockCodeView(APIView):
+    """
+    返回当前股票数据
+    """
     permission_classes = (AllowAny, )
 
     def get(self, request, stock_code):
