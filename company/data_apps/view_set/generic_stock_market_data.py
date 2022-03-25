@@ -22,7 +22,6 @@ class GenericStockMarketDataFilter(FilterSet):
     class Meta:
         model = GenericStockMarketData
         fields = {
-            'id': '__all__',
             'stock_code': '__all__',
             'stock_name': '__all__',
             'now_price': '__all__',
