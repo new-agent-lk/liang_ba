@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'companyinfo',  # 新创建的应用
     'data_apps',
     'wagtail_apps',
-    'rest_framework'
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -260,6 +261,9 @@ TAGGIT_CASE_INSENSITIVE = True
 WAGTAIL_ENABLE_UPDATE_CHECK = False
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
     # 指定认证
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
