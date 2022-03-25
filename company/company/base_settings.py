@@ -261,6 +261,7 @@ TAGGIT_CASE_INSENSITIVE = True
 WAGTAIL_ENABLE_UPDATE_CHECK = False
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
