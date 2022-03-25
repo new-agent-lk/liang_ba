@@ -21,6 +21,7 @@ class GenericStockMarketData(BaseModel):
     source_data = models.TextField(default='')
 
     class Meta:
+        ordering = ['-id']
         verbose_name = '股票市场历史数据'
         verbose_name_plural = verbose_name
 
