@@ -64,7 +64,7 @@ class CurrentStockCodeView(APIView):
         now = datetime.now()
         offset = timedelta(minutes=10)
         if get_on_work_time(now):
-            gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).first()
+            gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
             if gsmd:
                 data = {
                     'is_work_time': True,
