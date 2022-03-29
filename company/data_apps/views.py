@@ -62,7 +62,7 @@ class CurrentStockCodeView(APIView):
 
     def get(self, request, stock_code):
         now = datetime.now()
-        offset = timedelta(minutes=10)
+        offset = timedelta(minutes=2)
         if get_on_work_time(now):
             gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
             if gsmd:
