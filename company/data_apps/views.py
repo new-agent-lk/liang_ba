@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+from datetime import timedelta
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -61,8 +62,9 @@ class CurrentStockCodeView(APIView):
 
     def get(self, request, stock_code):
         now = datetime.now()
+        offset = timedelta(minutes=10)
         if get_on_work_time(now):
-            gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code,).first()
+            gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).first()
             if gsmd:
                 data = {
                     'is_work_time': True,
