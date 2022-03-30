@@ -11,6 +11,7 @@ coreschema==0.0.4
 distlib==0.3.2
 Django==3.2.11
 django-ckeditor==5.9.0
+django-cors-headers==3.11.0
 django-crontab==0.7.1
 django-debug-toolbar==3.2.4
 django-dotenv==1.4.1
