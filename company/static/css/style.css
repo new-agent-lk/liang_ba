@@ -592,3 +592,9 @@ textarea::-webkit-input-placeholder{color: #aaa;}
 /*↑组图样式↑*/
 
 
+#fullpage .section .content{
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 1080px;
+}
+
