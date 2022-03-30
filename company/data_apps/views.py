@@ -63,18 +63,21 @@ class CurrentStockCodeView(APIView):
     def get(self, request, stock_code):
         now = datetime.now()
         offset = timedelta(minutes=2)
+        hgsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__gte=datetime.now().date())
         if get_on_work_time(now):
             gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
             if gsmd:
                 data = {
                     'is_work_time': True,
                     'data': GenericStockMarketDataSerializer(gsmd).data,
+                    'today_data': GenericStockMarketDataSerializer(hgsmd, many=True).data,
                     'info': 'ok'
                 }
             else:
                 data = {
                     'is_work_time': True,
                     'info': '没有找到这只股票的数据',
+
                     'data': ''
                 }
             return Response(data)
@@ -82,6 +85,7 @@ class CurrentStockCodeView(APIView):
             data = {
                 'is_work_time': False,
                 'info': '当前非工作时间',
+                'today_data': GenericStockMarketDataSerializer(hgsmd, many=True).data,
                 'data': ''
             }
             return Response(data)
