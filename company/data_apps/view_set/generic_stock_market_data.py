@@ -44,3 +44,4 @@ class GenericStockMarketDataViewSet(ModelViewSet):
     serializer_class = GenericStockMarketDataSerializer
     filter_class = GenericStockMarketDataFilter
     search_fields = ('id', 'stock_code')
+    ordering_fields = ('current_time', )
