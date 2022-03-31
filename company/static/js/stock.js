@@ -197,19 +197,19 @@ $(function () {
     // var data = [Math.random() * 10000];
     var now = new Date();
         var xdata = [];
-        var close_price = [];
+        var now_price = [];
 
-    function addData(shift) {
-        // now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
-        now = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+'T'+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
-        xdata.push(now);
-        close_price.push(Math.random()*10000);
-        if (shift) {
-            xdata.shift();
-            close_price.shift();
+        function getData(shift) {
+            // now = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+'T'+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+            $.get('http://liangbax.com/api/v1/data/current/sz399001/').done(function (response) {
+                xdata.push(response.data.current_time);
+                now_price.push(response.data.now_price);
+                if (shift) {
+                    xdata.shift();
+                    now_price.shift();
+                }
+            });
         }
-        now = new Date();
-    }
 
 
     var option = {
@@ -233,20 +233,19 @@ $(function () {
         },
         // 纵坐标
         yAxis: {
+            min: 12000,
+            max: 12500,
             type: 'value',
-            data: close_price
+            data: now_price
         },
         // 数据
         series: [
             {
-                name: 'close_price',
+                name: 'now_price',
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
-                stack: 'a',
-                areaStyle: {
-                    normal: {}
-                }
+                stack: 'a'
             }
         ],
     };
@@ -254,9 +253,10 @@ $(function () {
             console.log(response);
 
             $.each(response.today_data, function (k, v) {
-                xdata.push(v.current_time);
-                close_price.push(v.now_price);
-
+                if (v.now_price != 0) {
+                    xdata.push(v.current_time);
+                    now_price.push(v.now_price);
+                }
             });
             myChart.setOption({
                 xAxis: {
@@ -264,27 +264,27 @@ $(function () {
                 },
                 series: [
                     {
-                        name: 'close_price',
-                        data: close_price
+                        name: 'now_price',
+                        data: now_price
                     }
                 ]
             })
         });
 
     setInterval(function () {
-        addData(true);
+        getData(true);
         myChart.setOption({
             xAxis: {
                 data: xdata
             },
             series: [
                 {
-                    name: 'close_price',
-                    data: close_price
+                    name: 'now_price',
+                    data: now_price
                 }
             ]
         });
-    }, 1000);
+    }, 1000*60);
 
     myChart.setOption(option);
 };
@@ -566,9 +566,9 @@ $(function () {
             }
             for (var i = 0; i < low.length; i++) {
                 if (i < i + 1) {
-                    min = low[i] -200;
+                    min = low[i] -500;
                 } else {
-                    min = low[i+1] -200;
+                    min = low[i+1] -500;
                 }
             }
             myChart.setOption({
