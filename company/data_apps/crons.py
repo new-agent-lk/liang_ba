@@ -74,7 +74,7 @@ def get_ten_stock_data():
         if get_on_work_time(now):
             codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sz002371', 'sz002460']
             for code in codes:
-                print(f'现在是工作时间 {now}')
+                print(f'现在是工作时间 {now}, 股票代码为：f{code}')
                 url = 'http://hq.sinajs.cn/?format=text&list={}'.format(code)
                 r = None
                 try:
