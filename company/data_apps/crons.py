@@ -72,7 +72,7 @@ def get_ten_stock_data():
     now = datetime.now()
     if chinese_calendar.is_workday(now):
         if get_on_work_time(now):
-            codes = ['603185', '603260', '600196', '600958', '601878', '600598', '0002594', '688981', '002371', '002460']
+            codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sz002371', 'sz002460']
             for code in codes:
                 print(f'现在是工作时间 {now}')
                 url = 'http://hq.sinajs.cn/?format=text&list={}'.format(code)
