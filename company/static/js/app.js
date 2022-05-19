@@ -7,12 +7,21 @@ $(function () {
     nav();
     toolbar();
 
+    new fullpage('#fullpage', {
+        sectionsColor: ['', 'orange', '#C0C0C0', '#ADD8E6'],
+        navigation: true,
+        navigationPosition: 'right',
+        showActiveTooltip: true,
+        slidesNavigation: true,
+        slidesNavPosition: 'bottom',
+    });
+
     $('.navbar-form .btn').click(function () {
        var query = $('.form-control').val();
        var url ='/search/?q=' + query;
        window.open(url);
     });
-    
+
     $('#scroll').slide({ titCell:'.hd ul', mainCell:'.bd ul', autoPlay:true, autoPage:true, delayTime:500,interTime:2000, effect:'leftLoop',trigger:"click",vis:3});
 
 /* 使用js分组，每4个li放到一个ul里面 */
@@ -20,7 +29,7 @@ $(function () {
 
 /* 调用SuperSlide，每次滚动一个ul，相当于每次滚动8个li */
     jQuery("#inews").slide({titCell:".hd ul",mainCell:".bd .list",autoPage:true,effect:"leftLoop",autoPlay:true,delayTime:500,interTime:5000});
-    
+
     $(".submian .subleft .lefta .comt > ul > li").each(function () {
         if (!$(this).find("li").length) {
             $(this).find(".boxlist").remove();
@@ -54,7 +63,7 @@ $(function () {
 			"scrollTop": 0
 		});
 	});
-	
+
 	$("#addFavo").click(function() {
 		var fm = $("title").html();
 		AddFavorite(fm, location.href, '');
@@ -62,7 +71,7 @@ $(function () {
 	$("#setHome").click(function(){
         SetHome($('title').html(), location.href, '');
 	});
-	
+
 	// map_ul
 	$(".map_ul > li").each(function() {
 		if (!$(this).find("li").length) {
@@ -70,105 +79,19 @@ $(function () {
 		}
 	});
 
-	//折线图
-    echart();
+
+    //首页隐藏toolbar
+    removeToolbar();
 });
 
-function echart() {
-    var myChart = echarts.init(document.getElementById('main'));
-    window.onresize = function () {
-        myChart.resize();
-    };
-        var option = {
-        // 标题
-        title: {
-            text: '折线图'
-        },
-        // 工具箱 保存图片
-        toolbox: {
-          show: true,
-          feature: {
-              saveAsImage: {
-                  show: true
-              }
-          }
-        },
-        tooltip: {},
-        // 图例声明
-        legend: {
-          data:['8月', '9月', '10月'],
-            right: 150
-        },
-        // 横坐标
-        xAxis: {
-            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子","卫衣","阿迪达斯","vans"]
-        },
-        // 纵坐标
-        yAxis: {
-        },
-        // 数据
-        series: [
-            {   name: '8月',
-                type: 'line',
-                data: [40, 20, 36, 20, 10, 20,30,66,54],
-                lineStyle: {
-                    normal: {
-                        color: 'skyblue'
-                    }
-                },
-                itemStyle: {
-                    color: 'skyblue'
-                },
-                label: {
-                    show: false,
-                    position: 'bottom',
-                    textStyle: {
-                        fontSize: 14
-                    }
-                }
-            },
-            {   name: '9月',
-                type: 'line',
-                data: [35, 13, 25, 50, 40, 60,30,77,65],
-                lineStyle: {
-                    normal: {
-                        color: '#c26611'
-                    }
-                },
-                itemStyle: {
-                    color: '#c26611'
-                },
-                label: {
-                    show: false,
-                    position: 'bottom',
-                    textStyle: {
-                        fontSize: 14
-                    }
-                }
-            },
-            {   name: '10月',
-                type: 'line',
-                data: [45, 20, 23, 56, 35, 48, 41,45,80],
-                lineStyle: {
-                    normal: {
-                        color: '#d33392'
-                    }
-                },
-                itemStyle: {
-                    color: '#d33392'
-                },
-                label: {
-                    show: false,
-                    position: 'bottom',
-                    textStyle: {
-                        fontSize: 14
-                    }
-                }
-            }
-        ]
-    };
-        myChart.setOption(option);
+
+function removeToolbar() {
+    if (window.location.pathname.indexOf('index')) {
+        $("#toolbar").css('display', 'none');
+    }
 }
+
+
 
 function nav() {
     //导航条鼠标滑过;
@@ -194,7 +117,7 @@ function nav() {
 	    });
 	});
 }
-	
+
 
 
 // banner焦点图
@@ -274,7 +197,7 @@ function banner() {
 
 
 //inews
-function inews(){ 
+function inews(){
 	var $a=$("#inews").find(".tog").find("div");
 	var i=2;
 	var page=1;
@@ -293,11 +216,11 @@ function inews(){
 		   if($sty=="prev"){
 			  if(page==1){
 					 $v_show.animate({left:-v_width*(page_count-1)+"px"},500);
-					 page=page_count;  
+					 page=page_count;
 			  }else{
-					 $v_show.animate({left:"+="+v_width+"px"},500);                                    
+					 $v_show.animate({left:"+="+v_width+"px"},500);
 					 page--;
-			  }  
+			  }
 		   }
 		   if($sty=="next"){
 			  if(page==page_count){
@@ -306,7 +229,7 @@ function inews(){
 			  }else{
 					$v_show.animate({left:"-="+v_width+"px"},500);
 					page++;
-			  }   
+			  }
 		   }
 		}
 	});

@@ -1,19 +1,28 @@
 {% extends 'base.html' %}
 <!-- 以下3行是留给小白的，可删除 -->
-
 {% load static %}
+{% block headjs %}
+    <link rel="stylesheet" href="{% static '/css/fullpage.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <script src="{% static '/js/fullpage.js' %}"></script>
+    <script src="{% static '/js/stock.js' %}"></script>
+{% endblock %}
 {% block content %}
-    <!--幻灯片大图开始-->
-    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
-        <div id="banner" class="banner">
-            <ul class="list clearfix">
-                {% for carousel in carousels %}
-                    <li><a href="javascript:;"><img src="{{ MEDIA_URL }}{{ companyinfo.topimg }}" alt=""/></a></li>
-                {% endfor %}
-            </ul>
-            <div class="tip"></div>
-            <a href="javascript:;" id="btn_prev" class="ico"></a> <a href="javascript:;" id="btn_next" class="ico"></a>
+    <div id="fullpage">
+        <div class="section">
+            <div class="content">
+                <!--日k线-->
+                <div id="main" style="height: 400px;width: 50%;"></div>
+                <!--动态数据-->
+                <div id="main2" style="height: 400px; width: 50%;"></div>
+                <!--周k线-->
+                <div id="main3" style="height: 400px; width: 50%;"></div>
+                <!--月k线-->
+                <div id="main4" style="height: 400px; width: 50%;"></div>
+            </div>
         </div>
+        <div class="section">Section 2</div>
+        <div class="section">Section 3</div>
+        <div class="section">Section 4</div>
     </div>
-    <!--幻灯片大图结束-->
 {% endblock %}
