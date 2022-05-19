@@ -68,7 +68,7 @@ def get_daily_stock_data():
 
 
 def get_ten_stock_data():
-    print('%s: get_daily_stock_data' % datetime.now())
+    print('%s: get_ten_stock_data' % datetime.now())
     now = datetime.now()
     if chinese_calendar.is_workday(now):
         if get_on_work_time(now):
