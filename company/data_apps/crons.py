@@ -88,8 +88,8 @@ def get_ten_stock_data():
                     stock_name, open_price, close_price, now_price, high_price, low_price, *_ = stock_string.split(',')
                     turnover_of_shares = stock_string.split(',')[8]
                     trading_volume = stock_string.split(',')[9]
-                    d = stock_string.split(',')[-3]
-                    t = stock_string.split(',')[-2]
+                    d = stock_string.split(',')[30]
+                    t = stock_string.split(',')[31]
                     current_time = datetime.strptime(f'{d} {t}', "%Y-%m-%d %H:%M:%S")
                     data = {
                         "stock_code": stock_code,
