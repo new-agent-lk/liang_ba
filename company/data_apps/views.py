@@ -91,4 +91,11 @@ class CurrentStockCodeView(APIView):
             return Response(data)
 
 
+class TenStockDataView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self):
+
+        l = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sz002371', 'sz002460']
+
 
