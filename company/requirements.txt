@@ -15,6 +15,7 @@ django-cors-headers==3.11.0
 django-crontab==0.7.1
 django-debug-toolbar==3.2.4
 django-dotenv==1.4.1
+django-extensions==3.1.5
 django-filter==2.4.0
 django-jet==1.0.8
 django-js-asset==1.2.2
@@ -53,6 +54,7 @@ telepath==0.2
 tushare==1.2.84
 uritemplate==4.1.1
 urllib3==1.26.7
+uWSGI @ file:///home/conda/feedstock_root/build_artifacts/uwsgi_1635522043340/work
 virtualenv-clone==0.5.6
 wagtail==2.14.2
 wagtailfontawesome==1.1.4
