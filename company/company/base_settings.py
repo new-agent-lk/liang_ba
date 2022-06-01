@@ -287,8 +287,8 @@ CRONJOBS = [
     # 每1分钟生成一次首页静态文件
     ('*/1 * * * *', 'data_apps.crons.get_daily_stock_data',
      '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'company/logs/crontab.log')),
-    ('*/1 * * * *', 'data_apps.crons.get_ten_stock_data',
-     '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'company/logs/crontab.log'))
+    # ('*/1 * * * *', 'data_apps.crons.get_ten_stock_data',
+    #  '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'company/logs/crontab.log'))
 ]
 # 指定中文编码格式
 CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
