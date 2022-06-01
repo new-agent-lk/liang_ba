@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器文件上传
+    'django_extensions',
 
     'django_crontab',
     'companyinfo',  # 新创建的应用
