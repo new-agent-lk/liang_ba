@@ -1,3 +1,4 @@
+from enum import Flag
 import requests
 from datetime import datetime
 from datetime import timedelta
@@ -92,11 +93,39 @@ class CurrentStockCodeView(APIView):
 
 
 class TenStockDataView(APIView):
+    """
+    返回当前十只股票历史数据
+    """
     permission_classes = (AllowAny,)
 
     def get(self):
         
-        l = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sz002371', 'sz002460']
+        codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438']
         
+        now = datetime.now()
+        offset = timedelta(minutes=2)
+        data = {
+            'is_work_time': True,
+            'data': '',
+            'info': 'ok',
+            'stock_codes': codes,
+        }
+        
+        if get_on_work_time(now):
+            sc_list = []
+            _price = 0
+            for stock_code in codes:
+                gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
+                sc_list.append(gsmd)
+            
+            for sc_obj in sc_list:
+                _price += sc_obj.now_price * 0.1
+            data['data'] = _price
+            
+        else:
+            data['is_work_time'] = False
+            data['info'] = '当前非工作时间'
+        
+        return Response(data)
 
 
