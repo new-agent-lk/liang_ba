@@ -98,8 +98,7 @@ class TenStockDataView(APIView):
     """
     permission_classes = (AllowAny,)
 
-    def get(self):
-        
+    def get(self, request):
         codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438']
         
         now = datetime.now()
