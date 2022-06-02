@@ -124,7 +124,7 @@ class TenStockDataView(APIView):
                 _avg_price += float(sc_obj.now_price)
                 
             data['avg_price'] = _avg_price / len(sc_list)
-            data['avg_weight_price'] = _avg_w_price
+            data['avg_weight_price'] = _avg_w_price / _avg_price
             
         else:
             data['is_work_time'] = False
