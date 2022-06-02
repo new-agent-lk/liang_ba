@@ -11,7 +11,7 @@ urlpatterns = [
     path('', include(router.urls)),
     re_path('history', views.GenericHistoryStockMarketView.as_view(), name='history_api'),
     re_path('stock-detail', views.GenericStockMarketView.as_view(), name='stock_detail_api'),
-    path('current/<str:stock_code>/', views.CurrentStockCodeView.as_view())
+    path('current/<str:stock_code>/', views.CurrentStockCodeView.as_view()),
     path('tensc/', views.TenStockDataView.as_view())
 ]
 
