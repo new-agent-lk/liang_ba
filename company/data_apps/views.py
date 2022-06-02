@@ -105,21 +105,26 @@ class TenStockDataView(APIView):
         offset = timedelta(minutes=2)
         data = {
             'is_work_time': True,
-            'data': '',
+            'avg_price': 0.0,
+            'avg_weight_price': 0.0,
             'info': 'ok',
             'stock_codes': codes,
         }
         
         if get_on_work_time(now):
             sc_list = []
-            _price = 0
+            _avg_price = 0.0
+            _avg_w_price = 0.0
             for stock_code in codes:
                 gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
                 sc_list.append(gsmd)
             
             for sc_obj in sc_list:
-                _price += sc_obj.now_price * 0.1
-            data['data'] = _price
+                _avg_w_price += float(sc_obj.now_price) * 0.1
+                _avg_price += float(sc_obj.now_price)
+                
+            data['avg_price'] = _avg_price / len(sc_list)
+            data['avg_weight_price'] = _avg_w_price
             
         else:
             data['is_work_time'] = False
