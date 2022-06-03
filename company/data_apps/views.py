@@ -1,4 +1,4 @@
-from enum import Flag
+import chinese_calendar
 import requests
 from datetime import datetime
 from datetime import timedelta
@@ -65,7 +65,7 @@ class CurrentStockCodeView(APIView):
         now = datetime.now()
         offset = timedelta(minutes=2)
         hgsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__gte=datetime.now().date())
-        if get_on_work_time(now):
+        if chinese_calendar.is_workday(now) and get_on_work_time(now):
             gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
             if gsmd:
                 data = {
@@ -100,6 +100,7 @@ class TenStockDataView(APIView):
 
     def get(self, request):
         codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438']
+        weight = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438'],
         
         now = datetime.now()
         offset = timedelta(minutes=2)
@@ -110,8 +111,7 @@ class TenStockDataView(APIView):
             'info': 'ok',
             'stock_codes': codes,
         }
-        
-        if get_on_work_time(now):
+        if chinese_calendar.is_workday(now) and get_on_work_time(now):
             sc_list = []
             _avg_price = 0.0
             _avg_w_price = 0.0
@@ -119,13 +119,14 @@ class TenStockDataView(APIView):
                 gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
                 sc_list.append(gsmd)
             
-            for sc_obj in sc_list:
-                _avg_w_price += float(sc_obj.now_price) * 0.1
-                _avg_price += float(sc_obj.now_price)
-                
-            data['avg_price'] = _avg_price / len(sc_list)
-            data['avg_weight_price'] = _avg_w_price / _avg_price
-            
+            if sc_list:
+                for sc_obj in sc_list:
+                    _avg_w_price += float(sc_obj.now_price) * 0.1
+                    _avg_price += float(sc_obj.now_price)
+                    
+                data['avg_price'] = _avg_price / len(sc_list)
+                data['avg_weight_price'] = _avg_w_price / _avg_price
+                data['total_price'] = _avg_price
         else:
             data['is_work_time'] = False
             data['info'] = '当前非工作时间'
