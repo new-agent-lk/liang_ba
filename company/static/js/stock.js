@@ -392,7 +392,7 @@ $(function () {
                     }
                 ]
             });
-        }, 1000 * 60);
+        }, 3000 * 60);
 
 
         myChart.setOption(option);
