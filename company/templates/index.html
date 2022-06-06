@@ -8,21 +8,63 @@
     <script src="{% static '/js/stock.js' %}"></script>
 {% endblock %}
 {% block content %}
-    <div id="fullpage">
-        <div class="section">
-            <div class="content">
+    <div class="home-banner">
+        <img src="{% static 'images/banner.png' %}" alt="">
+        <div class="text-title">
+            <h3>量化交易, 从聚宽开始</h3>
+            <span>我们提供免费的量化数据、投研工具、量化学习体系、在线交流社区,我们提供免费的量化数据、投研工具、量化学习体系、在线交流社</span>
+        </div>
+    </div>
+    <div class="section1">
+        <div class="content">
                 <!--日k线-->
-                <div id="main" style="height: 400px;width: 50%;"></div>
+                <div id="main" class="main" ></div>
                 <!--动态数据-->
-                <div id="main2" style="height: 400px; width: 50%;"></div>
+                <div id="main2" class="main" ></div>
                 <!--周k线-->
-                <div id="main3" style="height: 400px; width: 50%;"></div>
+                <div id="main3" class="main" ></div>
                 <!--月k线-->
-                <div id="main4" style="height: 400px; width: 50%;"></div>
+                <div id="main4" class="main" ></div>
+
+        </div>
+    </div>
+    <div class="section2">
+        <div class="big-title">
+            <span class="hLine"></span>
+            <span class="title">文章精选</span>
+            <span class="hLine"></span>
+        </div>
+        <div class="item-content">
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
+            </div>
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
+            </div>
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
+            </div>
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
+            </div>
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
+            </div>
+            <div class="item-box">
+                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
+                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
+                <a href="">查看文章</a>
             </div>
         </div>
-        <div class="section">Section 2</div>
-        <div class="section">Section 3</div>
-        <div class="section">Section 4</div>
     </div>
 {% endblock %}
