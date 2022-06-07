@@ -296,14 +296,12 @@ $(function () {
         var now = date.getHours() + date.getMinutes();
 
 
-        function getData(shift) {
+        function getData() {
             $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
-                xdata.push(now);
-                avg_price.push(response.avg_price);
-                if (shift) {
-                    xdata.shift();
-                    avg_price.shift();
-                }
+                response.last_work_data.forEach(function (v) {
+                    xdata.push(v[0]);
+                    avg_price.push(v[1]);
+                });
             });
         }
 
@@ -360,27 +358,27 @@ $(function () {
             ],
         };
 
-        $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
-            console.log(response);
-            response.last_work_data.forEach(function (v) {
-                xdata.push(v[0]);
-                avg_price.push(v[1]);
-            })
-            myChart.setOption({
-                xAxis: {
-                    data: xdata
-                },
-                series: [
-                    {
-                        name: 'avg_price',
-                        data: avg_price
-                    }
-                ]
-            });
-        });
+        // $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
+        //     console.log(response);
+        //     response.last_work_data.forEach(function (v) {
+        //         xdata.push(v[0]);
+        //         avg_price.push(v[1]);
+        //     });
+        //     myChart.setOption({
+        //         xAxis: {
+        //             data: xdata
+        //         },
+        //         series: [
+        //             {
+        //                 name: 'avg_price',
+        //                 data: avg_price
+        //             }
+        //         ]
+        //     });
+        // });
 
         setInterval(function () {
-            getData(true);
+            getData();
             myChart.setOption({
                 xAxis: {
                     data: xdata
@@ -393,6 +391,8 @@ $(function () {
                 ]
             });
         }, 3000 * 60);
+
+        getData();
 
 
         myChart.setOption(option);
