@@ -117,3 +117,6 @@ dmypy.json
 company/company/settings.py
 
 .idea
+liangba.log
+uwsgi.pid
+*.__pycache__/
