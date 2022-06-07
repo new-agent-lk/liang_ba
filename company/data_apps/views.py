@@ -1,5 +1,6 @@
 import chinese_calendar
 import requests
+from decimal import Decimal
 from datetime import datetime
 from datetime import timedelta
 
@@ -124,7 +125,7 @@ class TenStockDataView(APIView):
             'info': 'ok',
             'stock_codes': list(_codes.keys()),
         }
-        # if chinese_calendar.is_workday(now) and get_on_work_time(now):
+       
 
         _stock_dict = {}
         for stock_code, weight in _codes.items():
@@ -139,13 +140,19 @@ class TenStockDataView(APIView):
                 _datas = resp_data.get('data')
                 for time_str, _price, avg_price, _ in _datas:
                     if time_str in _stock_dict:
-                        _stock_dict[time_str] += get_two_float(_price * weight, 2)
+                        _stock_dict[time_str]['price'] += Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2))
+                        _stock_dict[time_str]['count'] += 1
                     else:
-                        _stock_dict[time_str] = get_two_float(_price * weight, 2)
+                        _stock_dict[time_str] = {
+                            'price': Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2)),
+                            'count': 1
+                        }
 
-        
-        data['last_work_data'] = [[key, value] for key, value in _stock_dict.items()]
-
+        data['last_work_data'] = []
+        for key, value in _stock_dict.items():
+            if value.get('count') != len(_codes.keys()):
+                continue
+            data['last_work_data'].append([key, float(value.get('price'))])
             #     gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
             #     sc_list.append(gsmd)
             
@@ -157,9 +164,9 @@ class TenStockDataView(APIView):
             #     data['avg_price'] = _avg_price / len(sc_list)
             #     data['avg_weight_price'] = _avg_w_price / _avg_price
             #     data['total_price'] = _avg_price
-        # else:
-        #     data['is_work_time'] = False
-        #     data['info'] = '当前非工作时间'
+        if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
+            data['is_work_time'] = False
+            data['info'] = '当前非工作时间'
 
         return Response(data)
 
