@@ -302,6 +302,17 @@ $(function () {
                     xdata.push(v[0]);
                     avg_price.push(v[1]);
                 });
+                myChart.setOption({
+                    xAxis: {
+                        data: xdata
+                    },
+                    series: [
+                        {
+                            name: 'avg_price',
+                            data: avg_price
+                        }
+                    ]
+                });
             });
         }
 
@@ -379,17 +390,6 @@ $(function () {
 
         setInterval(function () {
             getData();
-            myChart.setOption({
-                xAxis: {
-                    data: xdata
-                },
-                series: [
-                    {
-                        name: 'avg_price',
-                        data: avg_price
-                    }
-                ]
-            });
         }, 3000 * 60);
 
         getData();
