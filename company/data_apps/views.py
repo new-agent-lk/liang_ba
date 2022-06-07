@@ -12,6 +12,9 @@ from data_apps.models import GenericStockMarketData
 from data_apps.crons import get_on_work_time
 from data_apps.serializers.generic_stock_market_data import GenericStockMarketDataSerializer
 
+from .utils import get_two_float
+
+requests.packages.urllib3.disable_warnings()
 rq = requests.session()
 
 
@@ -99,8 +102,18 @@ class TenStockDataView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):
-        codes = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438']
-        weight = ['sh603185', 'sh603260', 'sh600196', 'sh600958', 'sh601878', 'sh600598', 'sz002594', 'sh688981', 'sh688363', 'sh600438'],
+        _codes = {
+            '0603185': 0.1,
+            '0603260': 0.1,
+            '0600196': 0.1,
+            '0600958': 0.1,
+            '0601878': 0.1,
+            '0600598': 0.1,
+            '1002594': 0.1,
+            '0688981': 0.1,
+            '0688363': 0.1,
+            '0600438': 0.1
+        }
         
         now = datetime.now()
         offset = timedelta(minutes=2)
@@ -109,28 +122,45 @@ class TenStockDataView(APIView):
             'avg_price': 0.0,
             'avg_weight_price': 0.0,
             'info': 'ok',
-            'stock_codes': codes,
+            'stock_codes': list(_codes.keys()),
         }
-        if chinese_calendar.is_workday(now) and get_on_work_time(now):
-            sc_list = []
-            _avg_price = 0.0
-            _avg_w_price = 0.0
-            for stock_code in codes:
-                gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
-                sc_list.append(gsmd)
+        # if chinese_calendar.is_workday(now) and get_on_work_time(now):
+
+        _stock_dict = {}
+        for stock_code, weight in _codes.items():
+            url = f"https://img1.money.126.net/data/hs/time/today/{stock_code}.json"
+            try:
+                r = rq.get(url, timeout=300, verify=False)
+                resp_data = r.json()
+            except Exception as e:
+                resp_data = {}
             
-            if sc_list:
-                for sc_obj in sc_list:
-                    _avg_w_price += float(sc_obj.now_price) * 0.1
-                    _avg_price += float(sc_obj.now_price)
-                    
-                data['avg_price'] = _avg_price / len(sc_list)
-                data['avg_weight_price'] = _avg_w_price / _avg_price
-                data['total_price'] = _avg_price
-        else:
-            data['is_work_time'] = False
-            data['info'] = '当前非工作时间'
+            if resp_data:
+                _datas = resp_data.get('data')
+                for time_str, _price, avg_price, _ in _datas:
+                    if time_str in _stock_dict:
+                        _stock_dict[time_str] += get_two_float(_price * weight, 2)
+                    else:
+                        _stock_dict[time_str] = get_two_float(_price * weight, 2)
+
         
+        data['last_work_data'] = [[key, value] for key, value in _stock_dict.items()]
+
+            #     gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
+            #     sc_list.append(gsmd)
+            
+            # if sc_list:
+            #     for sc_obj in sc_list:
+            #         _avg_w_price += float(sc_obj.now_price) * 0.1
+            #         _avg_price += float(sc_obj.now_price)
+                    
+            #     data['avg_price'] = _avg_price / len(sc_list)
+            #     data['avg_weight_price'] = _avg_w_price / _avg_price
+            #     data['total_price'] = _avg_price
+        # else:
+        #     data['is_work_time'] = False
+        #     data['info'] = '当前非工作时间'
+
         return Response(data)
 
 
