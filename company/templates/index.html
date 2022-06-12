@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 <!-- 以下3行是留给小白的，可删除 -->
-{% load static %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 {% block headjs %}
     <link rel="stylesheet" href="{% static '/css/fullpage.min.css' %}">
     <link rel="stylesheet" href="{% static '/css/style.css' %}">
@@ -35,36 +35,17 @@
             <span class="hLine"></span>
         </div>
         <div class="item-content">
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
-            <div class="item-box">
-                <h3>支持向量机模型(SVM)在多因子选股模型领域的应用</h3>
-                <span>研究目的：本文参考华泰研报《人工智能选股之支持向量机模型》，对研报里面的结果进行了分析，并研究了支持向量机模型（SVM）在多因子选股模型领域的应用，实现股票因子与收益之间非线性模型的建立，通过对模型进行多维度分析实现模型评价</span>
-                <a href="">查看文章</a>
-            </div>
+            {% if pages %}
+                {% for page in pages %}
+                    <div class="item-box">
+                        <h3>{{ page.content_stream.0 }}</h3>
+                        {% with page.specific as content %}
+                            <span>{{ content.digest }}</span>
+                        {% endwith %}
+                        <a href="{% pageurl page %}">查看文章</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
