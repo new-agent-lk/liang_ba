@@ -289,7 +289,7 @@ $(function () {
             myChart.resize();
         };
 
-        var isActive = true;
+        var timer = null;
         var xdata = [];
         var avg_price = [];
         var date = new Date();
@@ -298,6 +298,7 @@ $(function () {
 
         function getData() {
             $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
+                console.log(response);
                 response.last_work_data.forEach(function (v) {
                     xdata.push(v[0]);
                     avg_price.push(v[1]);
@@ -313,6 +314,9 @@ $(function () {
                         }
                     ]
                 });
+                if (!response.is_work_time) {
+                    clearInterval(timer);
+                }
             });
         }
 
@@ -369,26 +373,8 @@ $(function () {
             ],
         };
 
-        // $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
-        //     console.log(response);
-        //     response.last_work_data.forEach(function (v) {
-        //         xdata.push(v[0]);
-        //         avg_price.push(v[1]);
-        //     });
-        //     myChart.setOption({
-        //         xAxis: {
-        //             data: xdata
-        //         },
-        //         series: [
-        //             {
-        //                 name: 'avg_price',
-        //                 data: avg_price
-        //             }
-        //         ]
-        //     });
-        // });
 
-        setInterval(function () {
+        timer = setInterval(function () {
             getData();
         }, 3000 * 60);
 
