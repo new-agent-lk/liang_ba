@@ -119,4 +119,4 @@ company/company/settings.py
 .idea
 
 uwsgi.pid
-__pycache__
+**/__pycache__
