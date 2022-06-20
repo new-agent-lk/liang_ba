@@ -120,8 +120,8 @@ class TenStockDataView(APIView):
         offset = timedelta(minutes=2)
         data = {
             'is_work_time': True,
-            'avg_price': 0.0,
-            'avg_weight_price': 0.0,
+            # 'avg_price': 0.0,
+            # 'avg_weight_price': 0.0,
             'info': 'ok',
             'stock_codes': list(_codes.keys()),
         }
@@ -164,6 +164,12 @@ class TenStockDataView(APIView):
             #     data['avg_price'] = _avg_price / len(sc_list)
             #     data['avg_weight_price'] = _avg_w_price / _avg_price
             #     data['total_price'] = _avg_price
+        url = "https://img1.money.126.net/data/hs/time/today/0000001.json"
+        try:
+            r = rq.get(url, timeout=300, verify=False)
+            data['sh_data'] = r.json()
+        except Exception as e:
+            data['sh_data'] = []
         if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
             data['is_work_time'] = False
             data['info'] = '当前非工作时间'
