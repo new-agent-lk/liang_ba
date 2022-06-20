@@ -15,10 +15,10 @@ $(function () {
 
 
     function dateStock() {
-    var myChart = echarts.init(document.getElementById('main'));
-    window.onresize = function () {
-        myChart.resize();
-    };
+        var myChart = echarts.init(document.getElementById('main'));
+        window.onresize = function () {
+            myChart.resize();
+        };
         var upColor = '#ec0000';
         var upBorderColor = '#8A0000';
         var downColor = '#00da3c';
@@ -79,8 +79,8 @@ $(function () {
                 type: 'category',
                 data: [],
                 boundaryGap: false,
-                axisLine: {onZero: false},
-                splitLine: {show: false},
+                axisLine: { onZero: false },
+                splitLine: { show: false },
                 min: 'dataMin',
                 max: 'dataMax'
             },
@@ -104,7 +104,7 @@ $(function () {
                     end: 100
                 }
             ],
-        // 数据
+            // 数据
             series: [
                 {
                     name: '日K',
@@ -201,7 +201,7 @@ $(function () {
                     }
                 }
             ]
-    };
+        };
         myChart.setOption(option);
         myChart.on('click', function (params) {
             alert(params.data);
@@ -212,7 +212,7 @@ $(function () {
             var xdata = [];
             var item = [];
             var nowDate = new Date();
-            var nowMonth = nowDate.getMonth()+1;
+            var nowMonth = nowDate.getMonth() + 1;
             // if (nowMonth < 10) {
             //     nowMonth = '0' + nowMonth;
             // }
@@ -226,8 +226,8 @@ $(function () {
                 //     open.push(v.open);
                 //     close.push(v.close)
                 // }
-                    item = [v.day, v.open, v.close, v.low, v.high];
-                    xdata.push(item);
+                item = [v.day, v.open, v.close, v.low, v.high];
+                xdata.push(item);
 
 
             });
@@ -281,7 +281,7 @@ $(function () {
                 ],
             })
         })
-};
+    };
 
     function echartsDom() {
         var myChart = echarts.init(document.getElementById('main2'));
@@ -292,6 +292,7 @@ $(function () {
         var timer = null;
         var xdata = [];
         var avg_price = [];
+        var sh = [];
         var date = new Date();
         var now = date.getHours() + date.getMinutes();
 
@@ -300,9 +301,15 @@ $(function () {
             $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
                 console.log(response);
                 response.last_work_data.forEach(function (v) {
-                    xdata.push(v[0]);
+                    // 时间展示形式
+                    newData = v[0].split("");
+                    xdata.push(newData[0]+newData[1]+ ':'+newData[2]+newData[3]);
                     avg_price.push(v[1]);
                 });
+                response.sh_data.data.forEach(function (val) {
+                    sh.push(val[1]);
+                })
+                console.log(newData);
                 myChart.setOption({
                     xAxis: {
                         data: xdata
@@ -311,6 +318,10 @@ $(function () {
                         {
                             name: 'avg_price',
                             data: avg_price
+                        },
+                        {
+                            name: 'sh_data',
+                            data: sh
                         }
                     ]
                 });
@@ -329,46 +340,62 @@ $(function () {
             tooltip: {
                 trigger: 'axis'
             },
-            // 图例声明
-            // legend: {
-            //     data: ['成交'],
-            //     right: 150
-            // },
+            legend: {
+                data: ['avg_price', 'sh_data']
+            },
             // 横坐标
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
                 data: xdata,
-                axisTick: {
-                    show: false//不显示坐标轴刻度线
-                },
-                axisLabel: {
-                    show: false,//不显示坐标轴上的文字
-                }
             },
             // 纵坐标
-            yAxis: {
-                axisTick: {
-                    show: false//不显示坐标轴刻度线
-                },
-                axisLabel: {
-                    show: false,//不显示坐标轴上的文字
-                },
-                type: 'value',
-                data: avg_price,
-                min: function (value) {
-                    return value.min;
-                },
-                max: function (value) {
-                    return value.max;
+            yAxis: [
+                {
+                    name: 'avg_peice',
+                    type: 'value',
+                    data: avg_price,
+                    max: 100,
+                    min: function(value) {
+                        return value.min;
+                    },
+                    max: function(value) {
+                        return value.max;
+                    }
+                }, {
+                    name: 'sh_data',
+                    type: 'value',
+                    data: sh,
+                    min: function(value) {
+                        return value.min;
+                    },
+                    max: function(value) {
+                        return value.max;
+                    }
                 }
-            },
+            ],
             // 数据
             series: [
                 {
                     name: 'avg_price',
                     type: 'line',
-                    symbol: 'none'
+                    symbol: 'none',
+                    lineStyle: {
+                        normal: {
+                            color: 'green'
+                        }
+                    }
+                },
+                {
+                    name: 'sh_data',
+                    type: 'line',
+                    symbol: 'none',
+                    yAxisIndex: 1,
+                    lineStyle: {
+                        normal: {
+                            color: 'skyblue'
+                        }
+                    }
                 }
             ],
         };
@@ -385,104 +412,107 @@ $(function () {
     };
 
     function monthStock() {
-    var myChart = echarts.init(document.getElementById('main4'));
-    window.onresize = function () {
-        myChart.resize();
-    };
+        var myChart = echarts.init(document.getElementById('main4'));
+        window.onresize = function () {
+            myChart.resize();
+        };
         var option = {
-        // 标题
-        title: {
-            text: '本月K线'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        // 图例声明
-        // legend: {
-        //   data:['open', 'high', 'low', 'close'],
-        //     right: 100
-        // },
-        // 横坐标
-        xAxis: {
-            axisTick: {
-                show: false//不显示坐标轴刻度线
+            // 标题
+            title: {
+                text: '本月K线'
             },
-            axisLabel: {
-                show: false,//不显示坐标轴上的文字
+            tooltip: {
+                trigger: 'axis'
             },
-            data: []
-        },
-        // 纵坐标
-        yAxis: [
-            {
-                type: 'value',
-                // boundaryGap: [0, '50%'],
-                position: 'left',
+            // 图例声明
+            // legend: {
+            //   data:['open', 'high', 'low', 'close'],
+            //     right: 100
+            // },
+            // 横坐标
+            xAxis: {
                 axisTick: {
                     show: false//不显示坐标轴刻度线
                 },
                 axisLabel: {
                     show: false,//不显示坐标轴上的文字
+                },
+                data: []
+            },
+            // 纵坐标
+            yAxis: [
+                {
+                    type: 'value',
+                    // boundaryGap: [0, '50%'],
+                    position: 'left',
+                    axisTick: {
+                        show: false//不显示坐标轴刻度线
+                    },
+                    axisLabel: {
+                        show: false,//不显示坐标轴上的文字
+                    }
                 }
-            }
-        ],
-        // 数据
-        series: [
-            {   name: 'open',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+            ],
+            // 数据
+            series: [
+                {
+                    name: 'open',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: 'skyblue'
+                        }
+                    },
+                    itemStyle: {
                         color: 'skyblue'
                     }
                 },
-                itemStyle: {
-                    color: 'skyblue'
-                }
-            },
-            {   name: 'high',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'high',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#c26611'
+                        }
+                    },
+                    itemStyle: {
                         color: '#c26611'
                     }
                 },
-                itemStyle: {
-                    color: '#c26611'
-                }
-            },
-            {   name: 'low',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'low',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#d33392'
+                        }
+                    },
+                    itemStyle: {
                         color: '#d33392'
                     }
                 },
-                itemStyle: {
-                    color: '#d33392'
-                }
-            },
-            {
-                name: 'close',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'close',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#0fd342'
+                        }
+                    },
+                    itemStyle: {
                         color: '#0fd342'
                     }
-                },
-                itemStyle: {
-                    color: '#0fd342'
                 }
-            }
-        ]
-    };
+            ]
+        };
         myChart.setOption(option);
         myChart.on('click', function (params) {
             alert(params.data);
@@ -494,33 +524,33 @@ $(function () {
             var low = [];
             var open = [];
             var close = [];
-            var min =  10000;
-            var max =  15000;
+            var min = 10000;
+            var max = 15000;
             var nowDate = new Date();
-            var nowMonth = nowDate.getMonth()+1;
+            var nowMonth = nowDate.getMonth() + 1;
             if (nowMonth < 10) {
                 nowMonth = '0' + nowMonth;
             }
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             $.each(response.sz399001, function (k, v) {
-                    xdata.push(v.day.slice(0, 10));
-                    high.push(v.high);
-                    low.push(v.low);
-                    open.push(v.open);
-                    close.push(v.close)
+                xdata.push(v.day.slice(0, 10));
+                high.push(v.high);
+                low.push(v.low);
+                open.push(v.open);
+                close.push(v.close)
             });
-            for (var i=0;i<high.length;i++) {
-                if (i>i+1) {
+            for (var i = 0; i < high.length; i++) {
+                if (i > i + 1) {
                     max = high[i];
                 } else {
-                    max = high[i+1];
+                    max = high[i + 1];
                 }
             }
             for (var i = 0; i < low.length; i++) {
                 if (i < i + 1) {
-                    min = low[i] -1000;
+                    min = low[i] - 1000;
                 } else {
-                    min = low[i+1] -1000;
+                    min = low[i + 1] - 1000;
                 }
             }
             myChart.setOption({
@@ -551,107 +581,110 @@ $(function () {
                 }
             })
         })
-};
+    };
 
     function weekStock() {
-    var myChart = echarts.init(document.getElementById('main3'));
-    window.onresize = function () {
-        myChart.resize();
-    };
+        var myChart = echarts.init(document.getElementById('main3'));
+        window.onresize = function () {
+            myChart.resize();
+        };
         var option = {
-        // 标题
-        title: {
-            text: '周K线'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        // 图例声明
-        // legend: {
-        //   data:['open', 'high', 'low', 'close'],
-        //     right: 100
-        // },
-        // 横坐标
-        xAxis: {
-            data: [],
-                        axisTick: {
-                show: false//不显示坐标轴刻度线
+            // 标题
+            title: {
+                text: '周K线'
             },
-            axisLabel: {
-                show: false,//不显示坐标轴上的文字
-            }
-        },
-        // 纵坐标
-        yAxis: [
-            {
-                type: 'value',
-                // boundaryGap: [0, '50%']
-                position: 'left',
+            tooltip: {
+                trigger: 'axis'
+            },
+            // 图例声明
+            // legend: {
+            //   data:['open', 'high', 'low', 'close'],
+            //     right: 100
+            // },
+            // 横坐标
+            xAxis: {
+                data: [],
                 axisTick: {
                     show: false//不显示坐标轴刻度线
                 },
                 axisLabel: {
                     show: false,//不显示坐标轴上的文字
                 }
-            }
-        ],
-        // 数据
-        series: [
-            {   name: 'open',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+            },
+            // 纵坐标
+            yAxis: [
+                {
+                    type: 'value',
+                    // boundaryGap: [0, '50%']
+                    position: 'left',
+                    axisTick: {
+                        show: false//不显示坐标轴刻度线
+                    },
+                    axisLabel: {
+                        show: false,//不显示坐标轴上的文字
+                    }
+                }
+            ],
+            // 数据
+            series: [
+                {
+                    name: 'open',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: 'skyblue'
+                        }
+                    },
+                    itemStyle: {
                         color: 'skyblue'
                     }
                 },
-                itemStyle: {
-                    color: 'skyblue'
-                }
-            },
-            {   name: 'high',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'high',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#c26611'
+                        }
+                    },
+                    itemStyle: {
                         color: '#c26611'
                     }
                 },
-                itemStyle: {
-                    color: '#c26611'
-                }
-            },
-            {   name: 'low',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'low',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#d33392'
+                        }
+                    },
+                    itemStyle: {
                         color: '#d33392'
                     }
                 },
-                itemStyle: {
-                    color: '#d33392'
-                }
-            },
-            {
-                name: 'close',
-                type: 'line',
-                symbol: 'none',
-                data: [],
-                lineStyle: {
-                    normal: {
+                {
+                    name: 'close',
+                    type: 'line',
+                    symbol: 'none',
+                    data: [],
+                    lineStyle: {
+                        normal: {
+                            color: '#0fd342'
+                        }
+                    },
+                    itemStyle: {
                         color: '#0fd342'
                     }
-                },
-                itemStyle: {
-                    color: '#0fd342'
                 }
-            }
-        ]
-    };
+            ]
+        };
         myChart.setOption(option);
         myChart.on('click', function (params) {
             alert(params.data);
@@ -663,8 +696,8 @@ $(function () {
             var low = [];
             var open = [];
             var close = [];
-            var min =  10000;
-            var max =  15000;
+            var min = 10000;
+            var max = 15000;
 
             $.each(response.sz399001, function (k, v) {
                 if (checkDate(v.day.slice(0, 10))) {
@@ -676,18 +709,18 @@ $(function () {
                 }
 
             });
-            for (var i=0;i<high.length;i++) {
-                if (i>i+1) {
+            for (var i = 0; i < high.length; i++) {
+                if (i > i + 1) {
                     max = high[i];
                 } else {
-                    max = high[i+1];
+                    max = high[i + 1];
                 }
             }
             for (var i = 0; i < low.length; i++) {
                 if (i < i + 1) {
-                    min = low[i] -500;
+                    min = low[i] - 500;
                 } else {
-                    min = low[i+1] -500;
+                    min = low[i + 1] - 500;
                 }
             }
             myChart.setOption({
@@ -718,22 +751,22 @@ $(function () {
                 }
             })
         })
-};
+    };
 
     //判断是否为前7天内的日期(参数格式'YYYY-MM-dd')
     function checkDate(date) {
         var myDate = new Date();
-        myDate.setDate(myDate.getDate()-7);
+        myDate.setDate(myDate.getDate() - 7);
         var dateArray = [];
         var currentDate = '';
         var isPass = false;
         for (var i = 0; i < 7; i++) {
-            var month = (myDate.getMonth()+1)<10?'0'+(myDate.getMonth()+1):(myDate.getMonth()+1)
-            currentDate = myDate.getFullYear() +'-'+ month +'-'+ myDate.getDate();
+            var month = (myDate.getMonth() + 1) < 10 ? '0' + (myDate.getMonth() + 1) : (myDate.getMonth() + 1)
+            currentDate = myDate.getFullYear() + '-' + month + '-' + myDate.getDate();
             if (date === currentDate) {
                 isPass = true;
             }
-            myDate.setDate(myDate.getDate()+1);
+            myDate.setDate(myDate.getDate() + 1);
         }
         if (isPass) {
             return true;
