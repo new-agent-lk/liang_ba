@@ -402,6 +402,8 @@ $(function () {
 
 
         timer = setInterval(function () {
+            avg_price = [];
+            sh = [];
             getData();
         }, 3000 * 60);
 
