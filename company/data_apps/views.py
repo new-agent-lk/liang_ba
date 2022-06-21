@@ -164,7 +164,7 @@ class TenStockDataView(APIView):
             #     data['avg_price'] = _avg_price / len(sc_list)
             #     data['avg_weight_price'] = _avg_w_price / _avg_price
             #     data['total_price'] = _avg_price
-        url = "https://img1.money.126.net/data/hs/time/today/0000001.json"
+        url = "https://img1.money.126.net/data/hs/time/today/0000132.json"
         try:
             r = rq.get(url, timeout=300, verify=False)
             data['sh_data'] = r.json()
