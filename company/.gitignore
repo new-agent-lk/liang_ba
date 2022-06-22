@@ -5,3 +5,4 @@ logs/
 *.log
 *.pyc
 
+settings.py
