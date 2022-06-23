@@ -306,7 +306,7 @@ $(function () {
                     xdata.push(newData[0]+newData[1]+ ':'+newData[2]+newData[3]);
                     avg_price.push(v[1]);
                 });
-                response.sh_data.data.forEach(function (val) {
+                response.custom_data.data.forEach(function (val) {
                     sh.push(val[1]);
                 })
                 console.log(newData);
@@ -320,7 +320,7 @@ $(function () {
                             data: avg_price
                         },
                         {
-                            name: 'sh_data',
+                            name: 'custom_data',
                             data: sh
                         }
                     ]
@@ -341,7 +341,7 @@ $(function () {
                 trigger: 'axis'
             },
             legend: {
-                data: ['avg_price', 'sh_data']
+                data: ['avg_price', 'custom_data']
             },
             // 横坐标
             xAxis: {
@@ -387,7 +387,7 @@ $(function () {
                     }
                 },
                 {
-                    name: 'sh_data',
+                    name: 'custom_data',
                     type: 'line',
                     symbol: 'none',
                     yAxisIndex: 1,
