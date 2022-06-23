@@ -298,7 +298,7 @@ $(function () {
 
 
         function getData() {
-            $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
+            $.get('http://www.liangbax.com/api/v1/data/tensc/minsec/').done(function (response) {
                 console.log(response);
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式

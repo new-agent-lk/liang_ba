@@ -1,12 +1,13 @@
 import chinese_calendar
 import requests
 from decimal import Decimal
-from datetime import datetime
+from datetime import date, datetime
 from datetime import timedelta
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from django.http import Http404
 # Create your views here.
 
 from data_apps.models import GenericStockMarketData
@@ -98,11 +99,13 @@ class CurrentStockCodeView(APIView):
 
 class TenStockDataView(APIView):
     """
-    返回当前十只股票历史数据
+    
     """
     permission_classes = (AllowAny,)
 
-    def get(self, request):
+    def get(self, request, date_flag):
+        if date_flag not in ['minsec', 'day', 'week', 'month']:
+            return Http404
         _codes = {
             '0603185': 0.1,
             '0603260': 0.1,
@@ -115,65 +118,101 @@ class TenStockDataView(APIView):
             '0688363': 0.1,
             '0600438': 0.1
         }
-        
-        now = datetime.now()
-        offset = timedelta(minutes=2)
         data = {
             'is_work_time': True,
-            # 'avg_price': 0.0,
-            # 'avg_weight_price': 0.0,
             'info': 'ok',
             'stock_codes': list(_codes.keys()),
         }
-       
+        now = datetime.now()   
+        
+        if date_flag == 'minsec':
+            _stock_dict = {}
+            for stock_code, weight in _codes.items():
+                url = f"https://img1.money.126.net/data/hs/time/today/{stock_code}.json"
+                try:
+                    r = rq.get(url, timeout=300, verify=False)
+                    resp_data = r.json()
+                except Exception as e:
+                    resp_data = {}
+                
+                if resp_data:
+                    _datas = resp_data.get('data')
+                    for time_str, _price, avg_price, _ in _datas:
+                        if time_str in _stock_dict:
+                            _stock_dict[time_str]['price'] += Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2))
+                            _stock_dict[time_str]['count'] += 1
+                        else:
+                            _stock_dict[time_str] = {
+                                'price': Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2)),
+                                'count': 1
+                            }
 
-        _stock_dict = {}
-        for stock_code, weight in _codes.items():
-            url = f"https://img1.money.126.net/data/hs/time/today/{stock_code}.json"
+            data['last_work_data'] = []
+            for key, value in _stock_dict.items():
+                if value.get('count') != len(_codes.keys()):
+                    continue
+                data['last_work_data'].append([key, float(value.get('price'))])
+            url = "https://img1.money.126.net/data/hs/time/today/0000132.json"
             try:
                 r = rq.get(url, timeout=300, verify=False)
-                resp_data = r.json()
+                data['custom_data'] = r.json()
             except Exception as e:
-                resp_data = {}
-            
-            if resp_data:
-                _datas = resp_data.get('data')
-                for time_str, _price, avg_price, _ in _datas:
-                    if time_str in _stock_dict:
-                        _stock_dict[time_str]['price'] += Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2))
-                        _stock_dict[time_str]['count'] += 1
+                data['custom_data'] = []
+            if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
+                data['is_work_time'] = False
+                data['info'] = '当前非工作时间'
+
+        else:
+            _stock_dict = {}
+            for stock_code, weight in _codes.items():
+                url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2022/{stock_code}.json'
+                try:
+                    r = rq.get(url, timeout=300, verify=False)
+                    resp_data = r.json()
+                except Exception as e:
+                    resp_data = {}  
+                if resp_data:
+                    _datas = resp_data.get('data')
+                    if len(_datas) > 12:
+                        _datas = _datas[-13:]
                     else:
-                        _stock_dict[time_str] = {
-                            'price': Decimal(get_two_float(Decimal(_price) * Decimal(weight), 2)),
-                            'count': 1
-                        }
-
-        data['last_work_data'] = []
-        for key, value in _stock_dict.items():
-            if value.get('count') != len(_codes.keys()):
-                continue
-            data['last_work_data'].append([key, float(value.get('price'))])
-            #     gsmd = GenericStockMarketData.objects.filter(stock_code=stock_code, current_time__range=(now-offset, now)).order_by('-id').first()
-            #     sc_list.append(gsmd)
-            
-            # if sc_list:
-            #     for sc_obj in sc_list:
-            #         _avg_w_price += float(sc_obj.now_price) * 0.1
-            #         _avg_price += float(sc_obj.now_price)
+                        url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2021/{stock_code}.json'
+                        try:
+                            r = rq.get(url, timeout=300, verify=False)
+                            _resp_data = r.json()
+                        except Exception as e:
+                            _resp_data = {}
+                        if _resp_data:
+                            other_datas = _resp_data.get('data')
+                            _datas = other_datas[12-len(_datas):] + _datas
                     
-            #     data['avg_price'] = _avg_price / len(sc_list)
-            #     data['avg_weight_price'] = _avg_w_price / _avg_price
-            #     data['total_price'] = _avg_price
-        url = "https://img1.money.126.net/data/hs/time/today/0000132.json"
-        try:
-            r = rq.get(url, timeout=300, verify=False)
-            data['sh_data'] = r.json()
-        except Exception as e:
-            data['sh_data'] = []
-        if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
-            data['is_work_time'] = False
-            data['info'] = '当前非工作时间'
+                    for time_str, open, close, high, low, *_ in _datas:
+                        if time_str in _stock_dict:
+                            _stock_dict[time_str]['open'] += Decimal(get_two_float(Decimal(open) * Decimal(weight), 2))
+                            _stock_dict[time_str]['close'] += Decimal(get_two_float(Decimal(close) * Decimal(weight), 2))
+                            _stock_dict[time_str]['high'] += Decimal(get_two_float(Decimal(high) * Decimal(weight), 2))
+                            _stock_dict[time_str]['low'] += Decimal(get_two_float(Decimal(low) * Decimal(weight), 2))
+                            _stock_dict[time_str]['count'] += 1
+                        else:
+                            _stock_dict[time_str] = {
+                                'open': Decimal(get_two_float(Decimal(open) * Decimal(weight), 2)),
+                                'close': Decimal(get_two_float(Decimal(close) * Decimal(weight), 2)),
+                                'high': Decimal(get_two_float(Decimal(high) * Decimal(weight), 2)),
+                                'low': Decimal(get_two_float(Decimal(low) * Decimal(weight), 2)),
+                                'count': 1
+                            }
 
+            data[f'{date_flag}k_data'] = []
+            for key, value in _stock_dict.items():
+                if value.get('count') != len(_codes.keys()):
+                    continue
+                data[f'{date_flag}k_data'].append([key, float(value.get('open')), float(value.get('close')), float(value.get('high')), float(value.get('low'))])
+            
+            if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
+                data['is_work_time'] = False
+                data['info'] = '当前非工作时间'
+        
         return Response(data)
+        
 
 
