@@ -1,3 +1,4 @@
+from ossaudiodev import control_labels
 import chinese_calendar
 import requests
 from decimal import Decimal
@@ -155,9 +156,9 @@ class TenStockDataView(APIView):
             url = "https://img1.money.126.net/data/hs/time/today/0000132.json"
             try:
                 r = rq.get(url, timeout=300, verify=False)
-                data['custom_data'] = r.json()
+                data['control_data'] = r.json()
             except Exception as e:
-                data['custom_data'] = []
+                data['control_data'] = []
             if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
                 data['is_work_time'] = False
                 data['info'] = '当前非工作时间'
@@ -208,6 +209,28 @@ class TenStockDataView(APIView):
                     continue
                 data[f'{date_flag}k_data'].append([key, float(value.get('open')), float(value.get('close')), float(value.get('high')), float(value.get('low'))])
             
+            url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2022/0000903.json'
+            try:
+                r = rq.get(url, timeout=300, verify=False)
+                control_data = r.json()
+                
+            except Exception as e:
+                control_data = {}
+            
+            if control_data:
+                if len(control_data['data']) < 12:
+                    url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2021/0000903.json'
+                    try:
+                        r = rq.get(url, timeout=300, verify=False)
+                        _resp_data = r.json()
+                    except Exception as e:
+                        _resp_data = {}
+                    if _resp_data:
+                        other_datas = _resp_data.get('data')
+                        control_data['data'] = other_datas[12-len(control_data['data']):] + control_data['data']
+                
+                data['control_data'] = control_data
+
             if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
                 data['is_work_time'] = False
                 data['info'] = '当前非工作时间'
