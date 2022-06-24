@@ -116,7 +116,7 @@ dmypy.json
 
 company/company/settings.py
 
-.idea
+**/.idea
 
 uwsgi.pid
 **/__pycache__
