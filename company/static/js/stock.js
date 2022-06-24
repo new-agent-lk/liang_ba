@@ -206,26 +206,15 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-
-        $.get('/api/v1/data/history?stock_codes=sz399001').done(function (response) {
+        $.get('/api/v1/data/tensc/day/').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
             var nowDate = new Date();
             var nowMonth = nowDate.getMonth() + 1;
-            // if (nowMonth < 10) {
-            //     nowMonth = '0' + nowMonth;
-            // }
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             console.log(now);
             $.each(response.sz399001, function (k, v) {
-                // if (v.day.slice(0, 10) == now) {
-                //     xdata.push(v.day);
-                //     high.push(v.high);
-                //     low.push(v.low);
-                //     open.push(v.open);
-                //     close.push(v.close)
-                // }
                 item = [v.day, v.open, v.close, v.low, v.high];
                 xdata.push(item);
 
@@ -298,7 +287,7 @@ $(function () {
 
 
         function getData() {
-            $.get('http://www.liangbax.com/api/v1/data/tensc/minsec/').done(function (response) {
+            $.get('http://www.liangbax.com/api/v1/data/tensc/').done(function (response) {
                 console.log(response);
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
@@ -306,7 +295,7 @@ $(function () {
                     xdata.push(newData[0]+newData[1]+ ':'+newData[2]+newData[3]);
                     avg_price.push(v[1]);
                 });
-                response.custom_data.data.forEach(function (val) {
+                response.sh_data.data.forEach(function (val) {
                     sh.push(val[1]);
                 })
                 console.log(newData);
@@ -320,7 +309,7 @@ $(function () {
                             data: avg_price
                         },
                         {
-                            name: 'custom_data',
+                            name: 'sh_data',
                             data: sh
                         }
                     ]
@@ -341,7 +330,7 @@ $(function () {
                 trigger: 'axis'
             },
             legend: {
-                data: ['avg_price', 'custom_data']
+                data: ['avg_price', 'sh_data']
             },
             // 横坐标
             xAxis: {
@@ -387,7 +376,7 @@ $(function () {
                     }
                 },
                 {
-                    name: 'custom_data',
+                    name: 'sh_data',
                     type: 'line',
                     symbol: 'none',
                     yAxisIndex: 1,
@@ -402,6 +391,8 @@ $(function () {
 
 
         timer = setInterval(function () {
+            avg_price = [];
+            sh = [];
             getData();
         }, 3000 * 60);
 
