@@ -24,6 +24,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var control_data = [];
 
         function calculateMA(dayCount) {
             var result = [];
@@ -84,23 +85,36 @@ $(function () {
                 min: 'dataMin',
                 max: 'dataMax'
             },
-            yAxis: {
-                scale: true,
-                splitArea: {
-                    show: true
+            yAxis: [
+                {
+                    scale: true,
+                    splitArea: {
+                        show: true
+                    }
+                },
+                {
+                    name: 'control_data',
+                    type: 'value',
+                    data: control_data,
+                    min: function (value) {
+                        return value.min;
+                    },
+                    max: function (value) {
+                        return value.max;
+                    }
                 }
-            },
+            ],
             dataZoom: [
                 {
                     type: 'inside',
-                    start: 50,
+                    start: 0,
                     end: 100
                 },
                 {
                     show: true,
                     type: 'slider',
                     top: '90%',
-                    start: 50,
+                    start: 0,
                     end: 100
                 }
             ],
@@ -199,6 +213,17 @@ $(function () {
                             }
                         ]
                     }
+                },
+                {
+                    name: 'control_data',
+                    data: control_data,
+                    type: 'line',
+                    yAxisIndex: 1,
+                    lineStyle: {
+                        normal: {
+                            color: '#fc5e33'
+                        }
+                    }
                 }
             ]
         };
@@ -216,6 +241,11 @@ $(function () {
             console.log(now);
             xdata = response.dayk_data;
             data0 = splitData(xdata);
+
+            response.control_data.data.forEach(function (v) {
+                control_data.push(v[1]);
+            })
+            console.log(control_data);
             myChart.setOption({
                 xAxis: {
                     type: 'category',
@@ -282,15 +312,17 @@ $(function () {
 
 
         function getData() {
+            xdata = [];
+            avg_price = [];
             $.get('/api/v1/data/tensc/minsec').done(function (response) {
                 console.log(response);
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
                     newData = v[0].split("");
-                    xdata.push(newData[0]+newData[1]+ ':'+newData[2]+newData[3]);
+                    xdata.push(newData[0] + newData[1] + ':' + newData[2] + newData[3]);
                     avg_price.push(v[1]);
                 });
-                response.custom_data.data.forEach(function (val) {
+                response.control_data.data.forEach(function (val) {
                     sh.push(val[1]);
                 })
                 myChart.setOption({
@@ -339,20 +371,20 @@ $(function () {
                     type: 'value',
                     data: avg_price,
                     max: 100,
-                    min: function(value) {
+                    min: function (value) {
                         return value.min;
                     },
-                    max: function(value) {
+                    max: function (value) {
                         return value.max;
                     }
                 }, {
                     name: 'sh_data',
                     type: 'value',
                     data: sh,
-                    min: function(value) {
+                    min: function (value) {
                         return value.min;
                     },
-                    max: function(value) {
+                    max: function (value) {
                         return value.max;
                     }
                 }
@@ -382,15 +414,13 @@ $(function () {
                 }
             ],
         };
+        getData();
 
 
         timer = setInterval(function () {
-            avg_price = [];
-            sh = [];
             getData();
         }, 3000 * 60);
 
-        getData();
 
 
         myChart.setOption(option);
@@ -475,14 +505,14 @@ $(function () {
             dataZoom: [
                 {
                     type: 'inside',
-                    start: 50,
+                    start: 0,
                     end: 100
                 },
                 {
                     show: true,
                     type: 'slider',
                     top: '90%',
-                    start: 50,
+                    start: 0,
                     end: 100
                 }
             ],
@@ -728,14 +758,14 @@ $(function () {
             dataZoom: [
                 {
                     type: 'inside',
-                    start: 50,
+                    start: 0,
                     end: 100
                 },
                 {
                     show: true,
                     type: 'slider',
                     top: '90%',
-                    start: 50,
+                    start: 0,
                     end: 100
                 }
             ],
