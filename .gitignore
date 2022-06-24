@@ -121,3 +121,4 @@ company/company/settings.py
 uwsgi.pid
 **/__pycache__
 .vscode
+**settings.py
