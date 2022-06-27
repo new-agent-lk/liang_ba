@@ -63,7 +63,7 @@ def get_daily_stock_data():
                     }
                     print(f'获取到数据  {meta_string}')
                     try:
-                        gsmd, _ = GenericStockMarketData.objects.create(**data)
+                        gsmd = GenericStockMarketData.objects.create(**data)
                         print(f'{now}  {gsmd.stock_code} now_price:{gsmd.now_price}')
                     except Exception as e:
                         print(e)
