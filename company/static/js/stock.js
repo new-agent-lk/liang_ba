@@ -41,6 +41,7 @@ $(function () {
         var downBorderColor = '#008F28';
         var data0 = [];
         var control_data = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -75,7 +76,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -256,11 +257,15 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.dayk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
 
             response.control_data.data.forEach(function (v) {
                 control_data.push(v[1]);
             })
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -323,12 +328,14 @@ $(function () {
         var sh = [];
         var date = new Date();
         var now = date.getHours() + date.getMinutes();
+        var flag_info = null;
 
 
         function getData() {
             xdata = [];
             avg_price = [];
             $.get('/api/v1/data/tensc/minsec/?code_flag=0').done(function (response) {
+                flag_info = response.flag_info;
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
                     newData = v[0].split("");
@@ -339,6 +346,9 @@ $(function () {
                     sh.push(val[1]);
                 })
                 myChart.setOption({
+                    title: {
+                        text: flag_info
+                    },
                     xAxis: {
                         data: xdata
                     },
@@ -369,7 +379,8 @@ $(function () {
                 trigger: 'axis'
             },
             legend: {
-                data: ['avg_price', 'sh_data']
+                data: ['avg_price', 'sh_data'],
+                right: 0
             },
             // 横坐标
             xAxis: {
@@ -449,6 +460,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -483,7 +495,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -640,7 +652,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.monthk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -701,6 +717,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -735,7 +752,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -892,7 +909,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.weekk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -954,6 +975,7 @@ $(function () {
         var downBorderColor = '#008F28';
         var data0 = [];
         var control_data = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -988,7 +1010,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -1169,11 +1191,15 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.dayk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
 
             response.control_data.data.forEach(function (v) {
                 control_data.push(v[1]);
             })
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -1236,12 +1262,14 @@ $(function () {
         var sh = [];
         var date = new Date();
         var now = date.getHours() + date.getMinutes();
+        var flag_info = null;
 
 
         function getData() {
             xdata = [];
             avg_price = [];
             $.get('/api/v1/data/tensc/minsec/?code_flag=1').done(function (response) {
+                flag_info = response.flag_info;
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
                     newData = v[0].split("");
@@ -1252,6 +1280,9 @@ $(function () {
                     sh.push(val[1]);
                 })
                 myChart.setOption({
+                    title: {
+                        text: flag_info
+                    },
                     xAxis: {
                         data: xdata
                     },
@@ -1282,7 +1313,8 @@ $(function () {
                 trigger: 'axis'
             },
             legend: {
-                data: ['avg_price', 'sh_data']
+                data: ['avg_price', 'sh_data'],
+                right: 0
             },
             // 横坐标
             xAxis: {
@@ -1362,6 +1394,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -1396,7 +1429,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -1553,7 +1586,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.monthk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -1614,6 +1651,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -1648,7 +1686,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -1805,7 +1843,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.weekk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -1867,6 +1909,7 @@ $(function () {
         var downBorderColor = '#008F28';
         var data0 = [];
         var control_data = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -1901,7 +1944,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -2082,11 +2125,15 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.dayk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
 
             response.control_data.data.forEach(function (v) {
                 control_data.push(v[1]);
             })
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -2149,12 +2196,14 @@ $(function () {
         var sh = [];
         var date = new Date();
         var now = date.getHours() + date.getMinutes();
+        var flag_info = null;
 
 
         function getData() {
             xdata = [];
             avg_price = [];
             $.get('/api/v1/data/tensc/minsec/?code_flag=2').done(function (response) {
+                flag_info = response.flag_info;
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
                     newData = v[0].split("");
@@ -2165,6 +2214,9 @@ $(function () {
                     sh.push(val[1]);
                 })
                 myChart.setOption({
+                    title: {
+                        text: flag_info
+                    },
                     xAxis: {
                         data: xdata
                     },
@@ -2195,7 +2247,8 @@ $(function () {
                 trigger: 'axis'
             },
             legend: {
-                data: ['avg_price', 'sh_data']
+                data: ['avg_price', 'sh_data'],
+                right: 0
             },
             // 横坐标
             xAxis: {
@@ -2275,6 +2328,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -2309,7 +2363,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -2466,7 +2520,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.monthk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
@@ -2527,6 +2585,7 @@ $(function () {
         var downColor = '#00da3c';
         var downBorderColor = '#008F28';
         var data0 = [];
+        var flag_info = null;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -2561,7 +2620,7 @@ $(function () {
         var option = {
             // 标题
             title: {
-                text: '深证指数',
+                text: '',
                 left: 0
             },
             tooltip: {
@@ -2718,7 +2777,11 @@ $(function () {
             var now = nowDate.getFullYear() + '-' + nowMonth + '-' + nowDate.getDate();
             xdata = response.weekk_data;
             data0 = splitData(xdata);
+            flag_info = response.flag_info.slice(0, 4);
             myChart.setOption({
+                title: {
+                    text: flag_info
+                },
                 xAxis: {
                     type: 'category',
                     data: data0.categoryData
