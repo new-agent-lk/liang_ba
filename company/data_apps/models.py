@@ -1,3 +1,4 @@
+from re import T
 import uuid
 
 from django.db import models
@@ -28,3 +29,15 @@ class GenericStockMarketData(BaseModel):
     def __str__(self):
         return self.stock_name
 
+
+class BlastStorckMarketData(BaseModel):
+    """
+        用于对比的股票指数。
+    """
+    stock_code = models.CharField(max_length=16, unique=True)
+    stock_name = models.CharField(max_length=255, null=True, blank=True)
+    data = models.JSONField(null=True)
+ 
+    def __str__(self):
+        return self.stock_name
+    

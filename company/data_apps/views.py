@@ -1,3 +1,4 @@
+from dis import code_info
 from ossaudiodev import control_labels
 import chinese_calendar
 import requests
@@ -105,30 +106,73 @@ class TenStockDataView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, date_flag):
+        code_flag = request.GET.get('code_flag')
+        if str(code_flag) not in ['0', '1', '2']:
+            return Http404
         if date_flag not in ['minsec', 'day', 'week', 'month']:
             return Http404
-        _codes = {
-            '0603185': 0.1,
-            '0603260': 0.1,
-            '0600196': 0.1,
-            '0600958': 0.1,
-            '0601878': 0.1,
-            '0600598': 0.1,
-            '1002594': 0.1,
-            '0688981': 0.1,
-            '0688363': 0.1,
-            '0600438': 0.1
+        _data = {
+            '0': {
+                'info': '量霸价投，对标中证100',
+                'stock_portfolio': {
+                    '0603185': 0.1,
+                    '0603260': 0.1,
+                    '0600196': 0.1,
+                    '0600958': 0.1,
+                    '0601878': 0.1,
+                    '0600598': 0.1,
+                    '1002594': 0.1,
+                    '0688981': 0.1,
+                    '0688363': 0.1,
+                    '0600438': 0.1
+                },
+                'blast_stock_code': '0000903'
+            },
+            '1': {
+                'info': '量霸超额，对标中证500',
+                'stock_portfolio': {
+                    '1300869': 0.1,
+                    '0600298': 0.1,
+                    '0600597': 0.1,
+                    '1002511': 0.1,
+                    '1300724': 0.1,
+                    '1300024': 0.1,
+                    '0601555': 0.1,
+                    '1300474': 0.1,
+                    '0688521': 0.1,
+                    '1002156': 0.1
+                },
+                'blast_stock_code': '0000905'
+            },
+            '2': {
+                'info': '量霸超额，对标中证500',
+                'stock_portfolio': {
+                    '0688396': 0.1,
+                    '0601995': 0.1,
+                    '0601012': 0.1,
+                    '1002202': 0.1,
+                    '0600893': 0.1,
+                    '1300623': 0.1,
+                    '1300613': 0.1,
+                    '0688298': 0.1,
+                    '0603529': 0.1,
+                    '1300075': 0.1
+                },
+                'blast_stock_code': '0000300'
+            }
         }
         data = {
             'is_work_time': True,
-            'info': 'ok',
-            'stock_codes': list(_codes.keys()),
+            'info': 'ok'
         }
         now = datetime.now()   
         
         if date_flag == 'minsec':
             _stock_dict = {}
-            for stock_code, weight in _codes.items():
+            stock_datas = _data[code_flag]['stock_portfolio']
+            blast_stock_code = _data[code_flag]['blast_stock_code']
+            data['stock_codes']: list(stock_datas.keys())
+            for stock_code, weight in stock_datas.items():
                 url = f"https://img1.money.126.net/data/hs/time/today/{stock_code}.json"
                 try:
                     r = rq.get(url, timeout=300, verify=False)
@@ -150,22 +194,27 @@ class TenStockDataView(APIView):
 
             data['last_work_data'] = []
             for key, value in _stock_dict.items():
-                if value.get('count') != len(_codes.keys()):
+                if value.get('count') != len(stock_datas.keys()):
                     continue
                 data['last_work_data'].append([key, float(value.get('price'))])
-            url = "https://img1.money.126.net/data/hs/time/today/0000132.json"
+            url = f"https://img1.money.126.net/data/hs/time/today/{blast_stock_code}.json"
             try:
                 r = rq.get(url, timeout=300, verify=False)
                 data['control_data'] = r.json()
             except Exception as e:
                 data['control_data'] = []
+            
+            data['flag_info'] = _data[code_flag]['info']
             if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
                 data['is_work_time'] = False
                 data['info'] = '当前非工作时间'
 
         else:
             _stock_dict = {}
-            for stock_code, weight in _codes.items():
+            blast_stock_code = _data[code_flag]['blast_stock_code']
+            stock_datas = _data[code_flag]['stock_portfolio']
+            data['stock_codes']: list(stock_datas.keys())
+            for stock_code, weight in stock_datas.items():
                 url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2022/{stock_code}.json'
                 try:
                     r = rq.get(url, timeout=300, verify=False)
@@ -205,11 +254,11 @@ class TenStockDataView(APIView):
 
             data[f'{date_flag}k_data'] = []
             for key, value in _stock_dict.items():
-                if value.get('count') != len(_codes.keys()):
+                if value.get('count') != len(stock_datas.keys()):
                     continue
                 data[f'{date_flag}k_data'].append([key, float(value.get('open')), float(value.get('close')), float(value.get('high')), float(value.get('low'))])
             
-            url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2022/0000903.json'
+            url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2022/{blast_stock_code}.json'
             try:
                 r = rq.get(url, timeout=300, verify=False)
                 control_data = r.json()
@@ -219,7 +268,7 @@ class TenStockDataView(APIView):
             
             if control_data:
                 if len(control_data['data']) < 12:
-                    url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2021/0000903.json'
+                    url = f'https://img1.money.126.net/data/hs/kline/{date_flag}/history/2021/{blast_stock_code}.json'
                     try:
                         r = rq.get(url, timeout=300, verify=False)
                         _resp_data = r.json()
@@ -234,6 +283,8 @@ class TenStockDataView(APIView):
             if not (chinese_calendar.is_workday(now) and get_on_work_time(now)):
                 data['is_work_time'] = False
                 data['info'] = '当前非工作时间'
+            
+            data['flag_info'] = _data[code_flag]['info']
         
         return Response(data)
         
