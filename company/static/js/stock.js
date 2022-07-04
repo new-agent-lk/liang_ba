@@ -1182,7 +1182,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/day/?code_flag=1').done(function (response) {
+        $.get('/api/v1/data/tensc/day/?code_flag=2').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
@@ -1268,7 +1268,7 @@ $(function () {
         function getData() {
             xdata = [];
             avg_price = [];
-            $.get('/api/v1/data/tensc/minsec/?code_flag=1').done(function (response) {
+            $.get('/api/v1/data/tensc/minsec/?code_flag=2').done(function (response) {
                 flag_info = response.flag_info;
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
@@ -1577,7 +1577,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/month/?code_flag=1').done(function (response) {
+        $.get('/api/v1/data/tensc/month/?code_flag=2').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
@@ -1834,7 +1834,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/week/?code_flag=1').done(function (response) {
+        $.get('/api/v1/data/tensc/week/?code_flag=2').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
@@ -2116,7 +2116,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/day/?code_flag=2').done(function (response) {
+        $.get('/api/v1/data/tensc/day/?code_flag=1').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
@@ -2202,7 +2202,7 @@ $(function () {
         function getData() {
             xdata = [];
             avg_price = [];
-            $.get('/api/v1/data/tensc/minsec/?code_flag=2').done(function (response) {
+            $.get('/api/v1/data/tensc/minsec/?code_flag=1').done(function (response) {
                 flag_info = response.flag_info;
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
@@ -2511,7 +2511,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/month/?code_flag=2').done(function (response) {
+        $.get('/api/v1/data/tensc/month/?code_flag=1').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
@@ -2768,7 +2768,7 @@ $(function () {
         myChart.on('click', function (params) {
             alert(params.data);
         });
-        $.get('/api/v1/data/tensc/week/?code_flag=2').done(function (response) {
+        $.get('/api/v1/data/tensc/week/?code_flag=1').done(function (response) {
             console.log(response);
             var xdata = [];
             var item = [];
