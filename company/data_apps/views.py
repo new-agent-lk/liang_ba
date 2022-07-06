@@ -10,13 +10,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from django.http import Http404
+from django.core.cache import cache
 # Create your views here.
 
 from data_apps.models import GenericStockMarketData
 from data_apps.crons import get_on_work_time
 from data_apps.serializers.generic_stock_market_data import GenericStockMarketDataSerializer
 
-from .utils import get_two_float
+from .utils import get_two_float, count_rate
 
 requests.packages.urllib3.disable_warnings()
 rq = requests.session()
@@ -114,6 +115,7 @@ class TenStockDataView(APIView):
         _data = {
             '0': {
                 'info': '量霸价投，对标中证100',
+                'key': 'liangbajt',
                 'stock_portfolio': {
                     '0603185': 0.1,
                     '0603260': 0.1,
@@ -128,8 +130,9 @@ class TenStockDataView(APIView):
                 },
                 'blast_stock_code': '0000903'
             },
-            '1': {
+            '2': {
                 'info': '量霸成长，对标沪深300',
+                'key': 'liangbacz',
                 'stock_portfolio': {
                     '0688396': 0.1,
                     '0601995': 0.1,
@@ -144,8 +147,9 @@ class TenStockDataView(APIView):
                 },
                 'blast_stock_code': '0000300'
             },
-            '2': {
+            '1': {
                 'info': '量霸超额，对标中证500',
+                'key': 'liangbace',
                 'stock_portfolio': {
                     '1300869': 0.1,
                     '0600298': 0.1,
@@ -285,6 +289,8 @@ class TenStockDataView(APIView):
                 data['info'] = '当前非工作时间'
             
             data['flag_info'] = _data[code_flag]['info']
+        
+
         
         return Response(data)
         
