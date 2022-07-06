@@ -27,22 +27,22 @@ def count_rate(stock_portfolio, couple_key=None):
     for stock_code, weight in stock_portfolio.items():
         url = f'https://img1.money.126.net/data/hs/kline/day/history/{datetime.now().year}/{stock_code}.json'
         try:
-            key = f'{stock_code}_hs_{datetime.now().year-1}'
-            data = cache.get(key)
-            if not data:
-                resp = rq.get(f'https://img1.money.126.net/data/hs/kline/day/history/{datetime.now().year-1}/{stock_code}.json')
-                data = resp.json().get('data')
-                cache.set(key, data)
+            # key = f'{stock_code}_hs_{datetime.now().year-1}'
+            # data = cache.get(key)
+            # if not data:
+            #     resp = rq.get(f'https://img1.money.126.net/data/hs/kline/day/history/{datetime.now().year-1}/{stock_code}.json')
+            #     data = resp.json().get('data')
+            #     cache.set(key, data)
 
             r = rq.get(url, timeout=300, verify=False)
             resp_data = r.json()
         except Exception as e:
             print(e)
-            data = {}
+            # data = {}
             resp_data = {}  
-        if resp_data and data:
+        if resp_data:
             _datas = resp_data.get('data')
-            _datas = data + _datas
+            # _datas = data + _datas
             for time_str, open, close, high, low, *_ in _datas:
                 if time_str in _stock_dict:
                     _stock_dict[time_str]['open'] += Decimal(get_two_float(Decimal(open) * Decimal(weight), 2))
