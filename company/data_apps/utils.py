@@ -29,7 +29,7 @@ def count_rate(stock_portfolio, couple_key=None):
         try:
             key = f'{stock_code}_hs_{datetime.now().year-1}'
             data = cache.get(key)
-            if data:
+            if not data:
                 resp = rq.get(f'https://img1.money.126.net/data/hs/kline/day/history/{datetime.now().year-1}/{stock_code}.json')
                 data = resp.json().get('data')
                 cache.set(key, data)
@@ -78,7 +78,7 @@ def count_rate(stock_portfolio, couple_key=None):
     else:
         retreat_rate = 0
     
-    annual_yield = (last_price - start_price) / start_price * 365
+    annual_yield = (last_price - start_price) / start_price
 
     return annual_yield, retreat_rate
 
