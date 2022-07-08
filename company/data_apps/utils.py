@@ -38,7 +38,7 @@ def count_rate(stock_portfolio, couple_key=None):
             resp_data = r.json()
         except Exception as e:
             print(e)
-            # data = {}
+            data = {}
             resp_data = {}  
         if resp_data:
             _datas = resp_data.get('data')
@@ -65,8 +65,10 @@ def count_rate(stock_portfolio, couple_key=None):
         data_set.append([key, float(value.get('open')), float(value.get('close')), float(value.get('high')), float(value.get('low'))])
     print(data_set)
     price_list = [d[1] for d in data_set]
-    print(price_list)
-    low_price = min(price_list)
+    # print(price_list)
+    low_price = 0
+    if price_list:
+        low_price = min(price_list)
     start_date, start_price, *_ = data_set[0]
     last_date, last_price, *_ = data_set[-1]
 
