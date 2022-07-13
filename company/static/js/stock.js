@@ -1,4 +1,7 @@
 $(function () {
+    var annual_yield = $('.desc-box .annual-yield');
+    var retreat_rate = $('.desc-box .retreat-rate');
+
     //日线(量霸价投，对标中证100  code_flag=0)
     dateStock('main', 0);
     //周线(量霸价投，对标中证100  code_flag=0)
@@ -43,6 +46,8 @@ $(function () {
         var data0 = [];
         var control_data = [];
         var flag_info = null;
+        var annual_yield = '.day-annual-yield' + flag;
+        var retreat_rate = '.day-retreat-rate' + flag;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -237,6 +242,8 @@ $(function () {
             xdata = response.dayk_data;
             data0 = splitData(xdata);
             flag_info = response.flag_info.slice(0, 4);
+            $('.desc-box ' + annual_yield ).text((response.annual_yield*100).toFixed(2) + '%');
+            $('.desc-box ' + retreat_rate).text((response.retreat_rate*100).toFixed(2) + '%');
 
             response.control_data.data.forEach(function (v) {
                 control_data.push(v[1]);
@@ -308,6 +315,8 @@ $(function () {
         var date = new Date();
         var now = date.getHours() + date.getMinutes();
         var flag_info = null;
+        var annual_yield = '.minsec-annual-yield' + flag;
+        var retreat_rate = '.minsec-retreat-rate' + flag;
 
 
         function getData() {
@@ -315,6 +324,8 @@ $(function () {
             avg_price = [];
             $.get('/api/v1/data/tensc/minsec/?code_flag=' + flag).done(function (response) {
                 flag_info = response.flag_info;
+                $('.desc-box ' + annual_yield ).text((response.annual_yield*100).toFixed(2) + '%');
+                $('.desc-box ' + retreat_rate).text((response.retreat_rate*100).toFixed(2) + '%');
                 response.last_work_data.forEach(function (v) {
                     // 时间展示形式
                     newData = v[0].split("");
@@ -440,6 +451,8 @@ $(function () {
         var downBorderColor = '#008F28';
         var data0 = [];
         var flag_info = null;
+        var annual_yield = '.month-annual-yield' + flag;
+        var retreat_rate = '.month-retreat-rate' + flag;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -632,6 +645,8 @@ $(function () {
             xdata = response.monthk_data;
             data0 = splitData(xdata);
             flag_info = response.flag_info.slice(0, 4);
+            $('.desc-box ' + annual_yield ).text((response.annual_yield*100).toFixed(2) + '%');
+            $('.desc-box ' + retreat_rate).text((response.retreat_rate*100).toFixed(2) + '%');
             myChart.setOption({
                 title: {
                     text: flag_info
@@ -697,6 +712,8 @@ $(function () {
         var downBorderColor = '#008F28';
         var data0 = [];
         var flag_info = null;
+        var annual_yield = '.week-annual-yield' + flag;
+        var retreat_rate = '.week-retreat-rate' + flag;
 
         function calculateMA(dayCount) {
             var result = [];
@@ -889,6 +906,8 @@ $(function () {
             xdata = response.weekk_data;
             data0 = splitData(xdata);
             flag_info = response.flag_info.slice(0, 4);
+            $('.desc-box ' + annual_yield ).text((response.annual_yield*100).toFixed(2) + '%');
+            $('.desc-box ' + retreat_rate).text((response.retreat_rate*100).toFixed(2) + '%');
             myChart.setOption({
                 title: {
                     text: flag_info
