@@ -30,7 +30,7 @@ class GenericStockMarketData(BaseModel):
         return self.stock_name
 
 
-class BlastStorckMarketData(BaseModel):
+class BlastStockMarketData(BaseModel):
     """
         用于对比的股票指数。
     """
