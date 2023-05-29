@@ -109,7 +109,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liang_ba',   # 请换成新建的数据库名称
+        'NAME': 'liang_ba',  # 请换成新建的数据库名称
         'USER': 'root',
         'PASSWORD': '123456',  # 请换成自己的密码
         'HOST': '127.0.0.1',  # 如果不能连接，改成localhost
@@ -285,7 +285,7 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
     ),
 
-    'DEFAULT_PAGINATION_CLASS':  'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20  # 每页数目
 }
 
@@ -308,3 +308,61 @@ CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
 # SESSION_COOKIE_HTTPONLY = True
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
+ADMINS = (
+    ('lk', 'lk_ernest@163.com'),
+)
+# 创建log文件的文件夹
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+
+
+# 基本配置，可以复用的
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,  # 禁用已经存在的logger实例
+    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+    "formatters": {  # 定义了两种日志格式
+        "verbose": {  # 详细
+            "format": "%(levelname)s %(asctime)s %(module)s "
+                      "%(process)d %(thread)d %(message)s"
+        },
+        'simple': {  # 简单
+            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        },
+    },
+    "handlers": {  # 定义了三种日志处理方式
+        "mail_admins": {  # 只有debug=False且Error级别以上发邮件给admin
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
+        'file': {  # 对INFO级别以上信息以日志文件形式保存
+            'level': "INFO",
+            'class': 'logging.handlers.RotatingFileHandler',  # 滚动生成日志，切割
+            'filename': os.path.join(LOG_DIR, 'django.log'),  # 日志文件名
+            'maxBytes': 1024 * 1024 * 10,  # 单个日志文件最大为10M
+            'backupCount': 5,  # 日志备份文件最大数量
+            'formatter': 'simple',  # 简单格式
+            'encoding': 'utf-8',  # 放置中文乱码
+        },
+        "console": {  # 打印到终端console
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {"level": "INFO", "handlers": ["console"]},
+    "loggers": {
+        "django.request": {  # Django的request发生error会自动记录
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": True,  # 向不向更高级别的logger传递
+        },
+        "django.security.DisallowedHost": {  # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
+            "level": "ERROR",
+            "handlers": ["console", "mail_admins"],
+            "propagate": True,
+        },
+    },
+}
