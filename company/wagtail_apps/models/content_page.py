@@ -3,15 +3,16 @@ import re
 from django.db import models
 from modelcluster.fields import ParentalKey
 
-from wagtail.core.models import Page, Orderable
-from wagtail.core.fields import StreamField
-from wagtail.core import blocks
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
+from wagtail.models import Page, Orderable
+from wagtail.fields import StreamField
+from wagtail import blocks
+from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 from companyinfo.models import CompanyInfo, FriendlyLinks
+from wagtail_apps.blocks import BasePageStreamBlock, BaseDailyPageStreamBlock
 
 
 # Create your models here.
@@ -23,6 +24,7 @@ class CompanyContentPage(Page):
         ('Our Advantages', 'Our Advantages'),
         ('Our Future', 'Our Future'),
         ('Recruits', 'Recruits'),
+        ('Daily', 'Daily'),
     )
     category = models.CharField(verbose_name='文章分类', max_length=255, default='Our Opinions',
                                 choices=CONTENT_PAGE_CATEGORIES)
@@ -38,24 +40,18 @@ class CompanyContentPage(Page):
         verbose_name='首页内容介绍图片'
     )
 
-    content_stream = StreamField([
-        ('source_code', blocks.RawHTMLBlock()),
-        ('big_title', blocks.CharBlock(max_length=512, help_text='大标题')),
-        ('content', blocks.ListBlock(blocks.RichTextBlock(help_text='内容'), help_text='这里可以填入多个内容，也可以只填写一个')),
+    content_stream = StreamField(
+        BasePageStreamBlock(),
+        blank=True,
+        null=True,
+        block_counts={
+            'big_title': {'max_num': 1},
+            'content': {'max_num': 1},
+            'author_info': {'max_num': 1},
+        }, use_json_field=True
+    )
 
-        ('author_info', blocks.StructBlock([
-            ('ico_image', ImageChooserBlock(help_text='头像')),
-            ('author_name', blocks.CharBlock(max_length=255, help_text='作者')),
-            ('author_intro', blocks.CharBlock(max_length=255, help_text='作者介绍')),
-        ], null=True, blank=True, max_num=1, help_text='作者信息')),
-
-    ], blank=True, null=True, block_counts={
-        'big_title': {'max_num': 1},
-        'content': {'max_num': 1},
-        'author_info': {'max_num': 1},
-    })
-
-    search_fields = [
+    search_fields = Page.search_fields + [
         index.SearchField('navigation'),
     ]
 
@@ -82,14 +78,13 @@ class CompanyContentPage(Page):
         FieldPanel('navigation'),
         FieldPanel('page_intro'),
         FieldPanel('page_type'),
-        ImageChooserPanel('page_intro_image'),
-        StreamFieldPanel('content_stream'),
+        FieldPanel('page_intro_image'),
+        FieldPanel('content_stream'),
         InlinePanel('child_images', label="Child images"),
     ]
 
-    def get_context(self, request):
-
-        context = super().get_context(request)
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
         return context
@@ -108,7 +103,80 @@ class CompanyContentPageImage(Orderable):
     title = models.CharField(verbose_name='标题', max_length=255, null=True, blank=True)
 
     panels = [
-        ImageChooserPanel('child_image'),
+        FieldPanel('child_image'),
         FieldPanel('info'),
         FieldPanel('title'),
     ]
+
+
+class CompanyDailyContentPage(Page):
+    category = models.CharField(verbose_name='文章分类', max_length=255, default='Daily')
+    navigation = models.CharField(verbose_name='页面内标题', max_length=255, default='每日财报')
+    page_intro = models.CharField(verbose_name='页面简要介绍', max_length=512, default='简要介绍')
+    page_intro_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='首页内容介绍图片'
+    )
+
+    body = StreamField(
+        BaseDailyPageStreamBlock(), verbose_name="Page body", blank=True, use_json_field=True,
+        block_counts={
+            'source_code': {'max_num': 1},
+            'big_title': {'max_num': 1},
+            'content': {'max_num': 1},
+            'ico_image': {'max_num': 1},
+            'author_name': {'max_num': 1},
+            'author_intro': {'max_num': 1}
+        }
+    )
+
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="内容页图片",
+    )
+
+    search_fields = Page.search_fields + [
+        index.SearchField('navigation'),
+    ]
+
+    content_panels = Page.content_panels + [
+        FieldPanel('category'),
+        FieldPanel('navigation'),
+        FieldPanel('page_intro'),
+        FieldPanel('page_intro_image'),
+        FieldPanel('body'),
+        FieldPanel('image'),
+    ]
+
+    @property
+    def first_big_title(self):
+        return self.body.first_block_by_name('big_title')
+
+    @property
+    def first_ico_image(self):
+        return self.body.first_block_by_name('ico_image')
+
+    @property
+    def first_author_name(self):
+        return self.body.first_block_by_name('author_name')
+
+    @property
+    def first_author_intro(self):
+        return self.body.first_block_by_name('author_intro')
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+        context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+        return context
+
+    parent_page_types = ["CompanyDailyPage"]
+

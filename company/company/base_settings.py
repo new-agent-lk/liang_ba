@@ -42,10 +42,9 @@ INSTALLED_APPS = [
     'wagtail.images',
     'wagtail.search',
     'wagtail.admin',
-    'wagtail.core',
-
-    'taggit',
+    'wagtail',
     'modelcluster',
+    'taggit',
 
     'jet',  # 一定要放在admin前面
     'django.contrib.admin',
@@ -97,6 +96,17 @@ TEMPLATES = [
             ],
         },
     },
+    # {
+    #     'BACKEND': 'django.template.backends.jinja2.Jinja2',
+    #     'APP_DIRS': True,
+    #     'OPTIONS': {
+    #         'extensions': [
+    #             'wagtail.jinja2tags.core',
+    #             'wagtail.admin.jinja2tags.userbar',
+    #             'wagtail.images.jinja2tags.images',
+    #         ],
+    #     },
+    # }
 ]
 
 WSGI_APPLICATION = 'company.wsgi.application'
@@ -164,9 +174,9 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # 配置用户上传的文件

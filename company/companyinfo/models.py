@@ -7,9 +7,6 @@
 from datetime import datetime
 
 from django.db import models
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel
 
 from ckeditor_uploader.fields import RichTextUploadingField  # 富文本编辑器
 

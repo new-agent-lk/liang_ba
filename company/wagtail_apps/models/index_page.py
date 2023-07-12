@@ -1,8 +1,8 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 
-from wagtail.core.models import Page, Orderable
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.models import Page, Orderable
+from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 
 from companyinfo.models import CompanyInfo, FriendlyLinks
@@ -53,7 +53,7 @@ class CompanyIndexPageBannerImage(Orderable):
     info_title = models.CharField(blank=True, max_length=250)
 
     panels = [
-        ImageChooserPanel('banner_image'),
+        FieldPanel('banner_image'),
         FieldPanel('info'),
         FieldPanel('info_title'),
     ]

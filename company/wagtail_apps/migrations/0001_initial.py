@@ -3,8 +3,8 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.images.blocks
 
 
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('navigation', models.CharField(default='关于我们', max_length=255, verbose_name='页面内标题')),
                 ('page_intro', models.CharField(default='简要介绍', max_length=512, verbose_name='页面简要介绍')),
                 ('page_type', models.CharField(default='观点', max_length=20, verbose_name='文章类型')),
-                ('content_stream', wagtail.core.fields.StreamField([('source_code', wagtail.core.blocks.RawHTMLBlock()), ('big_title', wagtail.core.blocks.CharBlock(help_text='大标题', max_length=512)), ('content', wagtail.core.blocks.ListBlock(wagtail.core.blocks.RichTextBlock(help_text='内容'), help_text='这里可以填入多个内容，也可以只填写一个')), ('author_info', wagtail.core.blocks.StructBlock([('ico_image', wagtail.images.blocks.ImageChooserBlock(help_text='头像')), ('author_name', wagtail.core.blocks.CharBlock(help_text='作者', max_length=255)), ('author_intro', wagtail.core.blocks.CharBlock(help_text='作者介绍', max_length=255))], blank=True, help_text='作者信息', max_num=1, null=True))], blank=True, null=True)),
+                ('content_stream', wagtail.fields.StreamField([('source_code', wagtail.blocks.RawHTMLBlock()), ('big_title', wagtail.blocks.CharBlock(help_text='大标题', max_length=512)), ('content', wagtail.blocks.ListBlock(wagtail.blocks.RichTextBlock(help_text='内容'), help_text='这里可以填入多个内容，也可以只填写一个')), ('author_info', wagtail.blocks.StructBlock([('ico_image', wagtail.images.blocks.ImageChooserBlock(help_text='头像')), ('author_name', wagtail.blocks.CharBlock(help_text='作者', max_length=255)), ('author_intro', wagtail.blocks.CharBlock(help_text='作者介绍', max_length=255))], blank=True, help_text='作者信息', max_num=1, null=True))], blank=True, null=True)),
                 ('page_intro_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image', verbose_name='首页内容介绍图片')),
             ],
             options={
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
             name='CompanyRecruitsPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('info', wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ('info', wagtail.fields.RichTextField(blank=True, null=True)),
                 ('campus_intro', models.CharField(blank=True, max_length=255, null=True, verbose_name='校园招聘介绍')),
                 ('social_intro', models.CharField(blank=True, max_length=255, null=True, verbose_name='社会招聘介绍')),
             ],
