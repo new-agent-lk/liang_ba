@@ -36,7 +36,7 @@ def get_hsgt_north():
     str_nfi = f'净流入 {north_flow_in:.2f} 亿' if north_flow_in > 0 else f'净流出 {abs(north_flow_in):.2f} 亿'
     str_hfi = f'净流入 {hgt_flow_in:.2f} 亿' if hgt_flow_in > 0 else f'净流出 {abs(hgt_flow_in):.2f} 亿'
     str_sfi = f'净流入 {sgt_flow_in:.2f} 亿' if sgt_flow_in > 0 else f'净流出 {abs(sgt_flow_in):.2f} 亿'
-    return str_nfi, str_hfi, str_sfi
+    return str_nfi, str_hfi, str_sfi, hgt_flow_in, sgt_flow_in
 
 
 def get_hsgt_south():
@@ -52,7 +52,7 @@ def get_hsgt_south():
     str_nfi_s = f'净流入 {south_flow_in:.2f} 亿' if south_flow_in > 0 else f'净流出 {abs(south_flow_in):.2f} 亿'
     str_hfi_s = f'净流入 {hgt_south_flow_in:.2f} 亿' if hgt_south_flow_in > 0 else f'净流出 {abs(hgt_south_flow_in):.2f} 亿'
     str_sfi_s = f'净流入 {sgt_south_flow_in:.2f} 亿' if sgt_south_flow_in > 0 else f'净流出 {abs(sgt_south_flow_in):.2f} 亿'
-    return str_nfi_s, str_hfi_s, str_sfi_s
+    return str_nfi_s, str_hfi_s, str_sfi_s, hgt_south_flow_in, sgt_south_flow_in
 
 
 def get_hsgt_total():
@@ -82,25 +82,42 @@ def get_sz_deal_total():
 
 
 def get_template():
-    str_nfi_north, str_hfi_north, str_sfi_north = get_hsgt_north()
-    str_nfi_south, str_hfi_south, str_sfi_south = get_hsgt_south()
+    str_nfi_north, str_hfi_north, str_sfi_north, hgt_flow_in, sgt_flow_in = get_hsgt_north()
+    str_nfi_south, str_hfi_south, str_sfi_south, hgt_south_flow_in, sgt_south_flow_in = get_hsgt_south()
     total = get_hsgt_total()
     inner_data = json.dumps([
         {
-            'values': get_sh_deal_total(),
+            'value': get_sh_deal_total(),
             'name': '沪市',
         },
         {
-            'values': get_sz_deal_total(),
+            'value': get_sz_deal_total(),
             'name': '深市',
         }
     ])
-    # outer_data = '123'
+    outer_data = json.dumps([
+        {
+            'value': hgt_flow_in,
+            'name': '沪股通买入',
+        },
+        {
+            'value': sgt_flow_in,
+            'name': '深股通买入',
+        },
+        {
+            'value': hgt_south_flow_in,
+            'name': '沪股通买入',
+        },
+        {
+            'value': sgt_south_flow_in,
+            'name': '',
+        },
+    ])
     return render_to_string('charts/daily.html', locals())
 
 
 def get_stream_field():
-    return [("paragraph_block", RichText(get_template()))]
+    return [("source_code", RichText(get_template()))]
 
 
 def make_title(_date):
@@ -113,7 +130,6 @@ def make_slug(_date):
 
 def create_page():
     print('%s: generate daily page' % _one_day_pre)
-    # if chinese_calendar.is_workday(_now):
     daily_index = CompanyDailyPage.objects.live().first()
     daily_index.add_child(
         instance=CompanyDailyContentPage(
@@ -125,4 +141,6 @@ def create_page():
 
 
 if __name__ == '__main__':
+    # print(get_template())
+
     create_page()

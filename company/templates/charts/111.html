@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
 
 <div>
     北上一览<br/>
@@ -7,8 +14,8 @@
     其中港股通(沪)净流入 1.15 亿，港股通(深)净流入 15.28 亿。港元<br/>
 </div>
 
-<div id="container" style="height: 100%"></div>
-<!--<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>-->
+<div id="container" style="height: 100%; width: 1000px; height: 1000px"></div>
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
 <!-- Uncomment this line if you want to dataTool extension
 <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/extension/dataTool.min.js"></script>
 -->
@@ -28,8 +35,9 @@
 -->
 
 <script type="text/javascript">
-  var innerData = JSON.stringify([{"values": 3668.35, "name": "\u6caa\u5e02"}, {"values": 5475.07, "name": "\u6df1\u5e02"}]);
-  var OuterData = ;
+  var innerData = JSON.parse('[{"value": 3668.35, "name": "\u6caa\u5e02"}, {"value": 5475.07, "name": "\u6df1\u5e02"}]');
+  console.log(innerData);
+  // var OuterData = ;
   var dom = document.getElementById('container');
   var myChart = echarts.init(dom, null, {
     renderer: 'canvas',
@@ -118,6 +126,5 @@ series: [
 
   window.addEventListener('resize', myChart.resize);
 </script>
-
-
-Process finished with exit code 0
+</body>
+</html>
