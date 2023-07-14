@@ -36,7 +36,7 @@ def get_hsgt_north():
     str_nfi = f'净流入 {north_flow_in:.2f} 亿' if north_flow_in > 0 else f'净流出 {abs(north_flow_in):.2f} 亿'
     str_hfi = f'净流入 {hgt_flow_in:.2f} 亿' if hgt_flow_in > 0 else f'净流出 {abs(hgt_flow_in):.2f} 亿'
     str_sfi = f'净流入 {sgt_flow_in:.2f} 亿' if sgt_flow_in > 0 else f'净流出 {abs(sgt_flow_in):.2f} 亿'
-    return str_nfi, str_hfi, str_sfi, hgt_flow_in, sgt_flow_in
+    return str_nfi, str_hfi, str_sfi, abs(hgt_flow_in), abs(sgt_flow_in)
 
 
 def get_hsgt_south():
@@ -52,7 +52,7 @@ def get_hsgt_south():
     str_nfi_s = f'净流入 {south_flow_in:.2f} 亿' if south_flow_in > 0 else f'净流出 {abs(south_flow_in):.2f} 亿'
     str_hfi_s = f'净流入 {hgt_south_flow_in:.2f} 亿' if hgt_south_flow_in > 0 else f'净流出 {abs(hgt_south_flow_in):.2f} 亿'
     str_sfi_s = f'净流入 {sgt_south_flow_in:.2f} 亿' if sgt_south_flow_in > 0 else f'净流出 {abs(sgt_south_flow_in):.2f} 亿'
-    return str_nfi_s, str_hfi_s, str_sfi_s, hgt_south_flow_in, sgt_south_flow_in
+    return str_nfi_s, str_hfi_s, str_sfi_s, abs(hgt_south_flow_in), abs(sgt_south_flow_in)
 
 
 def get_hsgt_total():
@@ -98,11 +98,11 @@ def get_template():
     outer_data = json.dumps([
         {
             'value': hgt_flow_in,
-            'name': '沪股通买入',
+            'name': '沪股通卖出',
         },
         {
             'value': sgt_flow_in,
-            'name': '深股通买入',
+            'name': '深股通卖出',
         },
         {
             'value': hgt_south_flow_in,
@@ -110,7 +110,7 @@ def get_template():
         },
         {
             'value': sgt_south_flow_in,
-            'name': '',
+            'name': '深股通买入',
         },
     ])
     return render_to_string('charts/daily.html', locals())
