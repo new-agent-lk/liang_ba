@@ -36,7 +36,7 @@ def get_hsgt_north():
     str_nfi = f'净流入 {north_flow_in:.2f} 亿' if north_flow_in > 0 else f'净流出 {abs(north_flow_in):.2f} 亿'
     str_hfi = f'净流入 {hgt_flow_in:.2f} 亿' if hgt_flow_in > 0 else f'净流出 {abs(hgt_flow_in):.2f} 亿'
     str_sfi = f'净流入 {sgt_flow_in:.2f} 亿' if sgt_flow_in > 0 else f'净流出 {abs(sgt_flow_in):.2f} 亿'
-    return str_nfi, str_hfi, str_sfi, abs(hgt_flow_in), abs(sgt_flow_in)
+    return str_nfi, str_hfi, str_sfi
 
 
 def get_hsgt_south():
@@ -52,7 +52,7 @@ def get_hsgt_south():
     str_nfi_s = f'净流入 {south_flow_in:.2f} 亿' if south_flow_in > 0 else f'净流出 {abs(south_flow_in):.2f} 亿'
     str_hfi_s = f'净流入 {hgt_south_flow_in:.2f} 亿' if hgt_south_flow_in > 0 else f'净流出 {abs(hgt_south_flow_in):.2f} 亿'
     str_sfi_s = f'净流入 {sgt_south_flow_in:.2f} 亿' if sgt_south_flow_in > 0 else f'净流出 {abs(sgt_south_flow_in):.2f} 亿'
-    return str_nfi_s, str_hfi_s, str_sfi_s, abs(hgt_south_flow_in), abs(sgt_south_flow_in)
+    return str_nfi_s, str_hfi_s, str_sfi_s
 
 
 def get_hsgt_total():
@@ -81,9 +81,22 @@ def get_sz_deal_total():
     return round(stock_szse_summary_df.values[0][2] / 100000000, 2)
 
 
+def get_sh_deal():
+    stock_hsgt_hist_em_df = ak.stock_hsgt_hist_em(symbol="沪股通")
+    return round(stock_hsgt_hist_em_df.values[0][2], 2), round(stock_hsgt_hist_em_df.values[0][3], 2)
+
+
+def get_sz_deal():
+    stock_hsgt_hist_em_df = ak.stock_hsgt_hist_em(symbol="深股通")
+    return round(stock_hsgt_hist_em_df.values[0][2], 2), round(stock_hsgt_hist_em_df.values[0][3], 2)
+
+
 def get_template():
-    str_nfi_north, str_hfi_north, str_sfi_north, hgt_flow_in, sgt_flow_in = get_hsgt_north()
-    str_nfi_south, str_hfi_south, str_sfi_south, hgt_south_flow_in, sgt_south_flow_in = get_hsgt_south()
+    str_nfi_north, str_hfi_north, str_sfi_north = get_hsgt_north()
+    str_nfi_south, str_hfi_south, str_sfi_south = get_hsgt_south()
+    sh_deal_flow, sh_deal_sell = get_sh_deal()
+    sz_deal_flow, sz_deal_sell = get_sz_deal()
+
     total = get_hsgt_total()
     inner_data = json.dumps([
         {
@@ -97,19 +110,19 @@ def get_template():
     ])
     outer_data = json.dumps([
         {
-            'value': hgt_flow_in,
+            'value': sh_deal_sell,
             'name': '沪股通卖出',
         },
         {
-            'value': sgt_flow_in,
+            'value': sz_deal_sell,
             'name': '深股通卖出',
         },
         {
-            'value': hgt_south_flow_in,
+            'value': sh_deal_flow,
             'name': '沪股通买入',
         },
         {
-            'value': sgt_south_flow_in,
+            'value': sz_deal_flow,
             'name': '深股通买入',
         },
     ])
