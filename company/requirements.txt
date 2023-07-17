@@ -83,7 +83,7 @@ traitlets==5.2.1.post0
 tushare==1.2.84
 uritemplate==4.1.1
 urllib3==1.26.7
-uWSGI @ file:///home/conda/feedstock_root/build_artifacts/uwsgi_1640197103393/work
+uWSGI
 virtualenv-clone==0.5.6
 wagtail==4.2.4
 wagtailfontawesome==1.1.4
