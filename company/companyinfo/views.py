@@ -71,15 +71,15 @@ from .models import *
 #             return render(request, 'index.html', {})
 
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
-        context['pages'] = CompanyContentPage.objects.all()[:6]
-        context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
-        return context
+# class IndexView(TemplateView):
+#     template_name = 'index.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(IndexView, self).get_context_data(**kwargs)
+#         context['companyinfo'] = CompanyInfo.objects.all().order_by('-id')[0]  # 获取最新的一个公司信息对象
+#         context['pages'] = CompanyContentPage.objects.all()[:6]
+#         context['friendly_links'] = FriendlyLinks.objects.all()  # 获取所有友情链接对象
+#         return context
 
 
 class AboutView(View):

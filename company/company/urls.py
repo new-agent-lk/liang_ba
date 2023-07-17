@@ -10,20 +10,21 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url  # 添加include方法
 
+from company.view import IndexView
 from companyinfo.views import *  # 引入首页视图类
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # 第三方后台样式，一定要放在admin路由前面
     path('admin/', admin.site.urls),
 
-
+    path('', IndexView.as_view(), 'index'),
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('api/v1/data/', include('data_apps.urls')),
     path('docs/', include_docs_urls(title='LIANG BA API')),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
-    path('index/', IndexView.as_view(), name='index'),  # 定义首页路由
+    # path('index/', IndexView.as_view(), name='index_1'),  # 定义首页路由
     path('about/', AboutView.as_view(), name='about'),  # 关于我们
     # path('products/', ProductsView.as_view(), name='products'),  # 产品中心
     # path('productdetail/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),  # 产品详情
