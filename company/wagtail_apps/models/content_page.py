@@ -5,10 +5,7 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import StreamField
-from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, InlinePanel
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
 from companyinfo.models import CompanyInfo, FriendlyLinks
