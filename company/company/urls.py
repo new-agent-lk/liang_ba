@@ -17,7 +17,7 @@ urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # 第三方后台样式，一定要放在admin路由前面
     path('admin/', admin.site.urls),
 
-    path('/', IndexView.as_view(), 'index'),
+    re_path(r'^$', IndexView.as_view(), 'index'),
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('api/v1/data/', include('data_apps.urls')),
