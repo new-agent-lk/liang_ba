@@ -45,5 +45,3 @@ urlpatterns = [
 
     re_path(r'', include(wagtail_urls)),
 ]
-
-
