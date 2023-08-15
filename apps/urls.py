@@ -11,7 +11,7 @@ from django.urls import path, re_path
 from django.conf.urls import include, url  # 添加include方法
 
 from view import IndexView
-from website_info.views import *  # 引入首页视图类
+from companyinfo.views import *  # 引入首页视图类
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # 第三方后台样式，一定要放在admin路由前面
@@ -20,7 +20,7 @@ urlpatterns = [
     # re_path(r'^$', IndexView.as_view(), 'index'),
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    path('api/v1/data/', include('offer_data.urls')),
+    path('api/v1/data/', include('data_apps.urls')),
     path('docs/', include_docs_urls(title='LIANG BA API')),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器

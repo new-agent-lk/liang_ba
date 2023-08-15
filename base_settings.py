@@ -60,9 +60,9 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'django_crontab',
-    'website_info',  # 新创建的应用
-    'offer_data',
-    'wagtail_app',
+    'companyinfo',  # 新创建的应用
+    'data_apps',
+    'wagtail_apps',
     'rest_framework',
     'django_filters',
     'corsheaders',
@@ -303,9 +303,9 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 # 定时器配置
 CRONJOBS = [
     # 每1分钟生成一次首页静态文件
-    ('*/1 * * * *', 'offer_data.crons.get_daily_stock_data',
+    ('*/1 * * * *', 'data_apps.crons.get_daily_stock_data',
      '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log')),
-    # ('*/1 * * * *', 'offer_data.crons.get_ten_stock_data',
+    # ('*/1 * * * *', 'data_apps.crons.get_ten_stock_data',
     #  '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
 ]
 # 指定中文编码格式
