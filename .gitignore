@@ -114,11 +114,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-company/company/local_settings.py
+
 
 **/.idea
 
 uwsgi.pid
 **/__pycache__
 .vscode
-**settings.py
