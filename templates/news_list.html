@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags static wagtailimages_tags %}
+{% block content %}
+    <!--内页大图开始-->
+    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">
+        <img src="{{ MEDIA_URL }}{{ companyinfo.topimg }}" alt="{{ companyinfo.name }}"/></div>
+    <!--内页大图结束-->
+    <div class="submian">
+        <div class="w1200 clearfix">
+
+            <div class="subright">
+                <!--文章列表开始-->
+                <div class="thumblist">
+                    {% if pages %}
+                    <ul class="list clearfix">
+                        {% for page in pages %}
+                            <li class="item"><a class="clearfix" href="{% pageurl page %}">
+                                <div class="img">{% image page.page_intro_image fill-440x330 %}</div>
+                                <div class="txt fr"><h3>{{ page.page_intro }}</h3>
+                                    {% with page.specific as content %}
+                                    <p class="desc">{{ content.digest }}...</p>
+                                    {% endwith %}
+                                </div>
+                            </a></li>
+                        {% endfor %}
+
+                    </ul>
+                    {% else %}
+                        <p>未找到您想要的内容······</p>
+                    {% endif %}
+                    <div class="clear"></div>
+
+                </div>
+                <!--文章列表结束-->
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

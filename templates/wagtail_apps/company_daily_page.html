@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags static wagtailimages_tags %}
+
+{% block body_class %}template-companydailypage{% endblock %}
+
+{% block content %}
+    <!--幻灯片大图开始-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+        <div id="banner" class="banner">
+            <ul class="list clearfix">
+                {% with page.top_image as private_context %}
+                    <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
+            </ul>
+            <div class="tip"></div>
+            <div class="text">
+                <p>{{ private_context.info_title }}</p>
+                <p>{{ private_context.info }}</p>
+            </div>
+            {% endwith %}
+
+        </div>
+    </div>
+    <!--幻灯片大图结束-->
+
+    <div class="submian">
+        <div class="w1200 clearfix">
+
+            <div class="subright">
+                <!--文章列表开始-->
+                <div class="thumblist">
+                    {% if content_pages %}
+                    <ul class="list clearfix">
+                        {% for page in content_pages %}
+                            <li class="item"><a class="clearfix" href="{% pageurl page %}">
+                                <div class="img">{% image page.page_intro_image fill-440x330 %}</div>
+                                <div class="txt fr"><h3>{{ page.page_intro }}</h3>
+                                    {% with page.specific as content %}
+                                    <p class="desc">{{ content.digest }}...</p>
+                                    {% endwith %}
+                                </div>
+                            </a></li>
+                        {% endfor %}
+
+                    </ul>
+                    {% else %}
+                        <p>未找到您想要的内容······</p>
+                    {% endif %}
+                    <div class="clear"></div>
+
+                </div>
+                <!--文章列表结束-->
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

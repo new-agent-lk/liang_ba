@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags static wagtailimages_tags %}
+
+{% block body_class %}template-companycontentpage{% endblock %}
+
+{% block content %}
+    <!--内页大图开始-->
+<!--    <div class="nybanner" aos="fade-up" aos-easing="ease" aos-duration="700">-->
+<!--        {% with page.top_image as content %}-->
+<!--        {% if content %}{% image content.image fill-1920x460 alt=content.info %}{% endif %}-->
+<!--        {% endwith %}-->
+<!--    </div>-->
+    <!--内页大图结束-->
+    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+            <div id="banner" class="banner">
+                <ul class="list clearfix">
+                    {% with page.top_image as private_context %}
+                    <li><a href="javascript:;">{% if private_context %}{% image private_context.image fill-1920x550 %}{% endif %}</a></li>
+                </ul>
+                <div class="tip"></div>
+<!--                <div class="text">-->
+<!--                    <p>{{ private_context.info_title }}</p>-->
+<!--                    <p>{{ private_context.info }}</p>-->
+<!--                </div>-->
+                    {% endwith %}
+            </div>
+        </div>
+
+    <div class="submian">
+        <div class="container clearfix">
+            <div class="subright">
+                <!--单页内容开始-->
+                {% for block in page.content_stream %}
+                    {% if block.block_type == 'big_title' %}
+                        <!--title1大标题-->
+                        <h3 class="title1">{% include_block block %}</h3>
+
+                    {% elif block.block_type == 'author_info' %}
+                        <!--作者头像简介-->
+                        <div class="author">
+                            <div class="author-pic">
+                                {% image block.value.ico_image original %}
+                            </div>
+                            <div class="author-text">
+                                <span class="name">{{ block.value.author_name }}</span><br>
+                                <span class="title">{{ block.value.author_intro }}</span>
+                            </div>
+                        </div>
+                        <!--作者头像简介结束-->
+                        <hr>
+
+                    {% elif block.block_type == 'content' %}
+                        {% for content in block.value %}
+                            {% include_block content %}
+                        {% endfor %}
+
+                    {% elif block.block_type == 'source_code' %}
+                        {% include_block block %}
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

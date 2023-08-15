@@ -1,0 +1,123 @@
+
+<div>
+    北上一览<br/>
+    北上资金净流入 101.58 亿，<br/>
+    其中沪股通净流入 60.65 亿，深股通净流入 40.93 亿,北上资金持仓总市值 236490.11 亿。人民币<br/>
+    南下资金净流入 16.43 亿，<br/>
+    其中港股通(沪)净流入 1.15 亿，港股通(深)净流入 15.28 亿。港元<br/>
+</div>
+
+<div id="container" style="height: 100%"></div>
+<!--<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>-->
+<!-- Uncomment this line if you want to dataTool extension
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/extension/dataTool.min.js"></script>
+-->
+<!-- Uncomment this line if you want to use gl extension
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+-->
+<!-- Uncomment this line if you want to echarts-stat extension
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+-->
+<!-- Uncomment this line if you want to use map
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+-->
+<!-- Uncomment these two lines if you want to use bmap extension
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.2/dist/extension/bmap.min.js"></script>
+-->
+
+<script type="text/javascript">
+  var innerData = JSON.stringify([{"values": 3668.35, "name": "\u6caa\u5e02"}, {"values": 5475.07, "name": "\u6df1\u5e02"}]);
+  var OuterData = ;
+  var dom = document.getElementById('container');
+  var myChart = echarts.init(dom, null, {
+    renderer: 'canvas',
+    useDirtyRect: false
+  });
+  var app = {};
+
+  var option;
+
+  option = {
+tooltip: {
+  trigger: 'item',
+  formatter: '{a} <br/>{b}: {c} ({d}%)'
+},
+
+series: [
+  {
+    name: '',
+    type: 'pie',
+    radius: [0, '30%'],
+    label: {
+      position: 'inner',
+      fontSize: 14
+    },
+    labelLine: {
+      show: false
+    },
+    data: innerData,
+  },
+  {
+    name: '北上资金',
+    type: 'pie',
+    radius: ['40%', '50%'],
+    labelLine: {
+      length: 30
+    },
+    label: {
+      formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+      backgroundColor: '#F6F8FC',
+      borderColor: '#8C8D8E',
+      borderWidth: 1,
+      borderRadius: 4,
+      rich: {
+        a: {
+          color: '#6E7079',
+          lineHeight: 22,
+          align: 'center'
+        },
+        hr: {
+          borderColor: '#8C8D8E',
+          width: '100%',
+          borderWidth: 1,
+          height: 0
+        },
+        b: {
+          color: '#4C5058',
+          fontSize: 14,
+          fontWeight: 'bold',
+          lineHeight: 33
+        },
+        per: {
+          color: '#fff',
+          backgroundColor: '#4C5058',
+          padding: [3, 4],
+          borderRadius: 4
+        }
+      }
+    },
+    data: [
+      { value: 1048, name: 'Baidu' },
+      { value: 335, name: 'Direct' },
+      { value: 310, name: 'Email' },
+      { value: 251, name: 'Google' },
+      { value: 234, name: 'Union Ads' },
+      { value: 147, name: 'Bing' },
+      { value: 135, name: 'Video Ads' },
+      { value: 102, name: 'Others' }
+    ]
+  }
+]
+};
+
+  if (option && typeof option === 'object') {
+    myChart.setOption(option);
+  }
+
+  window.addEventListener('resize', myChart.resize);
+</script>
+
+
+Process finished with exit code 0
