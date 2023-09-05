@@ -1,0 +1,93 @@
+{% load static wagtailcore_tags %}
+<div>
+    北上一览<br/>
+    北上资金{{ str_nfi_north }}，<br/>
+    其中沪股通{{ str_hfi_north }}，深股通{{ str_sfi_north }},北上资金持仓总市值 {{ total }} 亿。人民币<br/>
+    南下资金{{ str_nfi_south }}，<br/>
+    其中港股通(沪){{ str_hfi_south }}，港股通(深){{ str_sfi_south }}。港元<br/>
+</div>
+
+<div id="container" style="height: 100%; width=1000px; height:1000px"></div>
+
+<script type="text/javascript">
+  var innerData = JSON.parse('{{ inner_data | safe }}');
+  var outerData = JSON.parse('{{ outer_data | safe }}');
+  var dom = document.getElementById('container');
+  var myChart = echarts.init(dom, null, {
+    renderer: 'canvas',
+    useDirtyRect: false
+  });
+  var app = {};
+
+  var option;
+
+  option = {
+tooltip: {
+  trigger: 'item',
+  formatter: '{a} <br/>{b}: {c} ({d}%)'
+},
+
+series: [
+  {
+    name: '',
+    type: 'pie',
+    radius: [0, '30%'],
+    label: {
+      position: 'inner',
+      fontSize: 14
+    },
+    labelLine: {
+      show: false
+    },
+    data: innerData,
+  },
+  {
+    name: '北上资金',
+    type: 'pie',
+    radius: ['40%', '50%'],
+    labelLine: {
+      length: 30
+    },
+    label: {
+      formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+      backgroundColor: '#F6F8FC',
+      borderColor: '#8C8D8E',
+      borderWidth: 1,
+      borderRadius: 4,
+      rich: {
+        a: {
+          color: '#6E7079',
+          lineHeight: 22,
+          align: 'center'
+        },
+        hr: {
+          borderColor: '#8C8D8E',
+          width: '100%',
+          borderWidth: 1,
+          height: 0
+        },
+        b: {
+          color: '#4C5058',
+          fontSize: 14,
+          fontWeight: 'bold',
+          lineHeight: 33
+        },
+        per: {
+          color: '#fff',
+          backgroundColor: '#4C5058',
+          padding: [3, 4],
+          borderRadius: 4
+        }
+      }
+    },
+    data: outerData,
+  }
+]
+};
+
+  if (option && typeof option === 'object') {
+    myChart.setOption(option);
+  }
+
+  window.addEventListener('resize', myChart.resize);
+</script>

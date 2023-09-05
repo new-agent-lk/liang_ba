@@ -9,13 +9,14 @@ import datetime
 from django.template.loader import render_to_string
 from wagtail.rich_text import RichText
 
-base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 # 将项目路径加入到系统path中，这样在导入模型等模块时就不会报模块找不到了
 sys.path.append(base_path)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'company.local_settings'  # 注意：base_django_api 是我的模块名，你在使用时需要跟换为你的模块
+os.environ['DJANGO_SETTINGS_MODULE'] = 'local_settings'  # 注意：base_django_api 是我的模块名，你在使用时需要跟换为你的模块
 django.setup()
 
 from wagtail_apps.models import CompanyDailyPage, CompanyDailyContentPage
+from django.conf import settings
 
 _now = datetime.datetime.now()
 _now_date = _now.date()
@@ -91,6 +92,43 @@ def get_sz_deal():
     return round(stock_hsgt_hist_em_df.values[0][2], 2), round(stock_hsgt_hist_em_df.values[0][3], 2)
 
 
+def create_pie_nest():
+    sh_deal_flow, sh_deal_sell = get_sh_deal()
+    sz_deal_flow, sz_deal_sell = get_sz_deal()
+    inner_data = json.dumps([
+        {
+            'value': get_sh_deal_total(),
+            'name': '沪市',
+        },
+        {
+            'value': get_sz_deal_total(),
+            'name': '深市',
+        }
+    ])
+    outer_data = json.dumps([
+        {
+            'value': sh_deal_sell,
+            'name': '沪股通卖出',
+        },
+        {
+            'value': sz_deal_sell,
+            'name': '深股通卖出',
+        },
+        {
+            'value': sh_deal_flow,
+            'name': '沪股通买入',
+        },
+        {
+            'value': sz_deal_flow,
+            'name': '深股通买入',
+        },
+    ])
+    return render_to_string('charts/pie-nest.html', locals())
+
+def create_pie_nest_img():
+    _path = settings
+
+
 def get_template():
     str_nfi_north, str_hfi_north, str_sfi_north = get_hsgt_north()
     str_nfi_south, str_hfi_south, str_sfi_south = get_hsgt_south()
@@ -154,6 +192,6 @@ def create_page():
 
 
 if __name__ == '__main__':
-    # print(get_template())
+    print(create_pie_nest())
 
-    create_page()
+    # create_page()
