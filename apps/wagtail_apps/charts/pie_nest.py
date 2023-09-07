@@ -63,18 +63,26 @@ def create_pie_nest_img():
 
     html_path = os.path.join(html_dir_path, f'{_now.strftime("%Y%m%d")}.html')
     img_path = os.path.join(img_dir_path, f'{_now.strftime("%Y%m%d")}.png')
-    with open(html_path, 'w') as f:
-        f.write(create_pie_nest())
-
-    if os.path.exists(html_path):
+    if not os.path.exists(html_path):
+        with open(html_path, 'w') as f:
+            f.write(create_pie_nest())
+    else:
         if not os.path.exists(img_path):
-            cmd_str = f"{settings.WKHTMLTOIMAGE} {html_path} {img_path}"
-            print(cmd_str)
-            subprocess.run(cmd_str, shell=True)
+            cmd_str = f'node web_screenshot.js {html_path} {img_path}'
+            result = subprocess.run(cmd_str, shell=True, cwd=settings.SCREENSHOT_WORK_PATH,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    text=True)
+            if result.returncode == 0:
+                print("命令执行成功:")
+                print(result.stdout)
+            else:
+                print("命令执行失败:")
+                print(result.stderr)
         else:
             print(img_path, ' @@exists.')
 
 
 if __name__ == '__main__':
-    print(create_pie_nest_img())
+    create_pie_nest_img()
 
