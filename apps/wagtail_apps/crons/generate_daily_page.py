@@ -17,22 +17,13 @@ django.setup()
 
 from wagtail_apps.models import CompanyDailyPage, CompanyDailyContentPage
 from wagtail_apps.charts.pie_nest import create_pie_nest
-from wagtail_apps.stock import get_hsgt_north, get_hsgt_south, get_hsgt_total, get_summary_deal
+from wagtail_apps.stock import get_template_data
 from django.conf import settings
-
-_now = datetime.datetime.now()
-_now_date = _now.date()
-_one_day_pre = _now_date - datetime.timedelta(days=1)
-_one_day_pre_str = _one_day_pre.strftime("%Y%m%d")
 
 
 def get_template():
-    str_nfi_north, str_hfi_north, str_sfi_north = get_hsgt_north()
-    str_nfi_south, str_hfi_south, str_sfi_south = get_hsgt_south()
-    total = get_hsgt_total()
-    sh_deal_flow, sh_deal_sell, sz_deal_flow, sz_deal_sell, summary_deal = get_summary_deal()
-
-    return render_to_string('charts/daily.html', locals())
+    context = get_template_data()
+    return render_to_string('charts/daily.html', context=context)
 
 
 def get_stream_field():

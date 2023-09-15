@@ -4,8 +4,8 @@ import subprocess
 import sys
 import django
 import datetime
+import chinese_calendar as cal
 from django.template.loader import render_to_string
-from wagtail_apps.stock import get_sh_deal, get_sz_deal, get_sh_deal_total, get_sz_deal_total
 
 base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 # 将项目路径加入到系统path中，这样在导入模型等模块时就不会报模块找不到了
@@ -14,14 +14,23 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'local_settings'  # 注意：base_django_
 django.setup()
 
 from django.conf import settings
+from wagtail_apps.stock import get_sh_deal, get_sz_deal, get_sh_deal_total, get_sz_deal_total
+
+
+def get_previous_workday(date):
+    while True:
+        date -= datetime.timedelta(days=1)
+        if cal.is_workday(date):
+            return date
+
 
 _now = datetime.datetime.now()
 _now_date = _now.date()
-_one_day_pre = _now_date - datetime.timedelta(days=1)
+_one_day_pre = get_previous_workday(_now_date)
 _one_day_pre_str = _one_day_pre.strftime("%Y%m%d")
 
 
-def create_pie_nest():
+def create_pie_nest(**kwargs):
     sh_deal_flow, sh_deal_sell = get_sh_deal()
     sz_deal_flow, sz_deal_sell = get_sz_deal()
     inner_data = json.dumps([
@@ -67,20 +76,22 @@ def create_pie_nest_img():
         with open(html_path, 'w') as f:
             f.write(create_pie_nest())
     else:
-        if not os.path.exists(img_path):
-            cmd_str = f'node web_screenshot.js {html_path} {img_path}'
-            result = subprocess.run(cmd_str, shell=True, cwd=settings.SCREENSHOT_WORK_PATH,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE,
-                                    text=True)
-            if result.returncode == 0:
-                print("命令执行成功:")
-                print(result.stdout)
-            else:
-                print("命令执行失败:")
-                print(result.stderr)
+        print(html_path, ' @@exists.')
+
+    if not os.path.exists(img_path):
+        cmd_str = f'node web_screenshot.js {html_path} {img_path}'
+        result = subprocess.run(cmd_str, shell=True, cwd=settings.SCREENSHOT_WORK_PATH,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        if result.returncode == 0:
+            print("命令执行成功:")
+            print(result.stdout)
         else:
-            print(img_path, ' @@exists.')
+            print("命令执行失败:")
+            print(result.stderr)
+    else:
+        print(img_path, ' @@exists.')
 
 
 if __name__ == '__main__':
