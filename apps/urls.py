@@ -8,13 +8,12 @@ from django.views.static import serve
 from django.views.generic import RedirectView
 from django.contrib import admin
 from django.urls import path, re_path
-from django.conf.urls import include, url  # 添加include方法
+from django.conf.urls import include
 
 from view import IndexView
 from companyinfo.views import *  # 引入首页视图类
 
 urlpatterns = [
-    path('jet/', include('jet.urls', 'jet')),  # 第三方后台样式，一定要放在admin路由前面
     path('admin/', admin.site.urls),
 
     # re_path(r'^$', IndexView.as_view(), 'index'),
@@ -39,9 +38,9 @@ urlpatterns = [
     # path('getmsg/', GetMsgView.as_view(), name='getmsg'),  # 留言
     # path('fav_oppose/<slug:flag>/<slug:chose>/<int:pk>/', FavOpposeView.as_view(), name='fav_oppose'),  # 游客点赞或踩一下
 
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    # url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicon.ico')),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    # re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicon.ico')),
 
     re_path(r'', include(wagtail_urls)),
 ]

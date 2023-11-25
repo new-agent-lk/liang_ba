@@ -14,7 +14,9 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'local_settings'  # 注意：base_django_
 django.setup()
 
 from django.conf import settings
-from wagtail_apps.stock import get_sh_deal, get_sz_deal, get_sh_deal_total, get_sz_deal_total
+from wagtail_apps.stock import Stock
+
+stock = Stock()
 
 
 def get_previous_workday(date):
@@ -31,15 +33,15 @@ _one_day_pre_str = _one_day_pre.strftime("%Y%m%d")
 
 
 def create_pie_nest(**kwargs):
-    sh_deal_flow, sh_deal_sell = get_sh_deal()
-    sz_deal_flow, sz_deal_sell = get_sz_deal()
+    sh_deal_flow, sh_deal_sell = stock.get_sh_deal()
+    sz_deal_flow, sz_deal_sell = stock.get_sz_deal()
     inner_data = json.dumps([
         {
-            'value': get_sh_deal_total(_one_day_pre_str),
+            'value': stock.get_sh_deal_total(_one_day_pre_str),
             'name': '沪市',
         },
         {
-            'value': get_sz_deal_total(_one_day_pre_str),
+            'value': stock.get_sz_deal_total(_one_day_pre_str),
             'name': '深市',
         }
     ])
@@ -80,6 +82,7 @@ def create_pie_nest_img():
 
     if not os.path.exists(img_path):
         cmd_str = f'node web_screenshot.js {html_path} {img_path}'
+
         result = subprocess.run(cmd_str, shell=True, cwd=settings.SCREENSHOT_WORK_PATH,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
@@ -95,5 +98,5 @@ def create_pie_nest_img():
 
 
 if __name__ == '__main__':
-    create_pie_nest_img()
+    print(create_pie_nest())
 

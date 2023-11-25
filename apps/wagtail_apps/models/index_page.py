@@ -3,7 +3,6 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
 from wagtail.admin.panels import FieldPanel, InlinePanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 
 from companyinfo.models import CompanyInfo, FriendlyLinks
 from wagtail_apps.models.content_page import CompanyContentPage

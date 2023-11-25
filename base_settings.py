@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
 
-    'jet',  # 一定要放在admin前面
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -386,3 +386,7 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
     ("de", "Deutsch"),
     ("ar", "العربيّة"),
 ]
+
+# 隐藏右侧SimpleUI广告链接和使用分析
+SIMPLEUI_HOME_INFO = False
+SIMPLEUI_ANALYSIS = False
