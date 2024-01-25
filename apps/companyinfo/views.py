@@ -522,11 +522,6 @@ class ContactView(View):
             product_cats = ProductCats.objects.all()  # 获取所有产品分类，用于产品中心的二级菜单
             friendly_links = FriendlyLinks.objects.all()  # 获取所有友情链接对象
 
-            left_products = Products.objects.all()  # 默认按照id排序
-            if len(left_products) > 4: left_products = left_products[:4]  # 只获取前4个产品
-            for product in left_products:
-                if len(product.name) > 6: product.name = product.name[:6] + '...'
-
             # 获取对象
             recruit_cat = request.GET.get('category', '')
             if recruit_cat == 'zwfb':
@@ -539,7 +534,6 @@ class ContactView(View):
                 'companyinfo': companyinfo,
                 'product_cats': product_cats,
                 'friendly_links': friendly_links,
-                'left_products': left_products,
                 'recruit': recruit,
             }
 
