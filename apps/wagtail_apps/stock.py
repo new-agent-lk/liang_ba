@@ -1,9 +1,7 @@
 import datetime
 import akshare as ak
 import chinese_calendar as cal
-from .utils import retry
-
-from wagtail_apps.utils import get_time_str
+from wagtail_apps.utils import retry, get_time_str
 
 
 class Stock:

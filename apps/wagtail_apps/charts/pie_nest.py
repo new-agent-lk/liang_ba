@@ -81,8 +81,8 @@ def create_pie_nest_img():
         print(html_path, ' @@exists.')
 
     if not os.path.exists(img_path):
-        cmd_str = f'node web_screenshot.js {html_path} {img_path}'
-
+        cmd_str = f'node /home/levi/myworkspace/liang_ba/bin/node_tool/web_screenshot.js {html_path} {img_path}'
+        print(cmd_str)
         result = subprocess.run(cmd_str, shell=True, cwd=settings.SCREENSHOT_WORK_PATH,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
@@ -98,5 +98,5 @@ def create_pie_nest_img():
 
 
 if __name__ == '__main__':
-    print(create_pie_nest())
+    create_pie_nest_img()
 
