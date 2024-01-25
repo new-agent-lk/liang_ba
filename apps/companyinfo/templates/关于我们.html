@@ -12,11 +12,11 @@
             <div class="subright fr">
 
                 <!--单页内容开始-->
-                {% ifequal request.GET.flag 'ryzz' %}
+                {% if request.GET.flag == 'ryzz' %}
                     {{ companyinfo.honor|safe }}
                 {% else %}
                     {{ companyinfo.info|safe }}
-                {% endifequal %}
+                {% endif %}
                 <!--单页内容结束-->
             </div>
         </div>

@@ -10,7 +10,7 @@
 
             <div class="subright">
                 <!--单页内容开始-->
-                {% ifequal request.GET.flag 'getmsg' %}
+                {% if request.GET.flag == 'getmsg' %}
                     <!--在线留言开始-->
                     <form id="myform" style="margin-left: 20%;margin-top: 50px">
                         <div style="border: 2px solid #1243a0;width: 50%;height: 40px;line-height: 40px;margin-bottom: 10px">
@@ -137,7 +137,7 @@
                             map.enableKeyboard();//启用键盘上下左右键移动地
                         </script>
                         <!--地图结束--></div>
-                {% endifequal %}
+                {% endif %}
 
                 <!--单页内容结束-->
             </div>
