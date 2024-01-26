@@ -7,14 +7,6 @@ $(function () {
     nav();
     toolbar();
 
-    new fullpage('#fullpage', {
-        sectionsColor: ['', 'orange', '#C0C0C0', '#ADD8E6'],
-        navigation: true,
-        navigationPosition: 'right',
-        showActiveTooltip: true,
-        slidesNavigation: true,
-        slidesNavPosition: 'bottom',
-    });
 
     $('.navbar-form .btn').click(function () {
        var query = $('.form-control').val();
@@ -81,7 +73,7 @@ $(function () {
 
 
     //首页隐藏toolbar
-    removeToolbar();
+    // removeToolbar();
 });
 
 
