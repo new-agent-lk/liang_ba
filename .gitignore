@@ -121,3 +121,4 @@ dmypy.json
 uwsgi.pid
 **/__pycache__
 .vscode
+uv.lock
