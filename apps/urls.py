@@ -20,7 +20,7 @@ urlpatterns = [
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('api/v1/data/', include('data_apps.urls')),
-    path('docs/', include_docs_urls(title='LIANG BA API')),
+    # path('docs/', include_docs_urls(title='LIANG BA API')),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
     # path('index/', IndexView.as_view(), name='index_1'),  # 定义首页路由

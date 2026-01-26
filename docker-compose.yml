@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    image: liang_ba:20.04
+#    build: .
+    networks:
+      - 1panel-network
+    command: tail -f /dev/null
+    volumes:
+      - .:/home/ubuntu/liang_ba
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - "9999:9999"
+    environment:
+      - DEBUG=1
+      - TZ=Asia/Shanghai
+
+networks:
+  1panel-network:
+    external: true

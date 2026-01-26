@@ -1,5 +1,4 @@
 akracer==0.0.13
-akshare==1.11.79
 anyascii==0.3.2
 asgiref==3.7.2
 asttokens==2.4.1

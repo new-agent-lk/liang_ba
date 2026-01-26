@@ -6,7 +6,7 @@
 
 {% block content %}
     <!--幻灯片大图开始-->
-    <div id="banner_main" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="100">
+    <div id="banner_main" >
         <div id="banner" class="banner">
             <ul class="list clearfix">
                 {% with page.top_image as private_context %}
@@ -28,7 +28,7 @@
 
 
         <!--最新观点开始-->
-        <div class="point" aos="fade-up" aos-easing="ease" aos-duration="700">
+        <div class="point" >
             {% if content_page_count > 0 %}</p>
                 <div class="row w1200">
                 {% for content in content_pages %}
@@ -163,20 +163,20 @@
 {#        <div id="floor_1_main">#}
 {#            <div class="floor_1 w1200">#}
 {#                <div class="about clearfix">#}
-{#                    <a class="item fl" href="javascript:;" aos="fade-right" aos-easing="ease" aos-duration="700">#}
+{#                    <a class="item fl" href="javascript:;" >#}
 {##}
 {#                        <img src="{% static '/images/关于我们.png' %}" alt="{{ companyinfo.name }}"/></a>#}
 {#                    <div class="contW fl">#}
 {##}
 {##}
-{#                        <div class="title"><p class="entit" aos="fade-up" aos-easing="ease" aos-duration="700"#}
-{#                                              aos-delay="300">ABOUT US</p>#}
-{#                            <h3 class="tit" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="400">关于我们</h3>#}
+{#                        <div class="title"><p class="entit" #}
+{#                                              >ABOUT US</p>#}
+{#                            <h3 class="tit" >关于我们</h3>#}
 {#                        </div>#}
-{#                        <a href="{% url 'about' %}"><p class="cont" aos="fade-up" aos-easing="ease" aos-duration="700"#}
-{#                                                       aos-delay="500">#}
+{#                        <a href="{% url 'about' %}"><p class="cont" #}
+{#                                                       >#}
 {#                            {{ companyinfo.digest }}...</p>#}
-{#                            <p class="view_detail" aos="fade-up" aos-easing="ease" aos-duration="700" aos-delay="600">#}
+{#                            <p class="view_detail" >#}
 {#                                详情>></p></a>#}
 {#                    </div>#}
 {#                </div>#}
