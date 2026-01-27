@@ -2,6 +2,18 @@ $(function () {
     var annual_yield = $('.desc-box .annual-yield');
     var retreat_rate = $('.desc-box .retreat-rate');
 
+    // Store all chart instances for global resize
+    var chartInstances = [];
+
+    // Global resize handler for all ECharts
+    $(window).on('resize', function () {
+        chartInstances.forEach(function (chart) {
+            if (chart && chart.resize) {
+                chart.resize();
+            }
+        });
+    });
+
     //日线(量霸价投，对标中证100  code_flag=0)
     dateStock('main', 0);
     //周线(量霸价投，对标中证100  code_flag=0)
@@ -36,6 +48,7 @@ $(function () {
 
     function dateStock(id, flag) {
         var myChart = echarts.init(document.getElementById(id));
+        chartInstances.push(myChart);
         window.onresize = function () {
             myChart.resize();
         };
@@ -304,6 +317,7 @@ $(function () {
 
     function echartsDom(id, flag) {
         var myChart = echarts.init(document.getElementById(id));
+        chartInstances.push(myChart);
         window.onresize = function () {
             myChart.resize();
         };
@@ -442,6 +456,7 @@ $(function () {
 
     function monthStock(id, flag) {
         var myChart = echarts.init(document.getElementById(id));
+        chartInstances.push(myChart);
         window.onresize = function () {
             myChart.resize();
         };
@@ -703,6 +718,7 @@ $(function () {
 
     function weekStock(id, flag) {
         var myChart = echarts.init(document.getElementById(id));
+        chartInstances.push(myChart);
         window.onresize = function () {
             myChart.resize();
         };

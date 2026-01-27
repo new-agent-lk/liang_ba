@@ -7,6 +7,22 @@ $(function () {
     nav();
     toolbar();
 
+    // Mobile toolbar back to top
+    $('.mobile-toolbar .back-top').click(function (e) {
+        e.preventDefault();
+        $('body, html').stop().animate({
+            'scrollTop': 0
+        }, 500);
+    });
+
+    // Mobile toolbar code button - show QR code modal
+    $('#mobile-code-btn').click(function (e) {
+        e.preventDefault();
+        if ($('.toolbar .pop-code').length) {
+            var qrCodeHtml = $('.toolbar .pop-code').html();
+            alert('微信：' + (typeof weichat !== 'undefined' ? weichat : '请扫描页面二维码'));
+        }
+    });
 
     $('.navbar-form .btn').click(function () {
        var query = $('.form-control').val();

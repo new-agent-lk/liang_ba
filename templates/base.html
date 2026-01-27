@@ -11,7 +11,7 @@
             {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
         {% endblock %}
     </title>
-    <meta name="viewport" content="width=1380">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static '/css/aos.css' %}" rel="stylesheet">
     <link href="{% static '/css/style.css' %}" rel="stylesheet">
     <link href="{% static '/css/common.css' %}" rel="stylesheet">
@@ -31,7 +31,7 @@
 </head>
 <body>
 
-<!--浮动客服开始-->
+<!--浮动客服开始（桌面版）-->
 <dl class="toolbar" id="toolbar">
     <dd><a class="slide tel slide-tel" href="tel:{{ companyinfo.phone }}" title="咨询热线"><i><span></span></i>{{ companyinfo.phone }}</a>
     </dd>
@@ -93,7 +93,7 @@
 <div class="footer">
     <div class="content w1200 clearfix">
         <!--友情链接开始-->
-        <div class="links" >
+        <div class="links">
             <span>友情链接：</span>
             {% for friendly_link in friendly_links %}
                 <a href="{{ friendly_link.friendly_link }}" title="{{ friendly_link.title }}"
@@ -102,12 +102,11 @@
         </div>
         <!--友情链接结束-->
 
-        <div>
+        <div class="footer-row">
             <!--联系方式开始-->
-            <div class="contact tel col-md-4 col-xs-12" >
+            <div class="contact tel col-md-4 col-xs-12">
                 <!--二维码开始-->
-                <div class="ewm ">
-
+                <div class="ewm">
                     <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/></div>
                 <!--二维码结束-->
                 <div class="contact_info">
@@ -120,13 +119,12 @@
 
             <!--底部导航开始-->
             <div class="bNav col-md-8 col-xs-12" >
-
                 <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">我们是谁</a></h3>
                 </div>
                 <div class="item"><h3><a href="{% url 'news' %}" title="新闻动态">新闻动态</a></h3>
                 </div>
-               <div class="item"><h3><a href="" title="人才招聘">加入量霸</a></h3>
-               </div>
+                <div class="item"><h3><a href="{% slugurl 'recruits' %}" title="人才招聘">加入量霸</a></h3>
+                </div>
                 <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系量霸</a></h3>
                 </div>
             </div>
@@ -141,13 +139,20 @@
 <!--版权开始-->
 <div class="copyright">
     <div class="w1200">
-        Copyright @ 2026 {{ companyinfo.name }}　地址：{{ companyinfo.address }}　备案号：<a href="javascript:;" target="_blank"
-                                                                                    title="{{ companyinfo.record_nums }}">{{ companyinfo.record_nums }}</a>&nbsp;&nbsp;
-        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011202014118" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
-            <img src="{% static '/images/备案图标.png' %}" style="float:left;"/>沪公网安备 31011202014118号</a>
-        <p class="fr">技术支持：<a href="javascript:;" target="_blank"
-                              title="{{ companyinfo.name }}">{{ companyinfo.name }}</a>
-        </p></div>
+        <div class="copyright-text">
+            Copyright @ {{ companyinfo.current_year }} {{ companyinfo.name }}　地址：{{ companyinfo.address }}
+        </div>
+        <div class="copyright-text">
+            备案号：<a href="javascript:;" target="_blank" title="{{ companyinfo.record_nums }}">{{ companyinfo.record_nums }}</a>
+        </div>
+        <div class="copyright-text">
+            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011202014118">
+                <img src="{% static '/images/备案图标.png' %}" alt=""/>沪公网安备 31011202014118号</a>
+        </div>
+        <div class="copyright-text">
+            技术支持：<a href="{% slugurl 'liang-ba' %}" target="_blank" title="{{ companyinfo.name }}">{{ companyinfo.name }}</a>
+        </div>
+    </div>
 </div>
 <!--版权结束-->
 

@@ -76,6 +76,9 @@ class CompanyInfo(models.Model):
 
     def __str__(self):  # 当print输出实例对象，或str() 实例对象时，调用这个方法
         return self.name
+    @property
+    def current_year(self):
+        return datetime.now().year
 
 
 class ProductCats(models.Model):

@@ -24,6 +24,7 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
     path('search/', SearchView.as_view(), name='search'),
     path('about/', AboutView.as_view(), name='about'),  # 关于我们
+
     path('news/', NewsListView.as_view(), name='news'),  # 新闻动态
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
