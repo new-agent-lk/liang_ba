@@ -27,7 +27,7 @@ urlpatterns = [
     path('news/', NewsListView.as_view(), name='news'),  # 新闻动态
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicon.ico')),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),
 
     re_path(r'', include(wagtail_urls))
 
