@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
 
-    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +68,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'apps.admin_api',
 ]
 
 MIDDLEWARE = [
@@ -388,5 +388,3 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
 ]
 
 # 隐藏右侧SimpleUI广告链接和使用分析
-SIMPLEUI_HOME_INFO = False
-SIMPLEUI_ANALYSIS = False

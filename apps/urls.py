@@ -20,6 +20,7 @@ urlpatterns = [
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('api/v1/data/', include('data_apps.urls')),
+    path('api/admin/', include('apps.admin_api.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
     path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
     path('search/', SearchView.as_view(), name='search'),
