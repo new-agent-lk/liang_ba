@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import sys
 import os
+from datetime import timedelta
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'data_apps',
     'wagtail_apps',
     'rest_framework',
+    'rest_framework_simplejwt',  # JWT 认证
     'django_filters',
     'corsheaders',
     'apps.admin_api',
@@ -289,15 +291,46 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    # 指定认证
+    # JWT 认证配置
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20  # 每页数目
+}
+
+# JWT 配置
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # 访问令牌有效期60分钟
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 刷新令牌有效期7天
+    'ROTATE_REFRESH_TOKENS': True,  # 刷新时轮换刷新令牌
+    'BLACKLIST_AFTER_ROTATION': True,  # 轮换后将旧令牌加入黑名单
+    'UPDATE_LAST_LOGIN': True,  # 更新最后登录时间
+    
+    'ALGORITHM': 'HS256',  # 算法
+    'SIGNING_KEY': SECRET_KEY,  # 签名密钥
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+    
+    'AUTH_HEADER_TYPES': ('Bearer',),  # 认证头类型
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    
+    'JTI_CLAIM': 'jti',
+    
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

@@ -12,3 +12,7 @@ export const logout = (): Promise<void> => {
 export const getCurrentUser = (): Promise<User> => {
   return request.get('/api/admin/auth/me/');
 };
+
+export const refreshToken = (refreshToken: string): Promise<{ access: string; refresh: string }> => {
+  return request.post('/api/admin/auth/refresh/', { refresh: refreshToken });
+};

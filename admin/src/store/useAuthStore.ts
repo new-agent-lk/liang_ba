@@ -4,10 +4,11 @@ import { User } from '@/types';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   setUser: (user: User) => void;
-  setToken: (token: string) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -15,14 +16,16 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
+      accessToken: null,
+      refreshToken: null,
       isAuthenticated: false,
       setUser: (user) => set({ user, isAuthenticated: true }),
-      setToken: (token) => set({ token }),
+      setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
       logout: () =>
         set({
           user: null,
-          token: null,
+          accessToken: null,
+          refreshToken: null,
           isAuthenticated: false,
         }),
     }),
@@ -30,7 +33,8 @@ export const useAuthStore = create<AuthState>()(
       name: 'admin_auth',
       partialize: (state) => ({
         user: state.user,
-        token: state.token,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     }

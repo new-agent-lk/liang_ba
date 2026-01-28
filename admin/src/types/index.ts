@@ -17,7 +17,8 @@ export interface LoginParams {
 }
 
 export interface LoginResponse {
-  token: string;
+  access: string;
+  refresh: string;
   user: User;
 }
 

@@ -2,7 +2,8 @@ from rest_framework import viewsets, views, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import authenticate, login, logout
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -59,20 +60,28 @@ class LoginView(views.APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
+        # 检查用户是否为管理员
+        if not user.is_staff:
+            return Response(
+                {'detail': '您没有权限访问后台管理系统'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         # 更新最后登录时间
         user.last_login = timezone.now()
         user.save(update_fields=['last_login'])
 
-        # 登录用户（创建session）
-        login(request, user)
-
+        # 生成 JWT token
+        refresh = RefreshToken.for_user(user)
+        
         return Response({
-            'token': 'session_auth',
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
             'user': UserSerializer(user).data
         })
 
     def logout(self, request):
-        logout(request)
+        # JWT 是无状态的，客户端只需删除 token
         return Response({'detail': '退出成功'})
 
     def get_current_user(self, request):

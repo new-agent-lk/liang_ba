@@ -4,6 +4,10 @@ import { login as loginApi, logout as logoutApi, getCurrentUser } from '@/api/au
 import { LoginParams, LoginResponse, User } from '@/types';
 import { message } from 'antd';
 
+// Token 存储键名
+const ACCESS_TOKEN_KEY = 'admin_access_token';
+const REFRESH_TOKEN_KEY = 'admin_refresh_token';
+
 interface LoginResult {
   success: boolean;
   error?: unknown;
@@ -15,23 +19,29 @@ interface CheckAuthResult {
 }
 
 export const useAuth = () => {
-  const { user, token, isAuthenticated, setUser, setToken, logout: clearAuth } = useAuthStore();
+  const { user, accessToken, refreshToken, isAuthenticated, setUser, setTokens, logout: clearAuth } = useAuthStore();
 
   const login = useCallback(
     async (data: LoginParams): Promise<LoginResult> => {
       try {
         const response: LoginResponse = await loginApi(data);
-        const { token: authToken, user: userData } = response;
-        setToken(authToken);
+        const { access, refresh, user: userData } = response;
+        
+        // 更新 store
+        setTokens(access, refresh);
         setUser(userData);
-        localStorage.setItem('admin_token', authToken);
+        
+        // 同时存储到 localStorage（用于 request.ts 拦截器）
+        localStorage.setItem(ACCESS_TOKEN_KEY, access);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
+        
         message.success('登录成功');
         return { success: true };
       } catch (error) {
         return { success: false, error };
       }
     },
-    [setToken, setUser]
+    [setTokens, setUser]
   );
 
   const logout = useCallback(async () => {
@@ -40,31 +50,42 @@ export const useAuth = () => {
     } catch (error) {
       console.error('Logout API failed:', error);
     } finally {
+      // 清除 store
       clearAuth();
-      localStorage.removeItem('admin_token');
+      
+      // 清除 localStorage
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      localStorage.removeItem('admin_user');
+      
+      // 跳转登录页
       window.location.href = '/login';
       message.success('已退出登录');
     }
   }, [clearAuth]);
 
   const checkAuth = useCallback(async (): Promise<CheckAuthResult> => {
-    if (token && !user) {
+    if (accessToken && !user) {
       try {
         const userData = await getCurrentUser();
         setUser(userData);
         return { isAuthenticated: true, user: userData };
       } catch (error) {
+        // Token 无效，清除认证信息
         clearAuth();
-        localStorage.removeItem('admin_token');
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
         return { isAuthenticated: false };
       }
     }
     return { isAuthenticated, user: user || undefined };
-  }, [token, user, isAuthenticated, setUser, clearAuth]);
+  }, [accessToken, user, isAuthenticated, setUser, clearAuth]);
 
   return {
     user,
-    token,
+    token: accessToken, // 保持向后兼容
+    accessToken,
+    refreshToken,
     isAuthenticated,
     login,
     logout,
