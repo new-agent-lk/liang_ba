@@ -41,7 +41,6 @@ const Header: React.FC = () => {
     },
   ];
 
-  const sidebarWidth = collapsed ? 80 : 200;
 
   return (
     <AntHeader
@@ -51,7 +50,6 @@ const Header: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginLeft: sidebarWidth,
         transition: 'margin-left 0.2s',
       }}
     >
