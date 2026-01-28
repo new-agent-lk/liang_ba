@@ -5,17 +5,14 @@ import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
 import Users from '@/pages/System/Users';
 import Settings from '@/pages/System/Settings';
-import Products from '@/pages/Content/Products';
-import NewsManagement from '@/pages/Content/News';
-import Cases from '@/pages/Content/Cases';
-import Carousels from '@/pages/Content/Carousels';
+import CompanyInfo from '@/pages/Content/CompanyInfo';
 import Messages from '@/pages/Content/Messages';
 import StockData from '@/pages/Data/StockData';
 import ImportExport from '@/pages/Data/ImportExport';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const token = localStorage.getItem('admin_token');
+  const token = localStorage.getItem('admin_access_token');
 
   if (!isAuthenticated && !token) {
     return <Navigate to="/login" replace />;
@@ -54,20 +51,8 @@ const router = createBrowserRouter([
         element: <Settings />,
       },
       {
-        path: 'content/products',
-        element: <Products />,
-      },
-      {
-        path: 'content/news',
-        element: <NewsManagement />,
-      },
-      {
-        path: 'content/cases',
-        element: <Cases />,
-      },
-      {
-        path: 'content/carousels',
-        element: <Carousels />,
+        path: 'content/company-info',
+        element: <CompanyInfo />,
       },
       {
         path: 'content/messages',

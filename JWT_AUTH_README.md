@@ -27,7 +27,13 @@
      - 返回 `access` 和 `refresh` 两个 token
      - 添加管理员权限检查（`is_staff`）
 
-4. **添加 Token 刷新端点**
+4. **创建用户信息视图**
+   - 在 `apps/admin_api/views.py` 中新增 `UserInfoView`：
+     - 独立的用户信息获取视图
+     - 从数据库重新获取用户信息，确保数据最新
+     - 使用 `IsAuthenticated` 权限类
+
+5. **添加 Token 刷新端点**
    - 在 `apps/admin_api/urls.py` 中添加 `/auth/refresh/` 端点
 
 ### 前端改进
@@ -58,6 +64,7 @@
    - 在 `admin/src/hooks/useAuth.ts` 中：
      - 登录时同时存储 access token 和 refresh token
      - 退出时清除所有 token
+     - 添加 `refreshUserInfo` 方法用于刷新用户信息
      - 保持向后兼容（`token` 属性指向 `accessToken`）
 
 ## 使用方法
@@ -90,14 +97,46 @@ SIMPLE_JWT = {
 ```typescript
 import { useAuth } from '@/hooks/useAuth';
 
-const { login, logout, isAuthenticated } = useAuth();
+const { login, logout, isAuthenticated, refreshUserInfo } = useAuth();
 
 // 登录
 await login({ username, password });
 
 // 退出
 await logout();
+
+// 刷新用户信息（获取最新用户状态）
+const latestUser = await refreshUserInfo();
 ```
+
+### 获取最新用户信息
+
+系统提供了专门的接口来获取最新的用户信息：
+
+**后端接口**：`GET /api/admin/auth/me/`
+
+- 需要认证（携带有效的 JWT token）
+- 从数据库重新获取用户信息，确保数据是最新的
+- 返回完整的用户信息
+
+**前端使用**：
+
+```typescript
+import { useAuth } from '@/hooks/useAuth';
+
+const { refreshUserInfo } = useAuth();
+
+// 在需要获取最新用户信息时调用
+const latestUser = await refreshUserInfo();
+if (latestUser) {
+  console.log('最新用户信息:', latestUser);
+}
+```
+
+**使用场景**：
+- 用户修改个人信息后刷新显示
+- 检查用户权限是否发生变化
+- 定期同步用户状态
 
 ## Token 机制说明
 
@@ -173,7 +212,7 @@ A: 前端会自动清除认证信息并跳转登录页，用户需要重新登�
 ### 后端
 - `requirements.txt` - JWT 依赖
 - `base_settings.py` - JWT 配置
-- `apps/admin_api/views.py` - 登录视图
+- `apps/admin_api/views.py` - 登录视图、用户信息视图
 - `apps/admin_api/urls.py` - 路由配置
 
 ### 前端

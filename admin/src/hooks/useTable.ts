@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { message } from 'antd';
 import { PageParams, PaginatedResponse } from '@/types';
 
@@ -32,7 +32,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
   });
 
   const fetch = useCallback(
-    async (page = pagination.current, pageSize = pagination.pageSize) => {
+    async (page = 1, pageSize = 10) => {
       setLoading(true);
       try {
         const response = await fetchData({ page, page_size: pageSize });
@@ -49,7 +49,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
         setLoading(false);
       }
     },
-    [fetchData, pagination.current, pagination.pageSize]
+    [fetchData]
   );
 
   const handleDelete = useCallback(
@@ -73,6 +73,11 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
     },
     [fetch]
   );
+
+  // 组件挂载时自动获取数据
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   return {
     data,

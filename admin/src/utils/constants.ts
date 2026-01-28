@@ -6,10 +6,7 @@ export const ROUTES = {
   USERS: '/system/users',
   SETTINGS: '/system/settings',
   // 内容管理
-  PRODUCTS: '/content/products',
-  NEWS: '/content/news',
-  CASES: '/content/cases',
-  CAROUSELS: '/content/carousels',
+  COMPANY_INFO: '/content/company-info',
   MESSAGES: '/content/messages',
   // 数据管理
   STOCK_DATA: '/data/stock-data',
@@ -37,10 +34,7 @@ export const MENU_CONFIG = [
     icon: 'FileTextOutlined',
     label: '内容管理',
     children: [
-      { key: '/content/products', icon: 'AppstoreOutlined', label: '产品管理' },
-      { key: '/content/news', icon: 'ReadOutlined', label: '新闻管理' },
-      { key: '/content/cases', icon: 'FolderOpenOutlined', label: '案例管理' },
-      { key: '/content/carousels', icon: 'PictureOutlined', label: '轮播图管理' },
+      { key: '/content/company-info', icon: 'HomeOutlined', label: '公司信息' },
       { key: '/content/messages', icon: 'MessageOutlined', label: '留言管理' },
     ],
   },

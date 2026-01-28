@@ -9,18 +9,12 @@ from django.utils import timezone
 
 from .serializers import (
     UserSerializer, UserCreateSerializer,
-    ProductCategorySerializer, ProductSerializer, ProductCreateUpdateSerializer,
-    NewsSerializer, NewsCreateUpdateSerializer,
-    CaseSerializer, CaseCreateUpdateSerializer,
-    CarouselSerializer, CarouselCreateUpdateSerializer,
+    CompanyInfoSerializer, CompanyInfoUpdateSerializer,
     MessageSerializer, MessageReplySerializer,
     StockDataSerializer,
-    ProvinceSerializer, CitySerializer,
 )
 from .permissions import IsAdminUser
-from companyinfo.models import (
-    ProductCats, Products, News, Projects, Carousls, GetMessages
-)
+from companyinfo.models import GetMessages, CompanyInfo
 from data_apps.models import GenericStockMarketData
 
 
@@ -35,11 +29,6 @@ class LoginView(views.APIView):
             return self.login(request)
         elif request.path.endswith('/logout/'):
             return self.logout(request)
-        return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def get(self, request, *args, **kwargs):
-        if request.path.endswith('/me/'):
-            return self.get_current_user(request)
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def login(self, request):
@@ -84,11 +73,22 @@ class LoginView(views.APIView):
         # JWT 是无状态的，客户端只需删除 token
         return Response({'detail': '退出成功'})
 
-    def get_current_user(self, request):
-        if request.user.is_authenticated:
-            return Response(UserSerializer(request.user).data)
-        return Response({'detail': '未登录'}, status=status.HTTP_401_UNAUTHORIZED)
 
+class UserInfoView(views.APIView):
+    """
+    获取当前用户信息视图
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        获取当前登录用户的最新信息
+        """
+        # 从数据库重新获取用户信息，确保数据是最新的
+        user = User.objects.get(id=request.user.id)
+        return Response(UserSerializer(user).data)
+
+    
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -115,112 +115,34 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(UserSerializer(request.user).data)
 
 
-class ProductCategoryViewSet(viewsets.ModelViewSet):
+class CompanyInfoView(views.APIView):
     """
-    产品分类视图集
+    公司信息视图
     """
-    queryset = ProductCats.objects.all()
-    serializer_class = ProductCategorySerializer
     permission_classes = [IsAdminUser]
 
-    def get_queryset(self):
-        return ProductCats.objects.all().order_by('id')
+    def get(self, request):
+        """获取公司信息"""
+        company_info = CompanyInfo.objects.first()
+        if not company_info:
+            return Response({'detail': '公司信息不存在'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CompanyInfoSerializer(company_info)
+        return Response(serializer.data)
 
-
-class ProductViewSet(viewsets.ModelViewSet):
-    """
-    产品管理视图集
-    """
-    queryset = Products.objects.all()
-    permission_classes = [IsAdminUser]
-
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return ProductCreateUpdateSerializer
-        return ProductSerializer
-
-    def get_queryset(self):
-        queryset = Products.objects.select_related('category').prefetch_related('tag')
-        category = self.request.query_params.get('category')
-        if category:
-            queryset = queryset.filter(category_id=category)
-        search = self.request.query_params.get('search')
-        if search:
-            queryset = queryset.filter(name__icontains=search)
-        return queryset.order_by('-add_time')
-
-    def perform_create(self, serializer):
+    def put(self, request):
+        """更新公司信息"""
+        company_info = CompanyInfo.objects.first()
+        if not company_info:
+            # 如果不存在，创建新的
+            serializer = CompanyInfoUpdateSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        serializer = CompanyInfoUpdateSerializer(company_info, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-
-    @action(detail=True, methods=['post'])
-    def upload_image(self, request, pk=None):
-        """上传产品图片"""
-        product = self.get_object()
-        # 图片上传逻辑
-        return Response({'detail': '图片上传成功'})
-
-
-class NewsViewSet(viewsets.ModelViewSet):
-    """
-    新闻管理视图集
-    """
-    queryset = News.objects.all()
-    permission_classes = [IsAdminUser]
-
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return NewsCreateUpdateSerializer
-        return NewsSerializer
-
-    def get_queryset(self):
-        queryset = News.objects.all()
-        category = self.request.query_params.get('category')
-        if category:
-            queryset = queryset.filter(category=category)
-        search = self.request.query_params.get('search')
-        if search:
-            queryset = queryset.filter(title__icontains=search)
-        return queryset.order_by('-add_time')
-
-
-class CaseViewSet(viewsets.ModelViewSet):
-    """
-    案例管理视图集
-    """
-    queryset = Projects.objects.all()
-    permission_classes = [IsAdminUser]
-
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return CaseCreateUpdateSerializer
-        return CaseSerializer
-
-    def get_queryset(self):
-        queryset = Projects.objects.all()
-        category = self.request.query_params.get('category')
-        if category:
-            queryset = queryset.filter(category=category)
-        search = self.request.query_params.get('search')
-        if search:
-            queryset = queryset.filter(title__icontains=search)
-        return queryset.order_by('-add_time')
-
-
-class CarouselViewSet(viewsets.ModelViewSet):
-    """
-    轮播图管理视图集
-    """
-    queryset = Carousls.objects.all()
-    permission_classes = [IsAdminUser]
-
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return CarouselCreateUpdateSerializer
-        return CarouselSerializer
-
-    def get_queryset(self):
-        queryset = Carousls.objects.all()
-        return queryset.order_by('-id')
+        return Response(serializer.data)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -300,10 +222,8 @@ class DashboardStatsView(views.APIView):
     def get(self, request):
         stats = {
             'total_users': User.objects.count(),
-            'total_products': Products.objects.count(),
-            'total_news': News.objects.count(),
-            'total_cases': Projects.objects.count(),
             'total_messages': GetMessages.objects.count(),
+            'total_stock_data': GenericStockMarketData.objects.count(),
             'recent_activities': self.get_recent_activities(),
         }
         return Response(stats)
@@ -312,38 +232,8 @@ class DashboardStatsView(views.APIView):
         """获取最近活动"""
         activities = []
 
-        # 最近添加的产品
-        recent_products = Products.objects.order_by('-add_time')[:3]
-        for p in recent_products:
-            activities.append({
-                'id': f'product_{p.id}',
-                'type': 'create',
-                'content': f'创建了产品: {p.name}',
-                'created_at': p.add_time.strftime('%Y-%m-%d %H:%M:%S'),
-            })
-
-        # 最近添加的新闻
-        recent_news = News.objects.order_by('-add_time')[:3]
-        for n in recent_news:
-            activities.append({
-                'id': f'news_{n.id}',
-                'type': 'create',
-                'content': f'发布了新闻: {n.title}',
-                'created_at': n.add_time.strftime('%Y-%m-%d %H:%M:%S'),
-            })
-
-        # 最近添加的案例
-        recent_cases = Projects.objects.order_by('-add_time')[:3]
-        for c in recent_cases:
-            activities.append({
-                'id': f'case_{c.id}',
-                'type': 'create',
-                'content': f'添加了案例: {c.title}',
-                'created_at': c.add_time.strftime('%Y-%m-%d %H:%M:%S'),
-            })
-
         # 最近收到的留言
-        recent_messages = GetMessages.objects.order_by('-add_time')[:3]
+        recent_messages = GetMessages.objects.order_by('-add_time')[:10]
         for m in recent_messages:
             activities.append({
                 'id': f'message_{m.id}',

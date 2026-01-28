@@ -6,8 +6,7 @@ __date__ = "2020/6/13 1:03 下午"
 from django.contrib import admin
 
 from .models import (
-    CompanyInfo, ProductCats, ProductTags, Products, ProductPics,
-    News, Projects, Recruits, Carousls, Advantages, IndexAsk,
+    CompanyInfo, Advantages, IndexAsk,
     FriendlyLinks, GetMessages, Comments, Province, City
 )
 
@@ -18,72 +17,6 @@ class CompanyInfoAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone', 'fax', 'email', 'linkman', 'telephone', 'qq']
     list_filter = ['name']
     search_fields = ['name']
-
-
-@admin.register(ProductCats)
-class ProductCatsAdmin(admin.ModelAdmin):
-    """配置后台产品分类"""
-    list_display = ['id', 'name']
-    list_filter = ['name']
-    search_fields = ['name']
-
-
-@admin.register(ProductTags)
-class ProductTagsAdmin(admin.ModelAdmin):
-    """配置后台产品标签"""
-    list_display = ['id', 'name']
-    list_filter = ['name']
-    search_fields = ['name']
-
-
-@admin.register(Products)
-class ProductsAdmin(admin.ModelAdmin):
-    """配置后台产品信息"""
-    list_display = ['name', 'category', 'add_time', 'click_nums']
-    list_filter = ['category']
-    search_fields = ['name']
-    readonly_fields = ['click_nums']
-
-
-@admin.register(ProductPics)
-class ProductPicsAdmin(admin.ModelAdmin):
-    """配置后台产品图片"""
-    list_display = ['id', 'name', 'product']
-    list_filter = ['product']
-    search_fields = ['name']
-
-
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    """配置后台新闻信息"""
-    list_display = ['title', 'category', 'add_time', 'click_nums', 'fav_nums', 'oppose_nums']
-    list_filter = ['category']
-    search_fields = ['title']
-    readonly_fields = ['click_nums', 'fav_nums', 'oppose_nums']
-
-
-@admin.register(Projects)
-class ProjectsAdmin(admin.ModelAdmin):
-    """配置后台工程案例"""
-    list_display = ['title', 'category', 'add_time', 'click_nums', 'fav_nums', 'oppose_nums']
-    list_filter = ['category']
-    search_fields = ['title']
-    readonly_fields = ['click_nums', 'fav_nums', 'oppose_nums']
-
-
-@admin.register(Recruits)
-class RecruitsAdmin(admin.ModelAdmin):
-    """配置后台人才招聘"""
-    list_display = ['id', 'category']
-    list_filter = ['category']
-    search_fields = ['category']
-
-
-@admin.register(Carousls)
-class CarouslsAdmin(admin.ModelAdmin):
-    """配置后台轮播图"""
-    list_display = ['id', 'title']
-    search_fields = ['title']
 
 
 @admin.register(Advantages)

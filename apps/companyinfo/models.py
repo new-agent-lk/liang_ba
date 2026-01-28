@@ -76,137 +76,31 @@ class CompanyInfo(models.Model):
 
     def __str__(self):  # 当print输出实例对象，或str() 实例对象时，调用这个方法
         return self.name
+    
     @property
     def current_year(self):
         return datetime.now().year
-
-
-class ProductCats(models.Model):
-    """产品分类"""
-    name = models.CharField(verbose_name='分类名称', max_length=20)
-
-    class Meta:
-        verbose_name = '产品分类'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
-class ProductTags(models.Model):
-    """产品标签"""
-    name = models.CharField(verbose_name='标签', max_length=20)
-
-    class Meta:
-        verbose_name = '产品标签'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
-class Products(models.Model):
-    """产品中心"""
-    name = models.CharField(verbose_name='产品名称', max_length=100)
-    # 产品分类同产品是一对多的关系，所以产品模块定义外键
-    category = models.ForeignKey(ProductCats, on_delete=models.CASCADE, null=True, verbose_name='所属分类')
-    img = models.ImageField(verbose_name='封面图', upload_to='productpic')
-    add_time = models.DateTimeField(verbose_name='发布时间', default=datetime.now)
-    click_nums = models.IntegerField(verbose_name='人气', default=0)
-    info = RichTextUploadingField('产品内容', default='')
-    # 产品同标签属于多对多的关系，所以可以在产品定义外键，方便新增产品时选择标签
-    tag = models.ManyToManyField(ProductTags)
-
-    class Meta:
-        verbose_name = '产品中心'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
-class ProductPics(models.Model):
-    """产品图片"""
-    name = models.CharField(verbose_name='图片名称', max_length=100)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, verbose_name='所属产品')
-    img = models.ImageField(verbose_name='产品图片', upload_to='productpic')
-
-    class Meta:
-        verbose_name = '产品图片'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.name
-
-
-class News(models.Model):
-    """新闻动态"""
-    title = models.CharField(verbose_name='标题', max_length=100)
-    category = models.CharField(verbose_name='所属分类', choices=(('gsxw', '公司新闻'), ('mtbd', '媒体报道'), ('yggh', '员工关怀')),
-                                max_length=4, default='gsxw')
-    img = models.ImageField(verbose_name='封面图', upload_to='news')
-    add_time = models.DateTimeField(verbose_name='发布时间', default=datetime.now)
-    click_nums = models.IntegerField(verbose_name='人气', default=0)
-    digest = models.CharField(verbose_name='摘要', max_length=50, default='')
-    info = RichTextUploadingField('新闻内容', default='')
-    fav_nums = models.IntegerField(verbose_name='点赞数', default=0)
-    oppose_nums = models.IntegerField(verbose_name='反对数', default=0)
-
-    class Meta:
-        verbose_name = '新闻动态'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.title
-
-
-class Projects(models.Model):
-    """工程案例"""
-    title = models.CharField(verbose_name='标题', max_length=100)
-    category = models.CharField(verbose_name='所属分类',
-                                choices=(('trxf', '土壤修复类'), ('wszl', '污水治理类'), ('shlj', '生活垃圾发电类')),
-                                max_length=4, default='trxf')
-    img = models.ImageField(verbose_name='封面图', upload_to='projects')
-    add_time = models.DateTimeField(verbose_name='发布时间', default=datetime.now)
-    click_nums = models.IntegerField(verbose_name='人气', default=0)
-    digest = models.CharField(verbose_name='摘要', max_length=60, default='')
-    info = RichTextUploadingField('工程内容', default='')
-    fav_nums = models.IntegerField(verbose_name='点赞数', default=0)
-    oppose_nums = models.IntegerField(verbose_name='反对数', default=0)
-
-    class Meta:
-        verbose_name = '工程案例'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.title
-
-
-class Recruits(models.Model):
-    """人才招聘"""
-    category = models.CharField(verbose_name='所属分类', choices=(('rcln', '人才理念'), ('zwfb', '职位发布')),
-                                max_length=4, default='rcln')
-    info = RichTextUploadingField('内容', default='')
-
-    class Meta:
-        verbose_name = '人才招聘'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.category
-
-
-class Carousls(models.Model):
-    """轮播图"""
-    title = models.CharField(verbose_name='标题', max_length=100, default='')
-    img = models.ImageField(verbose_name='轮播图', upload_to='carousls')
-
-    class Meta:
-        verbose_name = '轮播图'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.title
+    
+    @property
+    def logo_url(self):
+        """返回logo的完整URL"""
+        if self.logo:
+            return self.logo.url
+        return None
+    
+    @property
+    def qrcode_url(self):
+        """返回微信二维码的完整URL"""
+        if self.qrcode:
+            return self.qrcode.url
+        return None
+    
+    @property
+    def topimg_url(self):
+        """返回非首页顶长图的完整URL"""
+        if self.topimg:
+            return self.topimg.url
+        return None
 
 
 class Advantages(models.Model):

@@ -81,6 +81,21 @@ export const useAuth = () => {
     return { isAuthenticated, user: user || undefined };
   }, [accessToken, user, isAuthenticated, setUser, clearAuth]);
 
+  const refreshUserInfo = useCallback(async (): Promise<User | null> => {
+    if (!accessToken) {
+      return null;
+    }
+    
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      console.error('Failed to refresh user info:', error);
+      return null;
+    }
+  }, [accessToken, setUser]);
+
   return {
     user,
     token: accessToken, // 保持向后兼容
@@ -90,5 +105,6 @@ export const useAuth = () => {
     login,
     logout,
     checkAuth,
+    refreshUserInfo,
   };
 };

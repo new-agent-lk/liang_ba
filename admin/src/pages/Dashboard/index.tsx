@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Statistic, Table, Typography, Spin } from 'antd';
 import {
 	UserOutlined,
-	AppstoreOutlined,
-	ReadOutlined,
-	FolderOpenOutlined,
 	MessageOutlined,
+	DatabaseOutlined,
 } from '@ant-design/icons';
 import { getDashboardStats } from '@/api/dashboard';
 import { DashboardStats } from '@/types';
@@ -49,28 +47,16 @@ const Dashboard: React.FC = () => {
 			color: '#1890ff',
 		},
 		{
-			title: '产品总数',
-			value: stats?.total_products || 0,
-			icon: <AppstoreOutlined />,
-			color: '#52c41a',
-		},
-		{
-			title: '新闻总数',
-			value: stats?.total_news || 0,
-			icon: <ReadOutlined />,
-			color: '#722ed1',
-		},
-		{
-			title: '案例总数',
-			value: stats?.total_cases || 0,
-			icon: <FolderOpenOutlined />,
-			color: '#fa8c16',
-		},
-		{
 			title: '留言总数',
 			value: stats?.total_messages || 0,
 			icon: <MessageOutlined />,
-			color: '#eb2f96',
+			color: '#52c41a',
+		},
+		{
+			title: '股票数据',
+			value: stats?.total_stock_data || 0,
+			icon: <DatabaseOutlined />,
+			color: '#722ed1',
 		},
 	];
 
@@ -86,15 +72,14 @@ const Dashboard: React.FC = () => {
 	};
 
 	const barChartData = {
-		xAxis: ['产品', '新闻', '案例', '留言'],
+		xAxis: ['用户', '留言', '股票数据'],
 		series: [
 			{
 				name: '数量',
 				data: [
-					stats?.total_products || 0,
-					stats?.total_news || 0,
-					stats?.total_cases || 0,
+					stats?.total_users || 0,
 					stats?.total_messages || 0,
+					stats?.total_stock_data || 0,
 				],
 			},
 		],
@@ -110,6 +95,7 @@ const Dashboard: React.FC = () => {
 					create: 'green',
 					update: 'blue',
 					delete: 'red',
+					message: '#eb2f96',
 				};
 				return (
 					<span style={{ color: colors[type] || '#666' }}>
@@ -139,7 +125,7 @@ const Dashboard: React.FC = () => {
 
 			<Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
 				{statCards.map((card, index) => (
-					<Col xs={24} sm={12} md={8} lg={4} key={index}>
+					<Col xs={24} sm={12} md={8} key={index}>
 						<Card bordered={false}>
 							<Statistic
 								title={card.title}
@@ -161,7 +147,7 @@ const Dashboard: React.FC = () => {
 					</Card>
 				</Col>
 				<Col xs={24} lg={12}>
-					<Card title="内容统计" bordered={false}>
+					<Card title="数据统计" bordered={false}>
 						<BarChart data={barChartData} height={300} />
 					</Card>
 				</Col>

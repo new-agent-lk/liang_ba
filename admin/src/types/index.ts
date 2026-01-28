@@ -38,10 +38,8 @@ export interface PageParams {
 // Dashboard stats
 export interface DashboardStats {
   total_users: number;
-  total_products: number;
-  total_news: number;
-  total_cases: number;
   total_messages: number;
+  total_stock_data: number;
   recent_activities: Activity[];
 }
 
@@ -50,67 +48,6 @@ export interface Activity {
   type: string;
   content: string;
   created_at: string;
-}
-
-// Product types
-export interface Product {
-  id: number;
-  name: string;
-  category?: number;
-  category_name?: string;
-  tag?: number[];
-  tag_names?: string[];
-  img?: string;
-  img_url?: string;
-  add_time: string;
-  click_nums: number;
-  info: string;
-}
-
-export interface ProductCategory {
-  id: number;
-  name: string;
-}
-
-// News types
-export interface News {
-  id: number;
-  title: string;
-  category: string;
-  category_display?: string;
-  img?: string;
-  img_url?: string;
-  add_time: string;
-  click_nums: number;
-  digest?: string;
-  info: string;
-  fav_nums: number;
-  oppose_nums: number;
-}
-
-// Case types
-export interface Case {
-  id: number;
-  title: string;
-  category: string;
-  category_display?: string;
-  img?: string;
-  img_url?: string;
-  add_time: string;
-  click_nums: number;
-  digest?: string;
-  info: string;
-  fav_nums: number;
-  oppose_nums: number;
-}
-
-// Carousel types
-export interface Carousel {
-  id: number;
-  title: string;
-  img?: string;
-  img_url?: string;
-  link?: string;
 }
 
 // Message types
@@ -122,6 +59,34 @@ export interface Message {
   msg: string;
   is_handle: boolean;
   reply?: string;
+  add_time?: string;
+}
+
+// Company Info types
+export interface CompanyInfo {
+  id: number;
+  name: string;
+  logo?: string;
+  logo_url?: string;
+  area?: number | null;
+  area_name?: string | null;
+  address: string;
+  phone: string;
+  fax: string;
+  postcode: string;
+  email: string;
+  linkman: string;
+  telephone: string;
+  digest: string;
+  info: string;
+  honor: string;
+  qrcode?: string;
+  qrcode_url?: string;
+  weichat: string;
+  qq: string;
+  record_nums: string;
+  topimg?: string;
+  topimg_url?: string;
 }
 
 // Stock data types
