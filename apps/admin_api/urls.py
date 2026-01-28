@@ -7,14 +7,12 @@ from .views import (
     CompanyInfoView,
     UserViewSet,
     MessageViewSet,
-    StockDataViewSet,
     DashboardStatsView,
 )
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'messages', MessageViewSet, basename='message')
-router.register(r'stock-data', StockDataViewSet, basename='stock-data')
 
 urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='admin-login'),

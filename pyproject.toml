@@ -83,7 +83,6 @@ dependencies = [
     "telepath==0.3.1",
     "tqdm==4.66.1",
     "traitlets==5.13.0",
-    "tushare==1.2.89",
     "typing-extensions==4.8.0",
     "tzdata==2023.3",
     "uritemplate==4.1.1",

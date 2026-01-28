@@ -3,19 +3,20 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.contrib.auth import authenticate
 
 from .serializers import (
-    UserSerializer, UserCreateSerializer,
+    UserSerializer, UserCreateSerializer, UserUpdateSerializer, UserPasswordChangeSerializer,
     CompanyInfoSerializer, CompanyInfoUpdateSerializer,
     MessageSerializer, MessageReplySerializer,
-    StockDataSerializer,
 )
 from .permissions import IsAdminUser
 from companyinfo.models import GetMessages, CompanyInfo
-from data_apps.models import GenericStockMarketData
+from apps.users.models import UserProfile
+
+User = get_user_model()
 
 
 class LoginView(views.APIView):
@@ -56,9 +57,9 @@ class LoginView(views.APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # 更新最后登录时间
-        user.last_login = timezone.now()
-        user.save(update_fields=['last_login'])
+        # 更新登录信息
+        client_ip = self.get_client_ip(request)
+        user.update_login_info(ip_address=client_ip)
 
         # 生成 JWT token
         refresh = RefreshToken.for_user(user)
@@ -68,6 +69,15 @@ class LoginView(views.APIView):
             'refresh': str(refresh),
             'user': UserSerializer(user).data
         })
+    
+    def get_client_ip(self, request):
+        """获取客户端IP地址"""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
     def logout(self, request):
         # JWT 是无状态的，客户端只需删除 token
@@ -100,19 +110,61 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return UserCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return UserUpdateSerializer
         return UserSerializer
 
     def get_queryset(self):
-        queryset = User.objects.all()
+        queryset = User.objects.all().select_related('profile')
         username = self.request.query_params.get('username')
+        department = self.request.query_params.get('department')
+        is_active = self.request.query_params.get('is_active')
+        
         if username:
             queryset = queryset.filter(username__icontains=username)
+        if department:
+            queryset = queryset.filter(department__icontains=department)
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active.lower() == 'true')
+            
         return queryset.order_by('-date_joined')
 
     @action(detail=False, methods=['get'])
     def me(self, request):
         """获取当前用户信息"""
-        return Response(UserSerializer(request.user).data)
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def change_password(self, request, pk=None):
+        """修改用户密码"""
+        user = self.get_object()
+        serializer = UserPasswordChangeSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        
+        return Response({'detail': '密码修改成功'})
+    
+    @action(detail=True, methods=['post'])
+    def toggle_active(self, request, pk=None):
+        """切换用户激活状态"""
+        user = self.get_object()
+        user.is_active = not user.is_active
+        user.save()
+        status_text = '激活' if user.is_active else '禁用'
+        return Response({'detail': f'用户已{status_text}'})
+    
+    @action(detail=False, methods=['get'])
+    def departments(self, request):
+        """获取所有部门列表"""
+        departments = User.objects.values_list('department', flat=True).distinct()
+        departments = [dept for dept in departments if dept]  # 过滤空值
+        return Response(departments)
 
 
 class CompanyInfoView(views.APIView):
@@ -172,47 +224,6 @@ class MessageViewSet(viewsets.ModelViewSet):
         return Response(MessageSerializer(message).data)
 
 
-class StockDataViewSet(viewsets.ModelViewSet):
-    """
-    股票数据视图集
-    """
-    queryset = GenericStockMarketData.objects.all()
-    serializer_class = StockDataSerializer
-    permission_classes = [IsAdminUser]
-
-    def get_queryset(self):
-        queryset = GenericStockMarketData.objects.all()
-        stock_code = self.request.query_params.get('stock_code')
-        if stock_code:
-            queryset = queryset.filter(stock_code=stock_code)
-        start_date = self.request.query_params.get('start_date')
-        end_date = self.request.query_params.get('end_date')
-        if start_date:
-            queryset = queryset.filter(current_time__date__gte=start_date)
-        if end_date:
-            queryset = queryset.filter(current_time__date__lte=end_date)
-        return queryset.order_by('-current_time')
-
-    @action(detail=False, methods=['get'])
-    def stats(self, request):
-        """获取统计数据"""
-        total = self.get_queryset().count()
-        latest = self.get_queryset().order_by('-current_time').first()
-        return Response({
-            'total_records': total,
-            'latest_date': latest.current_time if latest else None,
-        })
-
-    @action(detail=False, methods=['post'])
-    def bulk_delete(self, request):
-        """批量删除"""
-        ids = request.data.get('ids', [])
-        if not ids:
-            return Response({'detail': '请选择要删除的记录'}, status=status.HTTP_400_BAD_REQUEST)
-        deleted_count, _ = self.get_queryset().filter(id__in=ids).delete()
-        return Response({'deleted': deleted_count})
-
-
 class DashboardStatsView(views.APIView):
     """
     仪表盘统计数据
@@ -223,7 +234,6 @@ class DashboardStatsView(views.APIView):
         stats = {
             'total_users': User.objects.count(),
             'total_messages': GetMessages.objects.count(),
-            'total_stock_data': GenericStockMarketData.objects.count(),
             'recent_activities': self.get_recent_activities(),
         }
         return Response(stats)

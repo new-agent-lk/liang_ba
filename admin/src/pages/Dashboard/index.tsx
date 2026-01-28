@@ -52,12 +52,6 @@ const Dashboard: React.FC = () => {
 			icon: <MessageOutlined />,
 			color: '#52c41a',
 		},
-		{
-			title: '股票数据',
-			value: stats?.total_stock_data || 0,
-			icon: <DatabaseOutlined />,
-			color: '#722ed1',
-		},
 	];
 
 	// Mock chart data for demonstration
@@ -72,14 +66,13 @@ const Dashboard: React.FC = () => {
 	};
 
 	const barChartData = {
-		xAxis: ['用户', '留言', '股票数据'],
+		xAxis: ['用户', '留言'],
 		series: [
 			{
 				name: '数量',
 				data: [
 					stats?.total_users || 0,
 					stats?.total_messages || 0,
-					stats?.total_stock_data || 0,
 				],
 			},
 		],

@@ -7,7 +7,6 @@ import Users from '@/pages/System/Users';
 import Settings from '@/pages/System/Settings';
 import CompanyInfo from '@/pages/Content/CompanyInfo';
 import Messages from '@/pages/Content/Messages';
-import StockData from '@/pages/Data/StockData';
 import ImportExport from '@/pages/Data/ImportExport';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -57,10 +56,6 @@ const router = createBrowserRouter([
       {
         path: 'content/messages',
         element: <Messages />,
-      },
-      {
-        path: 'data/stock-data',
-        element: <StockData />,
       },
       {
         path: 'data/import-export',

@@ -5,10 +5,43 @@ export interface User {
   email?: string;
   first_name?: string;
   last_name?: string;
+  full_name?: string;
+  phone?: string;
+  avatar?: string;
+  avatar_url?: string;
+  gender?: 'M' | 'F' | 'O';
+  birthday?: string;
+  department?: string;
+  position?: string;
+  employee_id?: string;
   is_staff: boolean;
   is_superuser: boolean;
+  is_active: boolean;
   date_joined: string;
   last_login?: string;
+  created_at?: string;
+  updated_at?: string;
+  login_count?: number;
+  last_login_ip?: string;
+  bio?: string;
+  notes?: string;
+  profile?: UserProfile;
+}
+
+export interface UserProfile {
+  address?: string;
+  city?: string;
+  province?: string;
+  postal_code?: string;
+  wechat?: string;
+  qq?: string;
+  linkedin?: string;
+  language?: string;
+  timezone?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  email_notifications?: boolean;
+  sms_notifications?: boolean;
+  push_notifications?: boolean;
 }
 
 export interface LoginParams {
@@ -39,7 +72,6 @@ export interface PageParams {
 export interface DashboardStats {
   total_users: number;
   total_messages: number;
-  total_stock_data: number;
   recent_activities: Activity[];
 }
 
@@ -87,27 +119,6 @@ export interface CompanyInfo {
   record_nums: string;
   topimg?: string;
   topimg_url?: string;
-}
-
-// Stock data types
-export interface StockData {
-  id: number;
-  stock_code: string;
-  stock_name: string;
-  now_price: number;
-  open_price: number;
-  close_price: number;
-  high_price: number;
-  low_price: number;
-  turnover_of_shares: number;
-  trading_volume: number;
-  current_time: string;
-}
-
-export interface StockStats {
-  total_records: number;
-  latest_date: string;
-  market_trend: 'up' | 'down' | 'stable';
 }
 
 // API Error

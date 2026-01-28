@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Table, Tabs, Upload, Button, message, Progress } from 'antd';
 import { UploadOutlined, DownloadOutlined, FileExcelOutlined } from '@ant-design/icons';
-import { importStockData, exportStockData } from '@/api/stock';
 
 const ImportExport: React.FC = () => {
   const [importLoading, setImportLoading] = useState(false);
@@ -13,12 +12,8 @@ const ImportExport: React.FC = () => {
     setImportProgress(0);
     setImportResult(null);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const result = await importStockData(formData);
-      setImportResult(result);
-      setImportProgress(100);
-      message.success(`导入完成: 成功 ${result.success} 条, 失败 ${result.failed} 条`);
+      // TODO: 实现导入逻辑
+      message.success('导入功能开发中');
     } catch (error) {
       message.error('导入失败');
     } finally {
@@ -29,15 +24,8 @@ const ImportExport: React.FC = () => {
 
   const handleExport = async (type: string) => {
     try {
-      const response = await exportStockData({ type });
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${type}_export_${new Date().toISOString().split('T')[0]}.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      message.success('导出成功');
+      // TODO: 实现导出逻辑
+      message.success('导出功能开发中');
     } catch (error) {
       message.error('导出失败');
     }
@@ -78,7 +66,6 @@ const ImportExport: React.FC = () => {
               { key: 'news', name: '新闻数据', type: 'news', description: '导出所有新闻资讯' },
               { key: 'cases', name: '案例数据', type: 'cases', description: '导出所有成功案例' },
               { key: 'messages', name: '留言数据', type: 'messages', description: '导出所有用户留言' },
-              { key: 'stock', name: '股票数据', type: 'stock', description: '导出所有股票数据' },
             ] as { key: string; name: string; type: string; description: string }[]}
             columns={[
               { title: '数据名称', dataIndex: 'name', key: 'name' },
@@ -108,7 +95,6 @@ const ImportExport: React.FC = () => {
             dataSource={[
               { name: '产品导入模板', type: 'product_template', size: '15KB' },
               { name: '新闻导入模板', type: 'news_template', size: '12KB' },
-              { name: '股票数据模板', type: 'stock_template', size: '18KB' },
             ]}
             columns={[
               { title: '模板名称', dataIndex: 'name', key: 'name' },

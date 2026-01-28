@@ -9,7 +9,6 @@ export const ROUTES = {
   COMPANY_INFO: '/content/company-info',
   MESSAGES: '/content/messages',
   // 数据管理
-  STOCK_DATA: '/data/stock-data',
   IMPORT_EXPORT: '/data/import-export',
 };
 
@@ -43,7 +42,6 @@ export const MENU_CONFIG = [
     icon: 'LineChartOutlined',
     label: '数据管理',
     children: [
-      { key: '/data/stock-data', icon: 'StockOutlined', label: '股票数据' },
       { key: '/data/import-export', icon: 'ImportOutlined', label: '导入导出' },
     ],
   },

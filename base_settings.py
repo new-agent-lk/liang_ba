@@ -64,7 +64,7 @@ INSTALLED_APPS = [
 
     'django_crontab',
     'companyinfo',  # 新创建的应用
-    'data_apps',
+    'apps.users',  # 自定义用户应用
     'wagtail_apps',
     'rest_framework',
     'rest_framework_simplejwt',  # JWT 认证
@@ -117,6 +117,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'wsgi.application'
+
+# 自定义用户模型
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -337,13 +340,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
 # 定时器配置
-CRONJOBS = [
-    # 每1分钟生成一次首页静态文件
-    ('*/1 * * * *', 'data_apps.crons.get_daily_stock_data',
-     '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log')),
-    # ('*/1 * * * *', 'data_apps.crons.get_ten_stock_data',
-    #  '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
-]
+CRONJOBS = []
 # 指定中文编码格式
 CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
 

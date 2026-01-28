@@ -939,7 +939,6 @@ dependencies = [
     { name = "telepath" },
     { name = "tqdm" },
     { name = "traitlets" },
-    { name = "tushare" },
     { name = "typing-extensions" },
     { name = "tzdata" },
     { name = "uritemplate" },
@@ -1035,7 +1034,6 @@ requires-dist = [
     { name = "telepath", specifier = "==0.3.1" },
     { name = "tqdm", specifier = "==4.66.1" },
     { name = "traitlets", specifier = "==5.13.0" },
-    { name = "tushare", specifier = "==1.2.89" },
     { name = "typing-extensions", specifier = "==4.8.0" },
     { name = "tzdata", specifier = "==2023.3" },
     { name = "uritemplate", specifier = "==4.1.1" },
@@ -1792,23 +1790,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/5a/0b/b825ac58e20a6fef55c94ba9c7c96f1777f9a3b7e34b3b43b6d54185ec2a/traitlets-5.13.0.tar.gz", hash = "sha256:9b232b9430c8f57288c1024b34a8f0251ddcc47268927367a0dd3eeaca40deb5", size = 159818, upload-time = "2023-10-30T11:10:28.911Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ed/fd/cfc0d27ca11f3dd12b2a90d06875d8bfb532ef40ce67be4066d10807f4aa/traitlets-5.13.0-py3-none-any.whl", hash = "sha256:baf991e61542da48fe8aef8b779a9ea0aa38d8a54166ee250d5af5ecf4486619", size = 84954, upload-time = "2023-10-30T11:10:25.917Z" },
-]
-
-[[package]]
-name = "tushare"
-version = "1.2.89"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "bs4" },
-    { name = "lxml" },
-    { name = "pandas" },
-    { name = "requests" },
-    { name = "simplejson" },
-    { name = "websocket-client" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/59/52/c4da66d6ffa1993c88a858e2b005df83370156800f5a2f4fd2d1fdaca9c0/tushare-1.2.89.tar.gz", hash = "sha256:d4dd91736a5a39b7602354681c6ba438695d6bd4b1cfeee17e380e6b88d2a32e", size = 105146, upload-time = "2022-12-07T01:38:44.935Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/b8/b24cd2274bd73333d716c7f14318cd7604c79c05b8a4e6ee037cf1cb3348/tushare-1.2.89-py3-none-any.whl", hash = "sha256:69805080b86a55bcb8801845a2127bc38fe1c4218b26a5028aee7395bbac96e0", size = 131132, upload-time = "2022-12-07T01:38:40.63Z" },
 ]
 
 [[package]]
