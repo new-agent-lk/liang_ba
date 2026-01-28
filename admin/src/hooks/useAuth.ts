@@ -1,30 +1,37 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/useAuthStore';
 import { login as loginApi, logout as logoutApi, getCurrentUser } from '@/api/auth';
-import { LoginParams } from '@/types';
+import { LoginParams, LoginResponse, User } from '@/types';
 import { message } from 'antd';
 
+interface LoginResult {
+  success: boolean;
+  error?: unknown;
+}
+
+interface CheckAuthResult {
+  isAuthenticated: boolean;
+  user?: User;
+}
+
 export const useAuth = () => {
-  const navigate = useNavigate();
   const { user, token, isAuthenticated, setUser, setToken, logout: clearAuth } = useAuthStore();
 
   const login = useCallback(
-    async (data: LoginParams) => {
+    async (data: LoginParams): Promise<LoginResult> => {
       try {
-        const response = await loginApi(data);
+        const response: LoginResponse = await loginApi(data);
         const { token: authToken, user: userData } = response;
         setToken(authToken);
         setUser(userData);
         localStorage.setItem('admin_token', authToken);
         message.success('登录成功');
-        navigate('/dashboard');
         return { success: true };
       } catch (error) {
         return { success: false, error };
       }
     },
-    [navigate, setToken, setUser]
+    [setToken, setUser]
   );
 
   const logout = useCallback(async () => {
@@ -35,24 +42,24 @@ export const useAuth = () => {
     } finally {
       clearAuth();
       localStorage.removeItem('admin_token');
-      navigate('/login');
+      window.location.href = '/login';
       message.success('已退出登录');
     }
-  }, [clearAuth, navigate]);
+  }, [clearAuth]);
 
-  const checkAuth = useCallback(async () => {
+  const checkAuth = useCallback(async (): Promise<CheckAuthResult> => {
     if (token && !user) {
       try {
         const userData = await getCurrentUser();
         setUser(userData);
-        return true;
+        return { isAuthenticated: true, user: userData };
       } catch (error) {
         clearAuth();
         localStorage.removeItem('admin_token');
-        return false;
+        return { isAuthenticated: false };
       }
     }
-    return isAuthenticated;
+    return { isAuthenticated, user: user || undefined };
   }, [token, user, isAuthenticated, setUser, clearAuth]);
 
   return {

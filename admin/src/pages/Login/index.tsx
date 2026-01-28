@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
 const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +15,9 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const result = await login(values);
-      if (!result.success) {
+      if (result.success) {
+        navigate('/dashboard');
+      } else {
         message.error('用户名或密码错误');
       }
     } catch (error) {

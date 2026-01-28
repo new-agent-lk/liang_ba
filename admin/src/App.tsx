@@ -21,8 +21,13 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     const initAuth = async () => {
-      await checkAuth();
+      const result = await checkAuth();
       setAuthChecking(false);
+
+      // If not authenticated and not on login page, redirect to login
+      if (!result.isAuthenticated && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     };
     initAuth();
   }, [checkAuth]);
