@@ -5,26 +5,17 @@
 {% block body_class %}template-companydailycontentpage{% endblock %}
 
 {% block content %}
+<!-- Page Banner -->
+<div class="page-banner">
+    <h1 class="banner-title">{{ page.title }}</h1>
+</div>
 
-    <div id="banner_main" >
-            <div id="banner" class="banner">
-                <ul class="list clearfix">
-                    <li><a href="javascript:;">{% if page.image %}{% image page.image fill-1920x550 %}{% endif %}</a></li>
-                </ul>
-                <div class="tip"></div>
-<!--                <div class="text">-->
-<!--                    <p>{{ private_context.info_title }}</p>-->
-<!--                    <p>{{ private_context.info }}</p>-->
-<!--                </div>-->
-            </div>
-        </div>
-
-    <div class="submian">
-        <div class="container clearfix">
-            <div class="subright">
-                <!--单页内容开始-->
+<!-- Page Content -->
+<div class="page-content">
+    <div class="container">
+        <div class="info-card">
+            <div class="card-content">
                 {% if page.first_big_title %}
-                    <!--title1大标题-->
                     <h3 class="title1">{% include_block page.first_big_title %}</h3>
                 {% endif %}
 
@@ -38,5 +29,20 @@
             </div>
         </div>
     </div>
+</div>
 
+<style>
+.title1 {
+    font-size: 32px;
+    color: var(--text-primary);
+    margin: 40px 0 30px;
+    text-align: center;
+}
+
+@media (max-width: 767px) {
+    .title1 {
+        font-size: 24px;
+    }
+}
+</style>
 {% endblock %}

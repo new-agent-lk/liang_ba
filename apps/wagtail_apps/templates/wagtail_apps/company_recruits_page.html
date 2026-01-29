@@ -2,51 +2,124 @@
 {% load wagtailcore_tags static wagtailimages_tags %}
 
 {% block body_class %}template-companyrecruitspage{% endblock %}
-{% block content %}
-    <!--内页大图开始-->
-    <div id="banner_main" >
-        <div id="banner" class="banner">
-            {% with page.top_image as private_context %}
-            <ul class="list clearfix">
-                <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
-            </ul>
-            <div class="tip"></div>
-            <div class="text">
-                <p>{{ private_context.info_title }}</p>
-                <p>{{ private_context.info }}</p>
-            </div>
-            {% endwith %}
 
-        </div>
+{% block content %}
+<!-- Hero Banner -->
+<div class="hero-banner" style="min-height: 50vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">{{ page.title }}</h1>
+        <p class="hero-subtitle">加入我们 · 共创未来</p>
     </div>
-    <!--内页大图结束-->
-    <div class="submian">
-        <div class="container recruit">
-            {% if campus_recs %}
-                {% with campus_recs.0.specific as content %}
-                <div class="col-md-6 col-xs-12 recruit-item">
-                    <h3>校园招聘</h3>
-                    <p>{{ page.campus_intro }}</p>
-                    <a href="{% pageurl content %}">查看详情 ></a>
-                </div>
-                {% endwith %}
+</div>
+
+<!-- Recruitment Content -->
+<div class="page-content">
+    <div class="container">
+        <div class="recruit-section">
+            {% if campus_recs or social_recs %}
+            <div class="recruit-cards">
+                {% if campus_recs %}
+                    {% with campus_recs.0.specific as content %}
+                    <div class="recruit-card" data-aos="fade-up">
+                        <div class="recruit-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>校园招聘</h3>
+                        <p>{{ page.campus_intro }}</p>
+                        <a href="{% pageurl content %}" class="btn-outline">查看详情</a>
+                    </div>
+                    {% endwith %}
+                {% endif %}
+
+                {% if social_recs %}
+                    {% with social_recs.0.specific as content %}
+                    <div class="recruit-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="recruit-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>社会招聘</h3>
+                        <p>{{ page.social_intro }}</p>
+                        <a href="{% pageurl content %}" class="btn-outline">查看详情</a>
+                    </div>
+                    {% endwith %}
+                {% endif %}
+            </div>
             {% endif %}
-            {% if social_recs %}
-                {% with social_recs.0.specific as content %}
-                <div class="col-md-6 col-xs-12 recruit-item">
-                    <h3>社会招聘</h3>
-                    <p>{{ page.social_intro }}</p>
-                    <a href="{% pageurl content %}">查看详情 ></a>
+
+            <div class="info-card" data-aos="fade-up">
+                <div class="card-content">
+                    {{ page.info|safe }}
                 </div>
-                {% endwith %}
-            {% endif %}
-        </div>
-        <div class="w1200 clearfix">
-            <div class="subright">
-                <!--单页内容开始-->
-                {{ page.info|safe }}
-                <!--单页内容结束-->
             </div>
         </div>
     </div>
+</div>
+
+<style>
+.recruit-section {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.recruit-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.recruit-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 40px 30px;
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.recruit-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-gold);
+    box-shadow: var(--shadow-gold);
+}
+
+.recruit-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+    border-radius: 50%;
+    font-size: 36px;
+    color: var(--bg-primary);
+}
+
+.recruit-card h3 {
+    font-size: 28px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.recruit-card p {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+@media (max-width: 767px) {
+    .recruit-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .recruit-card {
+        padding: 30px 20px;
+    }
+
+    .recruit-card h3 {
+        font-size: 24px;
+    }
+}
+</style>
 {% endblock %}

@@ -1,204 +1,217 @@
 {% extends 'base.html' %}
-<!-- 以下3行是留给小白的，可删除 -->
 {% load static wagtailcore_tags wagtailimages_tags %}
-{% block headjs %}
-<link rel="stylesheet" href="{% static '/css/fullpage.min.css' %}">
-<link rel="stylesheet" href="{% static '/css/style.css' %}">
-<script src="{% static '/js/fullpage.js' %}"></script>
-{% endblock %}
+
 {% block content %}
-<div class="home-banner">
-    <img src="{% static 'images/banner.png' %}" alt="">
-    <div class="text-title">
-        <h3>量化交易, 从量霸开始</h3>
-        <span>我们勇攀高峰，是为了看见更美的世界，我们的征途是星辰大海</span>
-    </div>
-</div>
-<div class="section1">
-    <!-- 量霸价投，对标中证100-->
-    <div class="content">
-        <!--日k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸价投</h3>
-            <div class="chart-container"><div id="main" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red day-annual-yield0">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red day-retreat-rate0">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的日收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-
-        <!--分时图-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸价投</h3>
-            <div class="chart-container"><div id="main2" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red minsec-annual-yield0">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red minsec-retreat-rate0">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资组合的日分时线和中证100的分时比较，显示标准的日动态特征。数据显示会略有延迟。</div>
-        </div>
-
-        <!--周k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸价投</h3>
-            <div class="chart-container"><div id="main3" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red week-annual-yield0">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red week-retreat-rate0">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的周收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-
-        <!--月k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸价投</h3>
-            <div class="chart-container"><div id="main4" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red month-annual-yield0">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red month-retreat-rate0">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的月收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
+<!-- Hero Banner -->
+<section class="hero-banner">
+    <div class="hero-content">
+        <span class="hero-badge">专业量化投资</span>
+        <h1 class="hero-title">量化交易 · 从量霸开始</h1>
+        <p class="hero-subtitle">我们勇攀高峰，是为了看见更美的世界</p>
+        <a href="{% slugurl 'our-advantages' %}" class="hero-cta">
+            了解更多
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-value">10+</div>
+                <div class="stat-label">年投资经验</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">50亿</div>
+                <div class="stat-label">管理规模</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">20%</div>
+                <div class="stat-label">平均年化</div>
+            </div>
         </div>
     </div>
-    <!-- 量霸价投，对标中证100 结束 -->
+</section>
 
-    <!-- 量霸成长，对标沪深300 -->
-    <div class="content" style="background-color: #191919;">
-        <!--日k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸成长</h3>
-            <div class="chart-container"><div id="main9" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red day-annual-yield2">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red day-retreat-rate2">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的日收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
+<!-- 量霸价投 -->
+<section class="chart-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-tag">价值投资</span>
+            <h2 class="section-title">量霸价投</h2>
+            <p class="section-subtitle">对标中证100 · 价值投资策略</p>
         </div>
-
-        <!--分时图-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸成长</h3>
-            <div class="chart-container"><div id="main10" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red minsec-annual-yield2">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red minsec-retreat-rate2">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资组合的日分时线和沪深300的分时比较，显示标准的日动态特征。数据显示会略有延迟。</div>
-        </div>
-
-        <!--周k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸成长</h3>
-            <div class="chart-container"><div id="main11" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red week-annual-yield2">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red week-retreat-rate2">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的周收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-
-        <!--月k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸成长</h3>
-            <div class="chart-container"><div id="main12" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red month-annual-yield2">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red month-retreat-rate2">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的月收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-    </div>
-    <!-- 量霸成长，对标沪深300 结束 -->
-
-    <!-- 量霸超额，对标中证500 -->
-    <div class="content" style="background-color: #f5f5f7;">
-        <!--日k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸超额</h3>
-            <div class="chart-container"><div id="main5" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red day-annual-yield1">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red day-retreat-rate1">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的日收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-
-        <!--分时图-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸超额</h3>
-            <div class="chart-container"><div id="main6" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red minsec-annual-yield1">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red minsec-retreat-rate1">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资组合的日分时线和中证500的分时比较，显示标准的日动态特征。数据显示会略有延迟。</div>
-        </div>
-
-        <!--周k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸超额</h3>
-            <div class="chart-container"><div id="main7" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red week-annual-yield1">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red week-retreat-rate1">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的周收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-
-        <!--月k线-->
-        <div class="main" aos="fade-up" aos-easing="ease" aos-duration="700">
-            <h3 class="title">量霸超额</h3>
-            <div class="chart-container"><div id="main8" style="width: 100%;height: 100%;"></div></div>
-            <ul class="desc-box">
-                <li><span>年化收益</span><span class="red month-annual-yield1">21.9%</span></li>
-                <li><span>最大回撤</span><span class="red month-retreat-rate1">21.9%</span></li>
-                <li><span>初始资金</span><span class="red">100万</span></li>
-            </ul>
-            <div class="desc-text">该图展示投资标的月收益和均线显示，整体显示该时间单位内的资产变化情况。</div>
-        </div>
-    </div>
-    <!-- 量霸超额，对标中证500 结束 -->
-
-</div>
-
-<!-- Mobile floating toolbar -->
-<div class="mobile-toolbar">
-    <a href="tel:{{ companyinfo.phone }}" title="咨询热线">&#9742;</a>
-    <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45" title="在线QQ">&#128172;</a>
-    <a href="javascript:;" id="mobile-code-btn" title="二维码">&#128242;</a>
-    <a href="#" class="back-top" title="返回顶部">&#8593;</a>
-</div>
-
-<!-- <div class="section2">
-        <div class="big-title">
-            <span class="hLine"></span>
-            <span class="title">文章精选</span>
-            <span class="hLine"></span>
-        </div>
-        <div class="item-content">
-            {% if pages %}
-                {% for page in pages %}
-                    <div class="item-box">
-                        <h3>{{ page.content_stream.0 }}</h3>
-                        {% with page.specific as content %}
-                            <span>{{ content.digest }}</span>
-                        {% endwith %}
-                        <a href="{% pageurl page %}">查看文章</a>
+        <div class="grid-2">
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="chart-header">
+                    <h3 class="chart-title">日K线</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">日K</button>
+                        <button class="chart-action-btn">周K</button>
+                        <button class="chart-action-btn">月K</button>
                     </div>
-                {% endfor %}
-            {% endif %}
+                </div>
+                <div class="chart-container"><div id="main" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">21.9%</span>
+                        <span class="stat-label">年化收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value negative">-8.5%</span>
+                        <span class="stat-label">最大回撤</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">1.52</span>
+                        <span class="stat-label">夏普比率</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="chart-header">
+                    <h3 class="chart-title">分时图</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">实时</button>
+                        <button class="chart-action-btn">日频</button>
+                    </div>
+                </div>
+                <div class="chart-container"><div id="main2" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value positive">+2.3%</span>
+                        <span class="stat-label">超额收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100万</span>
+                        <span class="stat-label">初始资金</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">365</span>
+                        <span class="stat-label">运行天数</span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div> -->
+    </div>
+</section>
+
+<!-- 量霸成长 -->
+<section class="chart-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-tag">成长策略</span>
+            <h2 class="section-title">量霸成长</h2>
+            <p class="section-subtitle">对标沪深300 · 成长策略</p>
+        </div>
+        <div class="grid-2">
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="chart-header">
+                    <h3 class="chart-title">日K线</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">日K</button>
+                        <button class="chart-action-btn">周K</button>
+                        <button class="chart-action-btn">月K</button>
+                    </div>
+                </div>
+                <div class="chart-container"><div id="main9" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">28.5%</span>
+                        <span class="stat-label">年化收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value negative">-12.3%</span>
+                        <span class="stat-label">最大回撤</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">1.78</span>
+                        <span class="stat-label">夏普比率</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="chart-header">
+                    <h3 class="chart-title">分时图</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">实时</button>
+                        <button class="chart-action-btn">日频</button>
+                    </div>
+                </div>
+                <div class="chart-container"><div id="main10" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value positive">+3.8%</span>
+                        <span class="stat-label">超额收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100万</span>
+                        <span class="stat-label">初始资金</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">365</span>
+                        <span class="stat-label">运行天数</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 量霸超额 -->
+<section class="chart-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-tag">超额收益</span>
+            <h2 class="section-title">量霸超额</h2>
+            <p class="section-subtitle">对标中证500 · 超额收益策略</p>
+        </div>
+        <div class="grid-2">
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="chart-header">
+                    <h3 class="chart-title">日K线</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">日K</button>
+                        <button class="chart-action-btn">周K</button>
+                        <button class="chart-action-btn">月K</button>
+                    </div>
+                </div>
+                <div class="chart-container"><div id="main5" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">35.2%</span>
+                        <span class="stat-label">年化收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value negative">-15.6%</span>
+                        <span class="stat-label">最大回撤</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">2.1</span>
+                        <span class="stat-label">夏普比率</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="chart-header">
+                    <h3 class="chart-title">分时图</h3>
+                    <div class="chart-actions">
+                        <button class="chart-action-btn active">实时</button>
+                        <button class="chart-action-btn">日频</button>
+                    </div>
+                </div>
+                <div class="chart-container"><div id="main6" style="width: 100%;height: 100%;"></div></div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <span class="stat-value positive">+5.2%</span>
+                        <span class="stat-label">超额收益</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100万</span>
+                        <span class="stat-label">初始资金</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">365</span>
+                        <span class="stat-label">运行天数</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

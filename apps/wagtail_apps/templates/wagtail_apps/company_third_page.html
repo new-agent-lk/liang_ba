@@ -5,85 +5,170 @@
 {% block body_class %}template-companythirdpage{% endblock %}
 
 {% block content %}
-    <!--幻灯片大图开始-->
-    <div id="banner_main" >
-        <div id="banner" class="banner">
-            {% with page.top_image as private_context %}
-            <ul class="list clearfix">
-                <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
-            </ul>
-            <div class="tip"></div>
-            <div class="text">
-                <p>{{ private_context.info_title }}</p>
-                <p>{{ private_context.info }}</p>
-            </div>
-            {% endwith %}
-
-        </div>
+<!-- Hero Banner -->
+<div class="hero-banner" style="min-height: 50vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">{{ page.title }}</h1>
+        <p class="hero-subtitle">{{ page.subtitle|default:"精选内容" }}</p>
     </div>
-    <!--幻灯片大图结束-->
+</div>
 
-    <!--卡片式盒子-->
-    <div class="bg-color">
-        <div class="container section">
-            <!--第一行-->
-            {% if content_page_count > 0 %}
-            <div class="row">
-                {% for content in content_pages|slice:":2" %}
-                <div class="item-box">
-                    <div>{% image content.page_intro_image fill-360x270 %}</div>
-                    {% with content.specific as content %}
-                    <div class="content-main"><span>{{ content.page_type }}</span>
-                        <a href="{% pageurl content %}">
-                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                        </a>
-                        <p>{{ content.page_intro }}</p>
+<!-- Card Grid -->
+<div class="page-content">
+    <div class="container">
+        {% if content_page_count > 0 %}
+        <div class="card-grid">
+            {% for content in content_pages %}
+            <div class="grid-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 | add:1 }}00">
+                <a href="{% pageurl content %}">
+                    <div class="grid-card-image">
+                        {% image content.page_intro_image fill-400x300 %}
+                        <div class="grid-card-overlay"></div>
                     </div>
-                    {% endwith %}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            {% if content_page_count > 2 %}
-            <!--第二行-->
-            <div class="row">
-                {% for content in content_pages|slice:"2:5" %}
-                <div class="item-box">
-                    <div>{% image content.page_intro_image fill-360x270 %}</div>
-                    {% with content.specific as content %}
-                    <div class="content-main"><span>{{ content.page_type }}</span>
-                        <a href="{% pageurl content %}">
-                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                        </a>
-                        <p>{{ content.page_intro }}</p>
-                    </div>
-                    {% endwith %}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            {% if content_page_count > 5 %}
-                <!--第二行-->
-                <div class="row">
-                    {% for content in content_pages|slice:"5:8" %}
-                    <div class="item-box">
-                        <div>{% image content.page_intro_image fill-360x270 %}</div>
-                        {% with content.specific as content %}
-                        <div class="content-main"><span>观点</span>
-                            <a href="{% pageurl content %}">
-                            <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                            </a>
-                            <p>{{ content.page_intro }}</p>
-                        </div>
+                    <div class="grid-card-content">
+                        {% with content.specific as content_detail %}
+                        <span class="grid-card-tag">{{ content_detail.page_type|default:"观点" }}</span>
+                        <h3 class="grid-card-title">
+                            {% for block in content_detail.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}
+                        </h3>
+                        <p class="grid-card-desc">{{ content_detail.page_intro }}</p>
+                        <span class="grid-card-link">查看详情 <i class="fas fa-arrow-right"></i></span>
                         {% endwith %}
                     </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+                </a>
+            </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>暂无内容</p>
+        </div>
+        {% endif %}
     </div>
-    <!--卡片式盒子结束-->
+</div>
 
+<style>
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.grid-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.grid-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-gold);
+    box-shadow: var(--shadow-gold);
+}
+
+.grid-card a {
+    display: block;
+}
+
+.grid-card-image {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+}
+
+.grid-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+}
+
+.grid-card:hover .grid-card-image img {
+    transform: scale(1.1);
+}
+
+.grid-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(10, 25, 47, 0.9), transparent);
+}
+
+.grid-card-content {
+    padding: 25px;
+    position: relative;
+}
+
+.grid-card-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    margin-bottom: 15px;
+}
+
+.grid-card-title {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.4;
+    transition: color var(--transition-fast);
+}
+
+.grid-card:hover .grid-card-title {
+    color: var(--accent-gold);
+}
+
+.grid-card-desc {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.grid-card-link {
+    color: var(--accent-gold);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.grid-card-link i {
+    margin-left: 5px;
+    transition: transform var(--transition-fast);
+}
+
+.grid-card:hover .grid-card-link i {
+    transform: translateX(5px);
+}
+
+@media (max-width: 767px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-card-image {
+        height: 200px;
+    }
+
+    .grid-card-content {
+        padding: 20px;
+    }
+
+    .grid-card-title {
+        font-size: 18px;
+    }
+}
+</style>
 {% endblock %}

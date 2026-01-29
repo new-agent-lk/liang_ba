@@ -5,185 +5,147 @@
 {% block body_class %}template-companyindexpage{% endblock %}
 
 {% block content %}
-    <!--幻灯片大图开始-->
-    <div id="banner_main" >
-        <div id="banner" class="banner">
-            <ul class="list clearfix">
-                {% with page.top_image as private_context %}
-                    <li><a href="javascript:;">{% if private_context %}{% image private_context.banner_image fill-1920x550 %}{% endif %}</a></li>
-            </ul>
-            <div class="tip"></div>
-            <div class="text">
-                <p>{{ private_context.info_title }}</p>
-                <p>{{ private_context.info }}</p>
-            </div>
-            {% endwith %}
+<!-- Hero Banner -->
+<div class="hero-banner" style="min-height: 60vh;">
+    <div class="hero-content">
+        <h1 class="hero-title">{{ page.title }}</h1>
+        <p class="hero-subtitle">最新观点 · 市场分析 · 投资策略</p>
+    </div>
+    <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</div>
 
+<!-- Latest Articles -->
+<div class="page-content">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">最新观点</h2>
+            <p class="section-subtitle">专业洞察 · 深度分析</p>
         </div>
-    </div>
-    <!--幻灯片大图结束-->
 
-    <div class="index">
-        <span class="big-title">最新观点</span>
-
-
-        <!--最新观点开始-->
-        <div class="point" >
-            {% if content_page_count > 0 %}</p>
-                <div class="row w1200">
-                {% for content in content_pages %}
-
-                    {% if forloop.counter == 1  %}
-                    <!--模板1-->
-                    <div class="col-two col-md-8 col-xs-12">
-                        {% image content.page_intro_image fill-760x570 %}
-                        {% with content.specific as content %}
-                        <div class="content-main">
-                            <span>{{ content.page_type }}</span>
-                            <a href="{% pageurl content %}">
-                            <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                            </a>
-                            <p>{{ content.page_intro }}</p>
+        {% if content_page_count > 0 %}
+        <div class="row">
+            {% for content in content_pages %}
+                {% with content.specific as content_detail %}
+                <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 | add:1 }}00">
+                    <div class="article-card">
+                        <div class="article-image">
+                            {% image content_detail.page_intro_image fill-600x400 %}
                         </div>
-                        {% endwith %}
-                    </div>
-                    {% elif forloop.counter == 2 %}
-                    <div class="col-one col-md-4 col-xs-12">
-                        <div class="main">
-                            <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
-                            {% with content.specific as content %}
-                            <div class="content-main">
-                                <span>{{ content.page_type }}</span>
+                        <div class="article-content">
+                            <span class="article-tag">{{ content_detail.page_type }}</span>
+                            <h3 class="article-title">
                                 <a href="{% pageurl content %}">
-                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
+                                    {% for block in content_detail.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}
                                 </a>
-                                <p>{{ content.page_intro }}</p>
-                            </div>
-                            {% endwith %}
+                            </h3>
+                            <p class="article-excerpt">{{ content_detail.page_intro }}</p>
+                            <a href="{% pageurl content %}" class="article-link">阅读全文 <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
-                    {% endif %}
-                {% endfor %}
                 </div>
-            {% endif %}
-            {% if content_page_count > 2 %}
-            <!--模板3-->
-                <div class="row w1200">
-                    {% for content in content_pages %}
-                        {% with content.specific as content %}
-                            {% if forloop.counter == 5 %}
-
-                                <div class="col-one col-md-4 col-xs-12">
-                                    <div class="main">
-                                        <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
-                                        <div class="content-main">
-                                            <span>{{ content.page_type }}</span>
-                                            <a href="{% pageurl content %}">
-                                            <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                            </a><p>{{ content.page_intro }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            {% elif forloop.counter == 6 %}
-                            <div class="col-three col-md-8 col-xs-12">
-
-                                <div class="column_main">
-                                     <div class="content-main col-md-6">
-                                        <span>{{ content.page_type }}</span>
-                                        <a href="{% pageurl content %}">
-                                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                        </a>
-                                        <p>{{ content.page_intro }}</p>
-                                    </div>
-                                    <div class="col-md-6" style="padding: 0 !important;">
-                                        {% image content.page_intro_image fill-380x269 %}
-                                    </div>
-                                </div>
-                            {% if content_page_count == 6 %}</div>{% endif %}
-                            {% elif forloop.counter == 7 %}
-                                <div class="column_main mt">
-                                    <div class="col-md-6" style="padding: 0 !important;">
-                                        {% image content.page_intro_image fill-380x269 %}
-                                    </div>
-                                     <div class="content-main col-md-6">
-                                        <span>{{ content.page_type }}</span>
-                                        <a href="{% pageurl content %}">
-                                        <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                        </a>
-                                        <p>{{ content.page_intro }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% endif %}
-                        {% endwith %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% if content_page_count > 5 %}
-                <div class="row w1200">
-                {% for content in content_pages %}
-                    {% with content.specific as content %}
-                        {% if forloop.counter == 3  %}
-                        <div class="col-one col-md-4 col-xs-12">
-                            <div class="main">
-                                <div class="img-warp">{% image content.page_intro_image fill-360x205 %}</div>
-                                {% with content.specific as content %}
-                                <div class="content-main">
-                                    <span>{{ content.page_type }}</span>
-                                    <a href="{% pageurl content %}">
-                                    <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                    </a>
-                                    <p>{{ content.page_intro }}</p>
-                                </div>
-                            </div>
-                        </div>
-                                    {% endwith %}
-                        {% elif forloop.counter == 4 %}
-                        <div class="col-two col-md-8 col-xs-12">
-                            {% image content.page_intro_image fill-760x570 %}
-                            <div class="content-main">
-                                <span>{{ content.page_type }}</span>
-                                <a href="{% pageurl content %}">
-                                <h3>{% for block in content.content_stream %}{% if block.block_type == 'big_title' %}{% include_block block %}{% endif %}{% endfor %}</h3>
-                                </a>
-                                <p>{{ content.page_intro }}</p>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endfor %}
-                </div>
-            {% endif %}
-        <!--最新观点结束-->
-
-
-        <!--关于我们开始-->
-{#        <div id="floor_1_main">#}
-{#            <div class="floor_1 w1200">#}
-{#                <div class="about clearfix">#}
-{#                    <a class="item fl" href="javascript:;" >#}
-{##}
-{#                        <img src="{% static '/images/关于我们.png' %}" alt="{{ companyinfo.name }}"/></a>#}
-{#                    <div class="contW fl">#}
-{##}
-{##}
-{#                        <div class="title"><p class="entit" #}
-{#                                              >ABOUT US</p>#}
-{#                            <h3 class="tit" >关于我们</h3>#}
-{#                        </div>#}
-{#                        <a href="{% url 'about' %}"><p class="cont" #}
-{#                                                       >#}
-{#                            {{ companyinfo.digest }}...</p>#}
-{#                            <p class="view_detail" >#}
-{#                                详情>></p></a>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-        <!--关于我们结束-->
-
-
+                {% endwith %}
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
+</div>
+
+<style>
+.article-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: all var(--transition-base);
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-gold);
+    border-color: var(--accent-gold);
+}
+
+.article-image {
+    overflow: hidden;
+}
+
+.article-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+}
+
+.article-card:hover .article-image img {
+    transform: scale(1.05);
+}
+
+.article-content {
+    padding: 25px;
+}
+
+.article-tag {
+    display: inline-block;
+    padding: 5px 15px;
+    background: var(--bg-tertiary);
+    color: var(--accent-gold);
+    font-size: 12px;
+    border-radius: var(--radius-full);
+    margin-bottom: 15px;
+}
+
+.article-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.article-title a {
+    color: var(--text-primary) !important;
+    transition: color var(--transition-fast);
+}
+
+.article-title a:hover {
+    color: var(--accent-gold) !important;
+}
+
+.article-excerpt {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.article-link {
+    color: var(--accent-gold);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.article-link i {
+    margin-left: 5px;
+    transition: transform var(--transition-fast);
+}
+
+.article-link:hover i {
+    transform: translateX(5px);
+}
+
+@media (max-width: 767px) {
+    .article-content {
+        padding: 20px;
+    }
+
+    .article-title {
+        font-size: 18px;
+    }
+}
+</style>
 {% endblock %}

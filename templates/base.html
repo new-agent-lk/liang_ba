@@ -1,166 +1,220 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
 {% load static wagtailcore_tags %}
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="Keywords" content=""/>
-    <meta name="Description" content=""/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
     <title>
         {% block title %}
             {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
         {% endblock %}
     </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Design Variables -->
+    <link rel="stylesheet" href="{% static '/css/variables.css' %}">
+    <!-- Bootstrap 5 CSS -->
+    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation -->
     <link href="{% static '/css/aos.css' %}" rel="stylesheet">
+    <!-- Custom Styles -->
     <link href="{% static '/css/style.css' %}" rel="stylesheet">
     <link href="{% static '/css/common.css' %}" rel="stylesheet">
-    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
-    <script src="{% static '/js/jquery.js' %}"></script>
-    <script src="{% static '/js/jquery.SuperSlide.2.1.1.js' %}"></script>
-    <script src="{% static '/js/mobile.js' %}"></script>
-    <script src="{% static '/js/echarts.min.js' %}"></script>
-    <script src="{% static '/js/bootstrap.min.js' %}"></script>
-    <script>$(function () {
-        $("#cur").addClass("hover");
-    })</script>
-    {% block headjs %}
-    {% endblock %}
+
     {% block headcss %}
     {% endblock %}
 </head>
 <body>
-
-<!--浮动客服开始（桌面版）-->
-<dl class="toolbar" id="toolbar">
-    <dd><a class="slide tel slide-tel" href="tel:{{ companyinfo.phone }}" title="咨询热线"><i><span></span></i>{{ companyinfo.phone }}</a>
-    </dd>
-    <dd>
-        <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes& Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45"
-           title="在线QQ"><i class="qq"><span></span></i></a></dd>
-    <dd><i class="code"><span></span></i>
-        <ul class="pop pop-code">
-            <li>
-                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/>
-                <h3><b>微信号：{{ companyinfo.weichat }}</b>微信二维码</h3></li>
-        </ul>
-    </dd>
-    <dd><a href="javascript:;"><i id="top" class="top"><span></span></i></a></dd>
-</dl>
-<!--浮动客服结束-->
-<!--页头结束-->
-<!--导航开始-->
-
-<div class="navbar" >
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% slugurl 'liang-ba' %}">
-                    <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="">
+    <!-- Left Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="nav-header">
+            <a href="{% slugurl 'liang-ba' %}" class="nav-logo">
+                <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}">
+            </a>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% slugurl 'liang-ba' %}" class="nav-link" data-nav="home">
+                    <i class="nav-icon fas fa-home"></i>
+                    <span class="nav-text">首页</span>
                 </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <form class="navbar-form navbar-right">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索...">
-                    </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
-                </form>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% slugurl 'liang-ba' %}">我们的观点</a></li>
-                    <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
-                    <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
-                    <li><a href="{% slugurl 'recruits' %}">加入我们</a></li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
+            </li>
+            <li class="nav-item">
+                <a href="{% slugurl 'our-advantages' %}" class="nav-link" data-nav="advantages">
+                    <i class="nav-icon fas fa-chart-line"></i>
+                    <span class="nav-text">优势</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% slugurl 'our-future' %}" class="nav-link" data-nav="future">
+                    <i class="nav-icon fas fa-rocket"></i>
+                    <span class="nav-text">未来</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% slugurl 'recruits' %}" class="nav-link" data-nav="recruits">
+                    <i class="nav-icon fas fa-users"></i>
+                    <span class="nav-text">加入</span>
+                </a>
+            </li>
+        </ul>
+        <div class="nav-footer">
+            <a href="tel:{{ companyinfo.phone }}" class="contact-phone" title="咨询热线">
+                <i class="fas fa-phone"></i>
+            </a>
+        </div>
     </nav>
-</div>
-<!--导航结束-->
-{% block content %}
-{% endblock %}
-<!--页尾开始-->
-<div class="footer">
-    <div class="content w1200 clearfix">
-        <!--友情链接开始-->
-        <div class="links">
-            <span>友情链接：</span>
-            {% for friendly_link in friendly_links %}
-                <a href="{{ friendly_link.friendly_link }}" title="{{ friendly_link.title }}"
-                   target="_blank">{{ friendly_link.title }}</a>
-            {% endfor %}
-        </div>
-        <!--友情链接结束-->
 
-        <div class="footer-row">
-            <!--联系方式开始-->
-            <div class="contact tel col-md-4 col-xs-12">
-                <!--二维码开始-->
-                <div class="ewm">
-                    <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="{{ companyinfo.name }}"/></div>
-                <!--二维码结束-->
-                <div class="contact_info">
-                    <p class="p1">咨询热线:</p>
-                    <p class="tel">{{ companyinfo.phone }}</p>
-                    <p class="p2">联系人：{{ companyinfo.linkman }}</p>
-                    <p class="p1">邮　箱：{{ companyinfo.email }}</p></div>
-            </div>
-            <!--联系方式结束-->
-
-            <!--底部导航开始-->
-            <div class="bNav col-md-8 col-xs-12" >
-                <div class="item"><h3><a href="{% url 'about' %}" title="关于我们">我们是谁</a></h3>
-                </div>
-                <div class="item"><h3><a href="{% url 'news' %}" title="新闻动态">新闻动态</a></h3>
-                </div>
-                <div class="item"><h3><a href="{% slugurl 'recruits' %}" title="人才招聘">加入量霸</a></h3>
-                </div>
-                <div class="item"><h3><a href="{% url 'contact' %}" title="联系我们">联系量霸</a></h3>
-                </div>
-            </div>
-            <!--底部导航结束-->
-
-        </div>
-
+    <!-- Mobile Header (hidden on desktop >991px) -->
+    <header class="mobile-header">
+        <a href="{% slugurl 'liang-ba' %}" class="mobile-logo">
+            <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}">
+        </a>
+        <button class="mobile-toggle" type="button" id="mobileToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+    <div class="mobile-nav-collapse" id="mobileNav">
+        <ul class="mobile-nav-menu">
+            <li><a href="{% slugurl 'liang-ba' %}">首页</a></li>
+            <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
+            <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
+            <li><a href="{% slugurl 'recruits' %}">加入我们</a></li>
+            <li><a href="tel:{{ companyinfo.phone }}">{{ companyinfo.phone }}</a></li>
+        </ul>
     </div>
-</div>
-<!--页尾结束-->
 
-<!--版权开始-->
-<div class="copyright">
-    <div class="w1200">
-        <div class="copyright-text">
-            Copyright @ {{ companyinfo.current_year }} {{ companyinfo.name }}　地址：{{ companyinfo.address }}　备案号：<a href="javascript:;" target="_blank" title="{{ companyinfo.record_nums }}">{{ companyinfo.record_nums }}</a>
-            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011202014118" class="beian-link">
-                <img src="{% static '/images/备案图标.png' %}" alt=""/>沪公网安备 31011202014118号</a>
-            <span class="support">技术支持：<a href="{% slugurl 'liang-ba' %}" target="_blank" title="{{ companyinfo.name }}">{{ companyinfo.name }}</a></span>
-        </div>
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        {% block content %}
+        {% endblock %}
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}" class="footer-logo">
+                        <p class="brand-name">{{ companyinfo.name }}</p>
+                        <p class="footer-desc">量化交易，从量霸开始</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" title="微信"><i class="fab fa-weixin"></i></a>
+                            <a href="#" class="social-link" title="微博"><i class="fab fa-weibo"></i></a>
+                            <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links-group">
+                        <h5>快速链接</h5>
+                        <ul>
+                            <li><a href="{% slugurl 'liang-ba' %}">首页</a></li>
+                            <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
+                            <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
+                            <li><a href="{% slugurl 'recruits' %}">加入我们</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-group">
+                        <h5>联系我们</h5>
+                        <ul>
+                            <li><a href="tel:{{ companyinfo.phone }}">{{ companyinfo.phone }}</a></li>
+                            <li><a href="mailto:{{ companyinfo.email }}">{{ companyinfo.email }}</a></li>
+                            <li>{{ companyinfo.address }}</li>
+                        </ul>
+                    </div>
+                    <div class="footer-qrcode">
+                        <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="微信公众号">
+                        <span>扫码关注</span>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>Copyright &copy; {{ companyinfo.current_year }} {{ companyinfo.name }} | 备案号: <a href="javascript:;">{{ companyinfo.record_nums }}</a></p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Floating Toolbar (Desktop) -->
+    <div class="floating-toolbar">
+        <a href="tel:{{ companyinfo.phone }}" class="toolbar-btn" title="咨询热线">
+            <i class="fas fa-phone"></i>
+        </a>
+        <a href="tencent://message/?uin={{ companyinfo.qq }}&Menu=yes" class="toolbar-btn" title="在线QQ">
+            <i class="fab fa-qq"></i>
+        </a>
+        <a href="javascript:;" class="toolbar-btn wechat-btn" title="微信">
+            <i class="fab fa-weixin"></i>
+            <div class="toolbar-popup">
+                <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="微信二维码">
+                <p>{{ companyinfo.weichat }}</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="toolbar-btn back-top" title="返回顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
     </div>
-</div>
-<!--版权结束-->
 
+    <!-- Scripts -->
+    <script src="{% static '/js/jquery.js' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script>
+    <script src="{% static '/js/aos.js' %}"></script>
+    <script src="{% static '/js/app.js' %}"></script>
 
-{% block footjs %}
-{% endblock %}
-<script src="{% static '/js/aos.js' %}"></script>
-<script src="{% static '/js/app.js' %}"></script>
-<script type="text/javascript">
-    AOS.init({
-        easing: 'linear',
-        duration: 0
-    });
-</script>
-<!--弹窗插件开始-->
+    {% block footjs %}
+    {% endblock %}
 
+    <script>
+        // Initialize AOS
+        AOS.init({
+            easing: 'ease-out',
+            duration: 600,
+            once: true,
+            offset: 100
+        });
+
+        // Back to top
+        document.querySelector('.back-top')?.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mobile navigation toggle
+        const mobileToggleBtn = document.getElementById('mobileToggleBtn');
+        const mobileNav = document.getElementById('mobileNav');
+
+        if (mobileToggleBtn && mobileNav) {
+            mobileToggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                mobileNav.classList.toggle('show');
+            });
+
+            // Close mobile nav when clicking a link
+            mobileNav.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    mobileNav.classList.remove('show');
+                });
+            });
+
+            // Close mobile nav when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mobileNav.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
+                    mobileNav.classList.remove('show');
+                }
+            });
+        }
+
+        // Set active nav link based on current page
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(function(link) {
+                const href = link.getAttribute('href');
+                if (currentPath === href || currentPath.endsWith(href)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
