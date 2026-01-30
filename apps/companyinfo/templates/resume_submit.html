@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headcss %}
+<style>
+.resume-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl);
+}
+
+.resume-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+}
+
+.form-section {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.form-section-title {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.form-section-title i {
+    color: var(--accent-primary);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    background: var(--bg-primary);
+    transition: all var(--transition-fast);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.selected-position {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.selected-position h4 {
+    color: var(--accent-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.selected-position .meta {
+    display: flex;
+    gap: var(--space-lg);
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.submit-btn:hover {
+    background: var(--accent-primary-dark);
+}
+
+.submit-btn:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .resume-container {
+        padding: var(--space-md);
+    }
+
+    .resume-card {
+        padding: var(--space-lg);
+    }
+
+    .selected-position .meta {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Banner -->
+<div class="page-banner">
+    <h1 class="banner-title">投递简历</h1>
+</div>
+
+<!-- Page Content -->
+<div class="page-content">
+    <div class="container">
+        <div class="resume-container">
+            <div class="resume-card">
+                {% if selected_position %}
+                <div class="selected-position">
+                    <h4><i class="fas fa-briefcase"></i> 应聘职位</h4>
+                    <div style="font-size: var(--font-base); margin-bottom: var(--space-sm);">{{ selected_position.title }}</div>
+                    <div class="meta">
+                        <span><i class="fas fa-map-marker-alt"></i> {{ selected_position.location|default:'不限' }}</span>
+                        <span><i class="fas fa-money-bill-alt"></i> {{ selected_position.salary_range|default:'面议' }}</span>
+                        <span><i class="fas fa-building"></i> {{ selected_position.department|default:'总部' }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <form id="resumeForm">
+                    {% csrf_token %}
+
+                    <!-- 基本信息 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-user"></i> 基本信息
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="name">姓名 *</label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                       value="{{ user.last_name }}{{ user.first_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">联系电话 *</label>
+                                <input type="tel" name="phone" id="phone" class="form-control"
+                                       value="{{ profile.phone|default:'' }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">电子邮箱 *</label>
+                                <input type="email" name="email" id="email" class="form-control"
+                                       value="{{ user.email }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expected_salary">期望薪资</label>
+                                <input type="text" name="expected_salary" id="expected_salary" class="form-control"
+                                       placeholder="如：20K-30K">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 应聘信息 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-briefcase"></i> 应聘信息
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="position">应聘岗位</label>
+                                <select name="position" id="position" class="form-control">
+                                    <option value="">请选择岗位</option>
+                                    {% for position in positions %}
+                                    <option value="{{ position.id }}"
+                                            {% if selected_position.id == position.id %}selected{% endif %}>
+                                        {{ position.title }} - {{ position.location|default:'总部' }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="job_category">应聘类别</label>
+                                <select name="job_category" id="job_category" class="form-control">
+                                    <option value="">请选择</option>
+                                    <option value="quant_dev">量化开发</option>
+                                    <option value="data_engineer">数据工程师</option>
+                                    <option value="risk_manager">风控专员</option>
+                                    <option value="researcher">研究员</option>
+                                    <option value="it_support">IT支持</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 教育背景 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-graduation-cap"></i> 教育背景
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="education">最高学历</label>
+                                <select name="education" id="education" class="form-control">
+                                    <option value="">请选择</option>
+                                    <option value="high_school">高中</option>
+                                    <option value="associate">大专</option>
+                                    <option value="bachelor">本科</option>
+                                    <option value="master">硕士</option>
+                                    <option value="doctor">博士</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="school">毕业院校</label>
+                                <input type="text" name="school" id="school" class="form-control"
+                                       placeholder="请输入毕业院校">
+                            </div>
+                            <div class="form-group">
+                                <label for="major">专业</label>
+                                <input type="text" name="major" id="major" class="form-control"
+                                       placeholder="请输入所学专业">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 专业信息 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-code"></i> 专业信息
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="skills">专业技能</label>
+                                <textarea name="skills" id="skills" class="form-control"
+                                          placeholder="请描述您的专业技能，如编程语言、框架等"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="work_experience">工作/实习经历</label>
+                                <textarea name="work_experience" id="work_experience" class="form-control"
+                                          placeholder="请描述您的工作或实习经历"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 自我介绍 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-comment-alt"></i> 自我介绍
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="self_introduction">自我简介</label>
+                                <textarea name="self_introduction" id="self_introduction" class="form-control"
+                                          placeholder="请简单介绍一下自己"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="resume_file">上传简历文件</label>
+                                <input type="file" name="resume_file" id="resume_file" class="form-control"
+                                       accept=".pdf,.doc,.docx">
+                                <small style="color: var(--text-muted);">支持 PDF、Word 格式</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> 提交简历
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block footjs %}
+<script>
+$(function() {
+    $('#resumeForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        var submitBtn = $('#submitBtn');
+
+        // 禁用提交按钮
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 提交中...');
+
+        $.ajax({
+            url: '/resume/submit/',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('简历投递成功！');
+                    window.location.href = '/resume/success/';
+                } else {
+                    alert(response.message || '投递失败，请稍后重试');
+                }
+            },
+            error: function() {
+                alert('投递失败，请稍后重试');
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane"></i> 提交简历');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

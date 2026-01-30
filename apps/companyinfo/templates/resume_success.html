@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headcss %}
+<style>
+.success-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-3xl) var(--space-xl);
+    text-align: center;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-xl);
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon i {
+    font-size: var(--font-2xl);
+    color: white;
+}
+
+.success-container h2 {
+    font-size: var(--font-xl);
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.success-container p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    line-height: 1.6;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background: var(--accent-primary-dark);
+    color: white;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .success-container {
+        padding: var(--space-xl) var(--space-md);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Banner -->
+<div class="page-banner">
+    <h1 class="banner-title">简历投递</h1>
+</div>
+
+<!-- Page Content -->
+<div class="page-content">
+    <div class="container">
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>简历投递成功！</h2>
+            <p>感谢您投递简历，我们会尽快处理。<br>如有合适职位，将与您联系。</p>
+            <a href="/resume/" class="back-btn">
+                <i class="fas fa-list"></i> 查看更多职位
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

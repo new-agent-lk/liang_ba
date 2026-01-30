@@ -1,6 +1,26 @@
 @charset "UTF-8";
 
 /* ============================================
+   表单元素修复 - 确保所有表单元素显示文字
+   ============================================ */
+input, select, textarea, label, .form-control, .form-group label {
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: inherit !important;
+}
+
+input::placeholder, textarea::placeholder, select::placeholder {
+    color: #999 !important;
+    opacity: 1 !important;
+}
+
+/* 确保下拉框选项文字可见 */
+select option {
+    color: #333 !important;
+    background: #fff !important;
+}
+
+/* ============================================
    设计变量 - 现代简约风格
    ============================================ */
 
@@ -63,7 +83,7 @@
     --space-4xl: 80px;
 
     /* 导航栏 */
-    --nav-width: 80px;
+    --nav-width: 100px;
 
     /* 过渡动画 */
     --transition-fast: 0.2s ease;
@@ -160,25 +180,25 @@ button, input, select, textarea {
 }
 
 /* ============================================
-   左侧固定导航栏 - 简约圆形图标
+   左侧固定导航栏 - 简约文字版
    ============================================ */
 .side-nav {
     position: fixed;
     left: 0;
     top: 0;
-    width: var(--nav-width);
     height: 100vh;
-    background: var(--bg-primary);
-    border-right: 1px solid var(--border-color);
+    background: transparent;
+    border-right: none;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: var(--space-lg) 0;
+    align-items: flex-start;
+    padding: var(--space-lg);
+    padding-top: var(--space-xl);
     z-index: 1000;
 }
 
 .nav-header {
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .nav-logo {
@@ -201,7 +221,7 @@ button, input, select, textarea {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-sm);
     width: 100%;
 }
@@ -213,8 +233,8 @@ button, input, select, textarea {
 .nav-link {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: var(--space-md);
+    align-items: flex-start;
+    padding: var(--space-sm) 0;
     color: var(--text-secondary) !important;
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
@@ -223,30 +243,25 @@ button, input, select, textarea {
 .nav-link:hover,
 .nav-link.active {
     color: var(--accent-primary) !important;
-    background: rgba(37, 99, 235, 0.08);
 }
 
 .nav-icon {
-    font-size: 22px;
-    margin-bottom: 4px;
+    display: none;
 }
 
 .nav-text {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 500;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
 }
 
 .nav-footer {
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border-color);
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    display: none;
 }
 
 .contact-phone {
-    color: var(--text-muted);
-    font-size: 11px;
+    display: none;
 }
 
 /* ============================================
@@ -281,6 +296,8 @@ button, input, select, textarea {
     font-size: 24px;
     cursor: pointer;
     padding: var(--space-sm);
+    z-index: 1001;
+    position: relative;
 }
 
 .mobile-nav-collapse {
@@ -623,8 +640,9 @@ button, input, select, textarea {
    页脚
    ============================================ */
 .site-footer {
-    background: var(--bg-dark);
-    padding: var(--space-4xl) 0 var(--space-2xl);
+    background: var(--bg-primary);
+    padding: var(--space-3xl) 0;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-content {
@@ -635,73 +653,72 @@ button, input, select, textarea {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: var(--space-3xl);
-    margin-bottom: var(--space-3xl);
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
 }
 
 .footer-brand {
-    padding-right: var(--space-xl);
+    padding-right: var(--space-lg);
 }
 
 .footer-logo {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-full);
-    margin-bottom: var(--space-lg);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
 }
 
 .footer-brand .brand-name {
-    font-size: var(--font-xl);
-    font-weight: 700;
+    font-size: var(--font-lg);
+    font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-xs);
 }
 
 .footer-desc {
     color: var(--text-muted);
     font-size: var(--font-sm);
-    line-height: 1.7;
-    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
 }
 
 .social-links {
     display: flex;
-    gap: var(--space-md);
+    gap: var(--space-sm);
 }
 
 .social-link {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-full);
-    color: var(--text-muted);
-    font-size: 16px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 14px;
     transition: all var(--transition-fast);
 }
 
 .social-link:hover {
     background: var(--accent-primary);
     color: white;
-    transform: translateY(-2px);
 }
 
 .footer-links-group h5 {
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-sm);
-    border-bottom: 2px solid var(--accent-primary);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .footer-links-group ul {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
 }
 
 .footer-links-group ul li a {
@@ -719,26 +736,25 @@ button, input, select, textarea {
 }
 
 .footer-qrcode img {
-    width: 120px;
-    height: 120px;
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-sm);
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-xs);
 }
 
 .footer-qrcode span {
     color: var(--text-muted);
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
 }
 
 .footer-bottom {
-    padding-top: var(--space-xl);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: var(--space-lg);
     text-align: center;
 }
 
 .footer-bottom p {
     color: var(--text-muted);
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
     margin: 0;
 }
 
@@ -1054,23 +1070,8 @@ button, input, select, textarea {
     transition-duration: 0.6s;
 }
 
-/* 滚动条样式 */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-}
+/* Scrollbar styles - unified in common.css */
+/* Removed duplicate definitions to avoid conflicts */
 
 /* 选中文字样式 */
 ::selection {

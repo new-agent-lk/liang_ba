@@ -118,9 +118,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsgi.application'
 
-# 自定义用户模型
-AUTH_USER_MODEL = 'users.CustomUser'
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 

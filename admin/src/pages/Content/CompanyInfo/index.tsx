@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Card, Typography, Upload, message, Row, Col, Spin } from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
 import { getCompanyInfo, updateCompanyInfo } from '@/api/company';
 import { CompanyInfo } from '@/types';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { TextArea } = Input;
 
 const CompanyInfoPage: React.FC = () => {

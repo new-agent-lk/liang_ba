@@ -11,12 +11,31 @@
             {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
         {% endblock %}
     </title>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{% static '/css/bootstrap.min.css' %}" as="style">
+    <link rel="preload" href="{% static '/css/style.css' %}" as="style">
+    <link rel="preload" href="{% static '/js/jquery.js' %}" as="script">
+
     <!-- Design Variables -->
     <link rel="stylesheet" href="{% static '/css/variables.css' %}">
     <!-- Bootstrap 5 CSS -->
     <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        /* Font Awesome fallback */
+        .fas, .far, .fab {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", sans-serif !important;
+            font-style: normal;
+            font-weight: 900;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Ensure icons display even if font fails to load */
+        .fas::before, .far::before, .fab::before {
+            display: inline-block;
+        }
+    </style>
     <!-- AOS Animation -->
     <link href="{% static '/css/aos.css' %}" rel="stylesheet">
     <!-- Custom Styles -->
@@ -37,34 +56,43 @@
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="{% slugurl 'liang-ba' %}" class="nav-link" data-nav="home">
-                    <i class="nav-icon fas fa-home"></i>
                     <span class="nav-text">首页</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% slugurl 'our-advantages' %}" class="nav-link" data-nav="advantages">
-                    <i class="nav-icon fas fa-chart-line"></i>
                     <span class="nav-text">优势</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% slugurl 'our-future' %}" class="nav-link" data-nav="future">
-                    <i class="nav-icon fas fa-rocket"></i>
                     <span class="nav-text">未来</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% slugurl 'recruits' %}" class="nav-link" data-nav="recruits">
-                    <i class="nav-icon fas fa-users"></i>
+                <a href="/resume/" class="nav-link" data-nav="recruits">
                     <span class="nav-text">加入</span>
                 </a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="/profile/" class="nav-link" data-nav="profile">
+                    <span class="nav-text">我的</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="/login/" class="nav-link" data-nav="login">
+                    <span class="nav-text">登录</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/register/" class="nav-link" data-nav="register">
+                    <span class="nav-text">注册</span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
-        <div class="nav-footer">
-            <a href="tel:{{ companyinfo.phone }}" class="contact-phone" title="咨询热线">
-                <i class="fas fa-phone"></i>
-            </a>
-        </div>
     </nav>
 
     <!-- Mobile Header (hidden on desktop >991px) -->
@@ -81,7 +109,14 @@
             <li><a href="{% slugurl 'liang-ba' %}">首页</a></li>
             <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
             <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
-            <li><a href="{% slugurl 'recruits' %}">加入我们</a></li>
+            <li><a href="/resume/">加入我们</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="/profile/">我的</a></li>
+            <li><a href="/logout/">退出</a></li>
+            {% else %}
+            <li><a href="/login/">登录</a></li>
+            <li><a href="/register/">注册</a></li>
+            {% endif %}
             <li><a href="tel:{{ companyinfo.phone }}">{{ companyinfo.phone }}</a></li>
         </ul>
     </div>
@@ -158,6 +193,7 @@
     <script src="{% static '/js/jquery.js' %}"></script>
     <script src="{% static '/js/bootstrap.min.js' %}"></script>
     <script src="{% static '/js/aos.js' %}"></script>
+    <script src="{% static '/js/jquery.SuperSlide.2.1.1.js' %}"></script>
     <script src="{% static '/js/app.js' %}"></script>
 
     {% block footjs %}
@@ -181,29 +217,32 @@
         });
 
         // Mobile navigation toggle
-        const mobileToggleBtn = document.getElementById('mobileToggleBtn');
-        const mobileNav = document.getElementById('mobileNav');
+        (function() {
+            const mobileToggleBtn = document.getElementById('mobileToggleBtn');
+            const mobileNav = document.getElementById('mobileNav');
 
-        if (mobileToggleBtn && mobileNav) {
-            mobileToggleBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                mobileNav.classList.toggle('show');
-            });
-
-            // Close mobile nav when clicking a link
-            mobileNav.querySelectorAll('a').forEach(function(link) {
-                link.addEventListener('click', function() {
-                    mobileNav.classList.remove('show');
+            if (mobileToggleBtn && mobileNav) {
+                // Toggle on click
+                mobileToggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNav.classList.toggle('show');
                 });
-            });
 
-            // Close mobile nav when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!mobileNav.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
-                    mobileNav.classList.remove('show');
-                }
-            });
-        }
+                // Close mobile nav when clicking a link
+                mobileNav.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mobileNav.classList.remove('show');
+                    });
+                });
+
+                // Close mobile nav when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!mobileNav.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
+                        mobileNav.classList.remove('show');
+                    }
+                });
+            }
+        })();
 
         // Set active nav link based on current page
         document.addEventListener('DOMContentLoaded', function() {

@@ -1,7 +1,6 @@
 
 $(function () {
     banner();
-    share();
     inews();
     /*k_menu();*/
     nav();
@@ -38,31 +37,17 @@ $(function () {
 /* 调用SuperSlide，每次滚动一个ul，相当于每次滚动8个li */
     jQuery("#inews").slide({titCell:".hd ul",mainCell:".bd .list",autoPage:true,effect:"leftLoop",autoPlay:true,delayTime:500,interTime:5000});
 
+    // Subleft menu handling (deduplicated)
     $(".submian .subleft .lefta .comt > ul > li").each(function () {
         if (!$(this).find("li").length) {
             $(this).find(".boxlist").remove();
         }
-    })
+    });
 
     if ($(".subleft").length) {
         $(".subleft .comt > ul > li").click(function () {
             $(this).find(".boxlist").show().end().siblings().find(".boxlist").hide();
-        }, function () {
-
-        })
-    }
-    $(".submian .subleft .lefta .comt > ul > li").each(function () {
-        if (!$(this).find("li").length) {
-            $(this).find(".boxlist").remove();
-        }
-    })
-
-    if ($(".subleft").length) {
-        $(".subleft .comt > ul > li").click(function () {
-            $(this).find(".boxlist").show().end().siblings().find(".boxlist").hide();
-        }, function () {
-
-        })
+        });
     }
 
 
@@ -280,32 +265,8 @@ function layout(u){
 		}
 	}
 }
-function share(){
-	window._bd_share_config = {
-    "common": {
-        "bdSnsKey": {},
-        "bdText": "",
-        "bdMini": "2",
-        "bdMiniList": false,
-        "bdPic": "",
-        "bdStyle": "0",
-        "bdSize": "16"
-    },
-    "share": {},
-    "slide": { // 跟图标式的代码相比，这里是添加了浮窗式 slide 属性配置
-        "type": "slide",
-        "bdImg": "6",
-        "bdPos": "left",
-        "bdTop": "100"
-    }
-};
-	window._bd_share_config = {
-		share : [{
-			"bdSize" : 16
-		}],
-	}
-	with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
-}
+
+// Baidu share removed - using HTTP instead of HTTPS
 
 
 // 加入收藏 兼容360和IE6

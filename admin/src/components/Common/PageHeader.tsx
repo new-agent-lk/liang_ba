@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Card, Typography, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -10,6 +10,7 @@ interface PageHeaderProps {
   showAddButton?: boolean;
   addButtonText?: string;
   onAdd?: () => void;
+  actions?: ReactNode[];
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -18,6 +19,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   showAddButton,
   addButtonText = '新增',
   onAdd,
+  actions,
 }) => {
   const handleAdd = () => {
     if (onAdd) {
@@ -42,11 +44,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             <Typography.Text type="secondary">{description}</Typography.Text>
           )}
         </div>
-        {showAddButton && (
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            {addButtonText}
-          </Button>
-        )}
+        <div style={{ display: 'flex', gap: 8 }}>
+          {actions}
+          {showAddButton && (
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+              {addButtonText}
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

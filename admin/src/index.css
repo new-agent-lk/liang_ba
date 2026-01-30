@@ -16,6 +16,45 @@ body {
     'Noto Color Emoji';
 }
 
+/* 确保所有表单元素显示文字 */
+.ant-select-selector,
+.ant-select-selection-item,
+.ant-select-selection-placeholder,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-picker,
+.ant-input-number,
+.ant-cascader-picker-label,
+.ant-mentions,
+.ant-select-dropdown,
+.ant-select-item-option-content {
+  color: rgba(0, 0, 0, 0.85) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* 确保 Select placeholder 显示 */
+.ant-select-selection-placeholder {
+  color: #bfbfbf !important;
+}
+
+/* 确保下拉选项文字可见 */
+.ant-select-item-option-content {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* 确保表格单元格文字可见 */
+.ant-table-cell {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* 确保标签文字可见 */
+.ant-tag,
+.ant-typography,
+.ant-form-item-label > label {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}注册 - 量霸{% endblock %}
+
+{% block headcss %}
+<style>
+.auth-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--space-2xl) 0;
+}
+
+.auth-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.auth-header h2 {
+    font-size: var(--font-2xl);
+    margin-bottom: var(--space-sm);
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+}
+
+.auth-form .form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.auth-form .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    transition: all var(--transition-fast);
+    background: var(--bg-primary);
+}
+
+.auth-form .form-control:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.auth-form select.form-control {
+    cursor: pointer;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 12px 24px;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.auth-footer a {
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+.alert {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: none;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+@media (max-width: 480px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-banner">
+    <h1 class="banner-title">用户注册</h1>
+</div>
+
+<div class="page-content">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>创建账户</h2>
+                    <p>加入量霸，开启量化交易之旅</p>
+                </div>
+
+                <div id="alert" class="alert"></div>
+
+                <form id="registerForm" class="auth-form">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="last_name">姓</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control"
+                                   placeholder="请输入姓">
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">名</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control"
+                                   placeholder="请输入名">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">用户名 *</label>
+                        <input type="text" name="username" id="username" class="form-control"
+                               placeholder="请输入用户名" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">电子邮箱 *</label>
+                        <input type="email" name="email" id="email" class="form-control"
+                               placeholder="请输入邮箱" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">联系电话</label>
+                        <input type="tel" name="phone" id="phone" class="form-control"
+                               placeholder="请输入手机号">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_category">用户类型</label>
+                        <select name="user_category" id="user_category" class="form-control">
+                            <option value="job_seeker">求职者</option>
+                            <option value="investor">投资者</option>
+                            <option value="partner">合作伙伴</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">密码 *</label>
+                        <input type="password" name="password" id="password" class="form-control"
+                               placeholder="请输入密码（至少6位）" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirm">确认密码 *</label>
+                        <input type="password" name="password_confirm" id="password_confirm" class="form-control"
+                               placeholder="请再次输入密码" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-block" id="submitBtn">
+                        <span>注册</span>
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>已有账户？<a href="/login/">立即登录</a></p>
+                    <p style="margin-top: var(--space-sm)"><a href="/">返回首页</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footjs %}
+<script>
+$(function() {
+    $('#registerForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = {
+            username: $('#username').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            password: $('#password').val(),
+            password_confirm: $('#password_confirm').val(),
+            user_category: $('#user_category').val(),
+            last_name: $('#last_name').val(),
+            first_name: $('#first_name').val()
+        };
+
+        var submitBtn = $('#submitBtn');
+        var alertDiv = $('#alert');
+
+        // Basic validation
+        if (!formData.username || !formData.email || !formData.password) {
+            alertDiv.removeClass('alert-success').addClass('alert-error').html('请填写所有必填字段').show();
+            return;
+        }
+
+        if (formData.password !== formData.password_confirm) {
+            alertDiv.removeClass('alert-success').addClass('alert-error').html('两次输入的密码不一致').show();
+            return;
+        }
+
+        if (formData.password.length < 6) {
+            alertDiv.removeClass('alert-success').addClass('alert-error').html('密码长度不能少于6位').show();
+            return;
+        }
+
+        submitBtn.prop('disabled', true).find('span').text('注册中...');
+
+        $.ajax({
+            url: '/register/api/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                if (response.status === 'success') {
+                    alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
+                    setTimeout(function() {
+                        window.location.href = '/profile/';
+                    }, 1000);
+                } else {
+                    alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+                }
+            },
+            error: function(xhr) {
+                var message = '注册失败，请稍后重试';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).find('span').text('注册');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

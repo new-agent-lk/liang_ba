@@ -7,7 +7,7 @@ const ImportExport: React.FC = () => {
   const [importProgress, setImportProgress] = useState(0);
   const [importResult, setImportResult] = useState<{ success: number; failed: number } | null>(null);
 
-  const handleImport = async (file: File) => {
+  const handleImport = async (_file: File) => {
     setImportLoading(true);
     setImportProgress(0);
     setImportResult(null);
@@ -22,7 +22,7 @@ const ImportExport: React.FC = () => {
     return false;
   };
 
-  const handleExport = async (type: string) => {
+  const handleExport = async (_type: string) => {
     try {
       // TODO: 实现导出逻辑
       message.success('导出功能开发中');

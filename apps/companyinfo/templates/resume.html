@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block headcss %}
+<style>
+.resume-tabs {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.resume-tab {
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-base);
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all var(--transition-fast);
+}
+
+.resume-tab:hover {
+    color: var(--text-primary);
+}
+
+.resume-tab.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
+.resume-tab-content {
+    display: none;
+}
+
+.resume-tab-content.active {
+    display: block;
+}
+
+.position-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    transition: all var(--transition-base);
+}
+
+.position-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.position-card h4 {
+    font-size: var(--font-lg);
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.position-card .description {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+}
+
+.position-card .requirements {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+}
+
+.position-card .meta {
+    display: flex;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.position-card .meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+}
+
+.position-card .meta-item i {
+    color: var(--accent-primary);
+}
+
+.salary {
+    font-size: var(--font-base);
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.apply-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    text-decoration: none;
+}
+
+.apply-btn:hover {
+    background: var(--accent-primary-dark);
+    color: white;
+    text-decoration: none;
+}
+
+.empty-message {
+    text-align: center;
+    padding: var(--space-3xl);
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.empty-message i {
+    font-size: var(--font-2xl);
+    margin-bottom: var(--space-md);
+    display: block;
+}
+
+.login-prompt {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-xl);
+}
+
+.login-prompt h4 {
+    font-size: var(--font-lg);
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.login-prompt p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+}
+
+.login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.login-btn:hover {
+    background: var(--accent-primary-dark);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .resume-tabs {
+        flex-direction: column;
+    }
+
+    .resume-tab {
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 0;
+    }
+
+    .position-card .meta {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Banner -->
+<div class="page-banner">
+    <h1 class="banner-title">校园招聘/社会招聘</h1>
+</div>
+
+<!-- Page Content -->
+<div class="page-content">
+    <div class="container">
+        <!-- 招聘类型切换 -->
+        <div class="resume-tabs">
+            <div class="resume-tab active" data-tab="campus">校园招聘</div>
+            <div class="resume-tab" data-tab="social">社会招聘</div>
+        </div>
+
+        <!-- 校园招聘内容 -->
+        <div class="resume-tab-content active" id="campus-content">
+            {% if campus_positions %}
+                {% for position in campus_positions %}
+                <div class="position-card">
+                    <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                        <h4>{{ position.title }}</h4>
+                        <span class="salary">{{ position.salary_range|default:'面议' }}</span>
+                    </div>
+                    <div class="meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ position.location|default:'不限' }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>{{ position.get_category_display }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>{{ position.department|default:'总部' }}</span>
+                        </div>
+                    </div>
+                    {% if position.description %}
+                    <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
+                    {% endif %}
+                    {% if position.requirements %}
+                    <div class="requirements">
+                        <strong>任职要求：</strong>
+                        {{ position.requirements|truncatewords:30|linebreaks }}
+                    </div>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
+                        <i class="fas fa-paper-plane"></i> 立即申请
+                    </a>
+                    {% else %}
+                    <a href="/login/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登录后申请
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-message">
+                <i class="fas fa-briefcase"></i>
+                <h4>暂无校园招聘职位</h4>
+                <p>请关注后续招聘信息</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 社会招聘内容 -->
+        <div class="resume-tab-content" id="social-content">
+            {% if social_positions %}
+                {% for position in social_positions %}
+                <div class="position-card">
+                    <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                        <h4>{{ position.title }}</h4>
+                        <span class="salary">{{ position.salary_range|default:'面议' }}</span>
+                    </div>
+                    <div class="meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ position.location|default:'不限' }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>{{ position.get_category_display }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>{{ position.department|default:'总部' }}</span>
+                        </div>
+                    </div>
+                    {% if position.description %}
+                    <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
+                    {% endif %}
+                    {% if position.requirements %}
+                    <div class="requirements">
+                        <strong>任职要求：</strong>
+                        {{ position.requirements|truncatewords:30|linebreaks }}
+                    </div>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
+                        <i class="fas fa-paper-plane"></i> 立即申请
+                    </a>
+                    {% else %}
+                    <a href="/login/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登录后申请
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-message">
+                <i class="fas fa-briefcase"></i>
+                <h4>暂无社会招聘职位</h4>
+                <p>请关注后续招聘信息</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if not user.is_authenticated %}
+        <div class="login-prompt">
+            <h4><i class="fas fa-user-circle"></i> 投递简历</h4>
+            <p>登录后即可投递简历</p>
+            <a href="/login/?next=/resume/" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> 立即登录
+            </a>
+            <p style="margin-top: var(--space-lg); margin-bottom: 0;">
+                还没有账号？<a href="/register/" style="color: var(--accent-primary);">立即注册</a>
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block footjs %}
+<script>
+$(function() {
+    // 标签切换
+    $('.resume-tab').on('click', function() {
+        var tab = $(this).data('tab');
+        $('.resume-tab').removeClass('active');
+        $(this).addClass('active');
+        $('.resume-tab-content').removeClass('active');
+        $('#' + tab + '-content').addClass('active');
+    });
+
+    // URL 参数处理 - 根据 tab 参数切换标签
+    var urlParams = new URLSearchParams(window.location.search);
+    var tab = urlParams.get('tab');
+    if (tab === 'social') {
+        $('.resume-tab[data-tab="social"]').click();
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

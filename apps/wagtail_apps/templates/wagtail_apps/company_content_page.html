@@ -12,89 +12,119 @@
 
 <!-- Page Content -->
 <div class="page-content">
-    <div class="page-content .container">
-        <div class="info-card">
-            <div class="card-content">
-                {% for block in page.content_stream %}
-                    {% if block.block_type == 'big_title' %}
-                        <h3 class="title1">{% include_block block %}</h3>
+    <div class="container">
+        <div class="article-container">
+            <div class="article-card">
+                <div class="article-content">
+                    {% for block in page.content_stream %}
+                        {% if block.block_type == 'big_title' %}
+                            <h2 class="article-title">{% include_block block %}</h2>
 
-                    {% elif block.block_type == 'author_info' %}
-                        <!--作者头像简介-->
-                        <div class="author">
-                            <div class="author-pic">
-                                {% image block.value.ico_image original %}
+                        {% elif block.block_type == 'author_info' %}
+                            <!--作者头像简介-->
+                            <div class="author">
+                                <div class="author-pic">
+                                    {% image block.value.ico_image original %}
+                                </div>
+                                <div class="author-text">
+                                    <span class="name">{{ block.value.author_name }}</span>
+                                    <span class="title">{{ block.value.author_intro }}</span>
+                                </div>
                             </div>
-                            <div class="author-text">
-                                <span class="name">{{ block.value.author_name }}</span><br>
-                                <span class="title">{{ block.value.author_intro }}</span>
-                            </div>
-                        </div>
-                        <hr>
 
-                    {% elif block.block_type == 'content' %}
-                        {% for content in block.value %}
-                            {% include_block content %}
-                        {% endfor %}
+                        {% elif block.block_type == 'content' %}
+                            {% for content in block.value %}
+                                {% include_block content %}
+                            {% endfor %}
 
-                    {% elif block.block_type == 'source_code' %}
-                        {% include_block block %}
-                    {% endif %}
-                {% endfor %}
+                        {% elif block.block_type == 'source_code' %}
+                            {% include_block block %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-.title1 {
-    font-size: 32px;
-    color: var(--text-primary);
-    margin: 40px 0 30px;
-    text-align: center;
+/* 文章容器 - 居中显示 */
+.article-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
 }
 
+.article-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.article-content {
+    max-width: 100%;
+}
+
+.article-title {
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-xl);
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* 作者信息 */
 .author {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: var(--bg-tertiary);
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
     border-radius: var(--radius-md);
-    margin: 30px 0;
+    margin: var(--space-xl) 0;
 }
 
 .author-pic img {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
+    object-fit: cover;
+}
+
+.author-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
 }
 
 .author-text .name {
-    font-size: 18px;
+    font-size: var(--font-base);
     font-weight: 600;
-    color: var(--accent-gold);
+    color: var(--accent-primary);
 }
 
 .author-text .title {
-    font-size: 14px;
-    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    color: var(--text-muted);
 }
 
-hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: 30px 0;
-}
+/* 响应式 */
+@media (max-width: 640px) {
+    .article-card {
+        padding: var(--space-lg);
+    }
 
-@media (max-width: 767px) {
-    .title1 {
-        font-size: 24px;
+    .article-title {
+        font-size: var(--font-xl);
     }
 
     .author {
         flex-direction: column;
         text-align: center;
+        gap: var(--space-md);
     }
 }
 </style>

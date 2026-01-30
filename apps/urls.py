@@ -21,11 +21,17 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
     path('api/admin/', include('apps.admin_api.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
-    path('contact/', ContactView.as_view(), name='contact'),  # 联系我们
     path('search/', SearchView.as_view(), name='search'),
-    path('about/', AboutView.as_view(), name='about'),  # 关于我们
 
     path('news/', NewsListView.as_view(), name='news'),  # 新闻动态
+
+    # 简历投递
+    path('resume/', ResumeView.as_view(), name='resume'),
+    path('resume/submit/', ResumeSubmitView.as_view(), name='resume_submit'),
+    path('resume/success/', ResumeSuccessView.as_view(), name='resume_success'),
+
+    # 用户认证
+    path('', include('apps.users.urls')),
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/favicon.ico')),

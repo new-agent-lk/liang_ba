@@ -1,65 +1,61 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import CustomUser, UserProfile
+from django.utils import timezone
+from .models import Resume, UserCategory
 
 
-@admin.register(CustomUser)
-class CustomUserAdmin(BaseUserAdmin):
-    """自定义用户管理"""
-    list_display = ['username', 'email', 'phone', 'first_name', 'last_name', 'department', 'position', 'is_staff', 'is_active', 'date_joined']
-    list_filter = ['is_staff', 'is_active', 'gender', 'department', 'date_joined']
-    search_fields = ['username', 'email', 'phone', 'first_name', 'last_name', 'employee_id']
-    ordering = ['-date_joined']
-    
+@admin.register(Resume)
+class ResumeAdmin(admin.ModelAdmin):
+    """简历管理后台"""
+    list_display = ['name', 'job_category', 'phone', 'email', 'status', 'created_at']
+    list_filter = ['status', 'job_category', 'education', 'created_at']
+    search_fields = ['name', 'phone', 'email', 'school']
+    readonly_fields = ['user', 'created_at', 'updated_at']
+    ordering = ['-created_at']
+
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('个人信息'), {
-            'fields': ('first_name', 'last_name', 'email', 'phone', 'avatar', 'gender', 'birthday')
+        ('基本信息', {
+            'fields': ('user', 'name', 'phone', 'email', 'age')
         }),
-        (_('工作信息'), {
-            'fields': ('department', 'position', 'employee_id')
+        ('求职信息', {
+            'fields': ('job_category', 'expected_salary')
         }),
-        (_('权限'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        ('教育背景', {
+            'fields': ('education', 'school', 'major')
         }),
-        (_('重要日期'), {
-            'fields': ('last_login', 'date_joined'),
+        ('专业信息', {
+            'fields': ('work_experience', 'skills', 'self_introduction')
         }),
-        (_('其他信息'), {
-            'fields': ('last_login_ip', 'login_count', 'bio', 'notes'),
+        ('简历文件', {
+            'fields': ('resume_file',)
+        }),
+        ('审核信息', {
+            'fields': ('status', 'review_notes', 'reviewed_by', 'reviewed_at'),
+            'classes': ('collapse',)
+        }),
+        ('时间信息', {
+            'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
-    
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'email', 'phone', 'password1', 'password2'),
-        }),
-    )
-    
-    readonly_fields = ['last_login', 'date_joined', 'created_at', 'updated_at', 'login_count', 'last_login_ip']
+
+    actions = ['approve_resumes', 'reject_resumes']
+
+    def approve_resumes(self, request, queryset):
+        """批量通过简历"""
+        queryset.update(status='approved', reviewed_by=request.user, reviewed_at=timezone.now())
+    approve_resumes.short_description = '批量通过选中简历'
+
+    def reject_resumes(self, request, queryset):
+        """批量拒绝简历"""
+        queryset.update(status='rejected', reviewed_by=request.user, reviewed_at=timezone.now())
+    reject_resumes.short_description = '批量拒绝选中简历'
 
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    """用户资料管理"""
-    list_display = ['user', 'city', 'province', 'language', 'timezone', 'theme']
-    list_filter = ['city', 'province', 'language', 'timezone', 'theme']
-    search_fields = ['user__username', 'user__email', 'address', 'city']
-    
-    fieldsets = (
-        (_('联系信息'), {
-            'fields': ('address', 'city', 'province', 'postal_code')
-        }),
-        (_('社交媒体'), {
-            'fields': ('wechat', 'qq', 'linkedin')
-        }),
-        (_('偏好设置'), {
-            'fields': ('language', 'timezone', 'theme')
-        }),
-        (_('通知设置'), {
-            'fields': ('email_notifications', 'sms_notifications', 'push_notifications')
-        }),
-    )
+@admin.register(UserCategory)
+class UserCategoryAdmin(admin.ModelAdmin):
+    """用户类别管理后台"""
+    list_display = ['user', 'category', 'company', 'position', 'created_at']
+    list_filter = ['category', 'created_at']
+    search_fields = ['user__username', 'user__email', 'company']

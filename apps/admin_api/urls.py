@@ -8,11 +8,15 @@ from .views import (
     UserViewSet,
     MessageViewSet,
     DashboardStatsView,
+    ResumeViewSet,
+    JobPositionViewSet,
 )
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'messages', MessageViewSet, basename='message')
+router.register(r'resumes', ResumeViewSet, basename='resume')
+router.register(r'jobs', JobPositionViewSet, basename='job')
 
 urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='admin-login'),

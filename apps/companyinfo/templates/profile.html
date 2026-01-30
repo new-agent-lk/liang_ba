@@ -1,0 +1,472 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}我的资料 - 量霸{% endblock %}
+
+{% block headcss %}
+<style>
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-xl) 0;
+}
+
+.profile-card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+    color: white;
+    padding: var(--space-2xl);
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-md);
+    font-size: 32px;
+}
+
+.profile-name {
+    font-size: var(--font-xl);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.profile-username {
+    opacity: 0.8;
+    font-size: var(--font-sm);
+}
+
+.profile-content {
+    padding: var(--space-2xl);
+}
+
+.profile-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.profile-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    color: var(--text-primary);
+    font-size: var(--font-lg);
+    font-weight: 600;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    transition: all var(--transition-fast);
+    background: var(--bg-primary);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-control:read-only {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+.form-actions {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 20px;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+.alert {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: none;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.info-display {
+    background: var(--bg-secondary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: var(--text-muted);
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.logout-section {
+    margin-top: var(--space-2xl);
+    text-align: center;
+}
+
+.btn-logout {
+    color: var(--accent-danger);
+    background: none;
+    border: 1px solid var(--accent-danger);
+    padding: 10px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-base);
+    transition: all var(--transition-fast);
+}
+
+.btn-logout:hover {
+    background: var(--accent-danger);
+    color: white;
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-banner">
+    <h1 class="banner-title">我的资料</h1>
+</div>
+
+<div class="page-content">
+    <div class="container">
+        <div class="profile-container">
+            <div id="alert" class="alert"></div>
+
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="profile-name">
+                        {% if user.first_name or user.last_name %}
+                            {{ user.last_name }}{{ user.first_name }}
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </h2>
+                    <p class="profile-username">@{{ user.username }}</p>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user-circle"></i> 基本信息
+                        </h3>
+
+                        <div class="info-display">
+                            <div class="info-row">
+                                <span class="info-label">用户名</span>
+                                <span class="info-value">{{ user.username }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">邮箱</span>
+                                <span class="info-value">{{ user.email|default:"未设置" }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">注册时间</span>
+                                <span class="info-value">{{ user.date_joined|date:"Y-m-d H:i" }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">最后登录</span>
+                                <span class="info-value">{{ user.last_login|default:"首次登录" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-edit"></i> 编辑资料
+                        </h3>
+
+                        <form id="profileForm">
+                            {% csrf_token %}
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="last_name">姓</label>
+                                    <input type="text" name="last_name" id="last_name" class="form-control"
+                                           value="{{ user.last_name|default:"" }}" placeholder="请输入姓">
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name">名</label>
+                                    <input type="text" name="first_name" id="first_name" class="form-control"
+                                           value="{{ user.first_name|default:"" }}" placeholder="请输入名">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">电子邮箱</label>
+                                    <input type="email" name="email" id="email" class="form-control"
+                                           value="{{ user.email|default:"" }}" placeholder="请输入邮箱">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">联系电话</label>
+                                    <input type="tel" name="phone" id="phone" class="form-control"
+                                           value="{{ profile.phone|default:"" }}" placeholder="请输入手机号">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">性别</label>
+                                    <select name="gender" id="gender" class="form-control">
+                                        <option value="">请选择</option>
+                                        <option value="M" {% if profile.gender == "M" %}selected{% endif %}>男</option>
+                                        <option value="F" {% if profile.gender == "F" %}selected{% endif %}>女</option>
+                                        <option value="O" {% if profile.gender == "O" %}selected{% endif %}>其他</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="birthday">生日</label>
+                                    <input type="date" name="birthday" id="birthday" class="form-control"
+                                           value="{{ profile.birthday|date:"Y-m-d"|default:"" }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="department">部门</label>
+                                    <input type="text" name="department" id="department" class="form-control"
+                                           value="{{ profile.department|default:"" }}" placeholder="请输入部门">
+                                </div>
+                                <div class="form-group">
+                                    <label for="position">职位</label>
+                                    <input type="text" name="position" id="position" class="form-control"
+                                           value="{{ profile.position|default:"" }}" placeholder="请输入职位">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bio">个人简介</label>
+                                <textarea name="bio" id="bio" class="form-control"
+                                          placeholder="请简单介绍一下自己">{{ profile.bio|default:"" }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="weichat">微信号</label>
+                                <input type="text" name="weichat" id="weichat" class="form-control"
+                                       value="{{ profile.weichat|default:"" }}" placeholder="请输入微信号">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" id="cancelBtn">取消</button>
+                                <button type="submit" class="btn-primary" id="saveBtn">
+                                    <i class="fas fa-save"></i> 保存修改
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logout-section">
+                <button type="button" class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footjs %}
+<script>
+$(function() {
+    // Save profile
+    $('#profileForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = {
+            last_name: $('#last_name').val(),
+            first_name: $('#first_name').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            gender: $('#gender').val(),
+            birthday: $('#birthday').val(),
+            department: $('#department').val(),
+            position: $('#position').val(),
+            bio: $('#bio').val(),
+            weichat: $('#weichat').val()
+        };
+
+        var saveBtn = $('#saveBtn');
+        var alertDiv = $('#alert');
+
+        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 保存中...');
+
+        $.ajax({
+            url: '/profile/api/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                if (response.status === 'success') {
+                    alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
+                    setTimeout(function() {
+                        alertDiv.fadeOut();
+                    }, 3000);
+                } else {
+                    alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+                }
+            },
+            error: function(xhr) {
+                var message = '保存失败，请稍后重试';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
+            },
+            complete: function() {
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> 保存修改');
+            }
+        });
+    });
+
+    // Cancel button
+    $('#cancelBtn').on('click', function() {
+        window.location.reload();
+    });
+
+    // Logout
+    $('#logoutBtn').on('click', function() {
+        if (confirm('确定要退出登录吗？')) {
+            $.ajax({
+                url: '/logout/api/',
+                type: 'POST',
+                success: function() {
+                    window.location.href = '/';
+                },
+                error: function() {
+                    window.location.href = '/';
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

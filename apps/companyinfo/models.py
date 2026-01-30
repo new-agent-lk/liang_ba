@@ -176,3 +176,143 @@ class Comments(models.Model):
 
     def __str__(self):
         return self.ip
+
+
+# 招聘相关常量
+JOB_CATEGORY_CHOICES = [
+    ('quant_dev', '量化开发'),
+    ('data_engineer', '数据工程师'),
+    ('risk_manager', '风控专员'),
+    ('researcher', '研究员'),
+    ('it_support', 'IT支持'),
+    ('other', '其他'),
+]
+
+RECRUITMENT_TYPE_CHOICES = [
+    ('campus', '校园招聘'),
+    ('social', '社会招聘'),
+]
+
+EDUCATION_CHOICES = [
+    ('high_school', '高中'),
+    ('associate', '大专'),
+    ('bachelor', '本科'),
+    ('master', '硕士'),
+    ('doctor', '博士'),
+]
+
+
+class JobPosition(models.Model):
+    """招聘岗位"""
+    title = models.CharField('岗位名称', max_length=100)
+    category = models.CharField(
+        '岗位类别',
+        max_length=50,
+        choices=JOB_CATEGORY_CHOICES,
+        default='other'
+    )
+    recruitment_type = models.CharField(
+        '招聘类型',
+        max_length=20,
+        choices=RECRUITMENT_TYPE_CHOICES,
+        default='social'
+    )
+    department = models.CharField('部门', max_length=50, blank=True)
+    location = models.CharField('工作地点', max_length=100, blank=True)
+    description = models.TextField('岗位职责', blank=True)
+    requirements = models.TextField('任职要求', blank=True)
+    salary_range = models.CharField('薪资范围', max_length=100, blank=True)
+
+    is_active = models.BooleanField('是否招聘中', default=True)
+    sort_order = models.IntegerField('排序', default=0)
+
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        verbose_name = '招聘岗位'
+        verbose_name_plural = '招聘岗位管理'
+        ordering = ['sort_order', '-created_at']
+
+    def __str__(self):
+        return self.title
+
+
+class Resume(models.Model):
+    """收到的简历"""
+    # 基本信息
+    name = models.CharField('姓名', max_length=50)
+    phone = models.CharField('联系电话', max_length=20)
+    email = models.EmailField('电子邮箱')
+
+    # 求职信息
+    position = models.ForeignKey(
+        JobPosition,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='应聘岗位'
+    )
+    job_category = models.CharField(
+        '应聘职位类别',
+        max_length=50,
+        choices=JOB_CATEGORY_CHOICES,
+        default='other'
+    )
+    expected_salary = models.CharField('期望薪资', max_length=50, blank=True)
+
+    # 教育信息
+    education = models.CharField(
+        '最高学历',
+        max_length=20,
+        choices=EDUCATION_CHOICES,
+        blank=True
+    )
+    school = models.CharField('毕业院校', max_length=100, blank=True)
+    major = models.CharField('专业', max_length=100, blank=True)
+
+    # 工作经历
+    work_experience = models.TextField('工作经历', blank=True)
+    skills = models.TextField('专业技能', blank=True)
+
+    # 自我介绍
+    self_introduction = models.TextField('自我介绍', blank=True)
+
+    # 简历文件
+    resume_file = models.FileField(
+        '简历文件',
+        upload_to='resumes/%Y/%m/',
+        null=True,
+        blank=True
+    )
+
+    # 状态
+    STATUS_CHOICES = [
+        ('new', '待查看'),
+        ('viewed', '已查看'),
+        ('interview', '待面试'),
+        ('hired', '已录用'),
+        ('rejected', '已拒绝'),
+        ('withdrawn', '已撤回'),
+    ]
+    status = models.CharField(
+        '状态',
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='new'
+    )
+
+    # 备注
+    notes = models.TextField('备注', blank=True)
+    reviewed_by = models.CharField('审核人', max_length=100, blank=True)
+    reviewed_at = models.DateTimeField('审核时间', null=True, blank=True)
+
+    # 时间戳
+    created_at = models.DateTimeField('投递时间', auto_now_add=True)
+
+    class Meta:
+        verbose_name = '收到的简历'
+        verbose_name_plural = '简历管理'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.position if self.position else '未选择岗位'}"

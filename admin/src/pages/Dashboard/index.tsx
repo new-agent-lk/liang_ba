@@ -3,7 +3,6 @@ import { Row, Col, Card, Statistic, Table, Typography, Spin } from 'antd';
 import {
 	UserOutlined,
 	MessageOutlined,
-	DatabaseOutlined,
 } from '@ant-design/icons';
 import { getDashboardStats } from '@/api/dashboard';
 import { DashboardStats } from '@/types';
