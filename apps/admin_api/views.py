@@ -8,16 +8,16 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.contrib.auth import authenticate
 
-from .serializers import (
+from apps.admin_api.serializers import (
     UserSerializer, UserCreateSerializer, UserUpdateSerializer, UserPasswordChangeSerializer,
     CompanyInfoSerializer, CompanyInfoUpdateSerializer,
     MessageSerializer, MessageReplySerializer,
     ResumeSerializer, ResumeReviewSerializer,
     JobPositionSerializer,
 )
-from .permissions import IsAdminUser
-from companyinfo.models import GetMessages, CompanyInfo
-from apps.users.models import UserProfile, Resume, JobPosition
+from apps.admin_api.permissions import IsAdminUser
+from apps.companyinfo.models import GetMessages, CompanyInfo,  Resume, JobPosition
+from apps.users.models import UserProfile
 
 User = get_user_model()
 

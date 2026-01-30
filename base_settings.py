@@ -13,8 +13,6 @@ import sys
 import os
 from datetime import timedelta
 
-import pymysql
-pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(__file__)
@@ -22,7 +20,6 @@ BASE_DIR = os.path.dirname(__file__)
 WKHTMLTOIMAGE = os.path.join(BASE_DIR, 'bin', 'wkhtmltoimage', 'wkhtmltoimage')
 SCREENSHOT_WORK_PATH = os.path.join(BASE_DIR, 'bin', 'node_tool')
 TMP_DIR = os.path.join(BASE_DIR, 'media', 'tmp')
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -61,16 +58,16 @@ INSTALLED_APPS = [
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器文件上传
     'django_extensions',
-
     'django_crontab',
-    'companyinfo',  # 新创建的应用
-    'apps.users',  # 自定义用户应用
-    'wagtail_apps',
     'rest_framework',
     'rest_framework_simplejwt',  # JWT 认证
     'django_filters',
     'corsheaders',
-    'apps.admin_api',
+
+    'apps.wagtail_apps.apps.WagtailAppsConfig',
+    'apps.companyinfo.apps.CompanyinfoConfig',
+    'apps.users.apps.UsersConfig',
+    'apps.admin_api.apps.AdminApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +83,7 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'apps.urls'
 
 TEMPLATES = [
     {

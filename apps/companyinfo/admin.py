@@ -6,8 +6,11 @@ __date__ = "2020/6/13 1:03 下午"
 from django.contrib import admin
 
 from .models import (
-    CompanyInfo, Advantages, IndexAsk,
-    FriendlyLinks, GetMessages, Comments, Province, City
+    CompanyInfo, 
+    FriendlyLinks,
+    GetMessages,
+    Province,
+    City
 )
 
 
@@ -17,20 +20,6 @@ class CompanyInfoAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone', 'fax', 'email', 'linkman', 'telephone', 'qq']
     list_filter = ['name']
     search_fields = ['name']
-
-
-@admin.register(Advantages)
-class AdvantagesAdmin(admin.ModelAdmin):
-    """配置后台产品优势"""
-    list_display = ['id', 'title', 'info']
-    search_fields = ['title']
-
-
-@admin.register(IndexAsk)
-class IndexAskAdmin(admin.ModelAdmin):
-    """配置后台首页咨询"""
-    list_display = ['id', 'title']
-    search_fields = ['title']
 
 
 @admin.register(FriendlyLinks)
@@ -48,14 +37,6 @@ class GetMessagesAdmin(admin.ModelAdmin):
     list_filter = ['is_handle']
     search_fields = ['name', 'phone', 'email']
     list_per_page = 20
-
-
-@admin.register(Comments)
-class CommentsAdmin(admin.ModelAdmin):
-    """配置后台游客评论"""
-    list_display = ['ip', 'category', 'obj_pk', 'add_time', 'is_display']
-    list_filter = ['ip', 'category', 'is_display']
-    search_fields = ['ip']
 
 
 @admin.register(Province)

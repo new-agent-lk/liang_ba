@@ -8,8 +8,8 @@ from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.search import index
 
-from companyinfo.models import CompanyInfo, FriendlyLinks
-from wagtail_apps.blocks import BasePageStreamBlock, BaseDailyPageStreamBlock
+from apps.companyinfo.models import CompanyInfo, FriendlyLinks
+from apps.wagtail_apps.blocks import BasePageStreamBlock, BaseDailyPageStreamBlock
 
 
 # Create your models here.

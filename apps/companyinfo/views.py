@@ -9,9 +9,9 @@ from django.views.generic import View, TemplateView  # 使用django的视图类
 from django.core.paginator import Paginator  # 分页器
 from django.shortcuts import get_object_or_404  # 404报错模式获取对象
 from wagtail.search.utils import parse_query_string
-from wagtail_apps.models.content_page import CompanyContentPage
 
-from companyinfo.models import *
+from apps.wagtail_apps.models.content_page import CompanyContentPage
+from apps.companyinfo.models import *
 
 
 

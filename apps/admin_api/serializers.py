@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from companyinfo.models import GetMessages, CompanyInfo
-from apps.users.models import UserProfile, Resume, JobPosition
+from apps.companyinfo.models import GetMessages, CompanyInfo, Resume, JobPosition
+from apps.users.models import UserProfile
 
 User = get_user_model()
 

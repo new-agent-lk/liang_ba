@@ -3,9 +3,9 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.models import Page, Orderable
 from wagtail.admin.panels import FieldPanel, InlinePanel
-from wagtail_apps.models.content_page import CompanyDailyContentPage
 
-from companyinfo.models import CompanyInfo, FriendlyLinks
+from apps.wagtail_apps.models.content_page import CompanyDailyContentPage
+from apps.companyinfo.models import CompanyInfo, FriendlyLinks
 
 
 class CompanyDailyPage(Page):

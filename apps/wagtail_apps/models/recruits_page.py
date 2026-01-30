@@ -5,8 +5,8 @@ from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel, InlinePanel
 
-from wagtail_apps.models.content_page import CompanyContentPage
-from companyinfo.models import CompanyInfo, FriendlyLinks
+from apps.wagtail_apps.models.content_page import CompanyContentPage
+from apps.companyinfo.models import CompanyInfo, FriendlyLinks
 
 
 class CompanyRecruitsPage(Page):
