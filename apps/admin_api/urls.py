@@ -2,13 +2,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .viewset.public import LoginView, UserInfoView
-from .viewset.users import UserViewSet
-from .viewset.company import CompanyInfoView
-from .viewset.messages import MessageViewSet
-from .viewset.dashboard import DashboardStatsView
-from .viewset.resumes import ResumeViewSet
-from .viewset.jobs import JobPositionViewSet
+from .viewsets.public import LoginView, UserInfoView
+from .viewsets.users import UserViewSet
+from .viewsets.company import CompanyInfoView
+from .viewsets.messages import MessageViewSet
+from .viewsets.dashboard import DashboardStatsView
+from .viewsets.resumes import ResumeViewSet
+from .viewsets.jobs import JobPositionViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')

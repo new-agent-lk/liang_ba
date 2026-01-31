@@ -27,7 +27,7 @@ class DashboardStatsView(views.APIView):
         activities = []
 
         # 最近收到的留言
-        recent_messages = GetMessages.objects.order_by('-add_time')[:10]
+        recent_messages = GetMessages.objects.order_by('-id')[:10]
         for m in recent_messages:
             activities.append({
                 'id': f'message_{m.id}',
