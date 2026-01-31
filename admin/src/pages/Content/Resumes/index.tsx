@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Select, Button, message, Tag, Space } from 'antd';
-import { CheckOutlined, EyeOutlined } from '@ant-design/icons';
+import { CheckOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
 import PageHeader from '@/components/Common/PageHeader';
 import DataTable from '@/components/Common/DataTable';
 import { useTable } from '@/hooks/useTable';
@@ -33,6 +33,14 @@ const Resumes: React.FC = () => {
   const handleView = (record: Resume) => {
     setCurrentResume(record);
     setDetailVisible(true);
+  };
+
+  const handleViewResume = (record: Resume) => {
+    if (record.resume_file_url) {
+      window.open(record.resume_file_url, '_blank');
+    } else {
+      message.warning('该简历没有上传附件');
+    }
   };
 
   const handleDelete = async (record: Resume) => {
@@ -85,6 +93,28 @@ const Resumes: React.FC = () => {
       key: 'status',
       width: 90,
       render: (v: string) => <Tag color={getStatusColor(v)}>{getResumeStatusLabel(v)}</Tag>,
+    },
+    {
+      title: '简历',
+      dataIndex: 'resume_file_url',
+      key: 'resume_file',
+      width: 80,
+      render: (url: string | undefined) =>
+        url ? (
+          <Button
+            type="link"
+            size="small"
+            icon={<FileTextOutlined />}
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(url, '_blank');
+            }}
+          >
+            查看
+          </Button>
+        ) : (
+          <span style={{ color: '#999' }}>-</span>
+        ),
     },
     { title: '提交时间', dataIndex: 'created_at', key: 'created_at', width: 160 },
   ];

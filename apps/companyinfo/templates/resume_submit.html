@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block headcss %}
+{{ block.super }}
 <style>
 .resume-container {
     max-width: 900px;
@@ -39,7 +40,7 @@
 }
 
 .form-section-title i {
-    color: var(--accent-primary);
+    color: var(--accent-gold);
 }
 
 .form-grid {
@@ -66,35 +67,105 @@
 
 .form-control {
     width: 100%;
-    padding: 10px 14px;
+    padding: 16px 18px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
     background: var(--bg-primary);
     transition: all var(--transition-fast);
+    height: 52px;
+    box-sizing: border-box;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
 }
 
 textarea.form-control {
-    min-height: 120px;
+    min-height: 140px;
     resize: vertical;
+    height: auto;
+}
+
+.form-control[type="file"] {
+    padding: 12px 18px;
+    height: auto;
+    cursor: pointer;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+/* Checkbox styling */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    margin: 0;
+}
+
+.auth-checkbox {
+    appearance: none;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    padding: 0 !important;
+    margin: 0;
+}
+
+.auth-checkbox:checked {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+.auth-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--bg-primary);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.auth-checkbox:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
 }
 
 .selected-position {
     background: var(--bg-secondary);
-    border: 1px solid var(--accent-primary);
+    border: 1px solid var(--accent-gold);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
     margin-bottom: var(--space-lg);
 }
 
 .selected-position h4 {
-    color: var(--accent-primary);
+    color: var(--accent-gold);
     margin-bottom: var(--space-sm);
 }
 
@@ -106,25 +177,64 @@ textarea.form-control {
 }
 
 .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
     width: 100%;
-    padding: var(--space-md) var(--space-2xl);
-    background: var(--accent-primary);
-    color: white;
+    padding: 16px 24px;
+    background: var(--accent-gold);
+    color: var(--bg-primary);
     border: none;
     border-radius: var(--radius-md);
     font-size: var(--font-base);
     font-weight: 600;
+    height: 52px;
+    box-sizing: border-box;
     cursor: pointer;
     transition: all var(--transition-fast);
 }
 
 .submit-btn:hover {
-    background: var(--accent-primary-dark);
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
 }
 
 .submit-btn:disabled {
-    background: var(--text-muted);
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+}
+
+small {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+}
+
+.alert {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+    display: none;
+    font-size: var(--font-sm);
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -316,39 +426,82 @@ textarea.form-control {
 
 {% block footjs %}
 <script>
-$(function() {
-    $('#resumeForm').on('submit', function(e) {
+(function() {
+    // 使用全局标记防止重复提交
+    window.__resumeFormSubmitted = window.__resumeFormSubmitted || false;
+
+    function handleFormSubmit(e) {
+        // 如果已经提交过，直接阻止
+        if (window.__resumeFormSubmitted) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
         e.preventDefault();
+        e.stopPropagation();
 
-        var formData = new FormData(this);
-        var submitBtn = $('#submitBtn');
+        var form = e.target;
+        var submitBtn = document.getElementById('submitBtn');
 
-        // 禁用提交按钮
-        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 提交中...');
+        // 标记为已提交
+        window.__resumeFormSubmitted = true;
 
-        $.ajax({
-            url: '/resume/submit/',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.status === 'success') {
-                    alert('简历投递成功！');
-                    window.location.href = '/resume/success/';
-                } else {
-                    alert(response.message || '投递失败，请稍后重试');
-                }
-            },
-            error: function() {
-                alert('投递失败，请稍后重试');
-            },
-            complete: function() {
-                submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane"></i> 提交简历');
+        // 立即禁用按钮和移除事件监听
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+        }
+        form.removeEventListener('submit', handleFormSubmit);
+
+        var formData = new FormData(form);
+        var url = form.getAttribute('action') || '/resume/submit/';
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
             }
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.status === 'success') {
+                alert('简历投递成功！');
+                window.location.href = '/resume/success/';
+            } else {
+                alert(data.message || '投递失败，请稍后重试');
+                window.__resumeFormSubmitted = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 提交简历';
+                }
+                // 重新绑定事件
+                form.addEventListener('submit', handleFormSubmit, { capture: true });
+            }
+        })
+        .catch(function() {
+            alert('投递失败，请稍后重试');
+            window.__resumeFormSubmitted = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 提交简历';
+            }
+            // 重新绑定事件
+            form.addEventListener('submit', handleFormSubmit, { capture: true });
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var resumeForm = document.getElementById('resumeForm');
+        if (resumeForm) {
+            // 绑定事件处理
+            resumeForm.addEventListener('submit', handleFormSubmit, { capture: true });
+        }
     });
-});
+})();
 </script>
 {% endblock %}
 {% endblock %}

@@ -1,16 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import (
-    LoginView,
-    UserInfoView,
-    CompanyInfoView,
-    UserViewSet,
-    MessageViewSet,
-    DashboardStatsView,
-    ResumeViewSet,
-    JobPositionViewSet,
-)
+
+from .viewset.public import LoginView, UserInfoView
+from .viewset.users import UserViewSet
+from .viewset.company import CompanyInfoView
+from .viewset.messages import MessageViewSet
+from .viewset.dashboard import DashboardStatsView
+from .viewset.resumes import ResumeViewSet
+from .viewset.jobs import JobPositionViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')

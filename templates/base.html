@@ -35,6 +35,27 @@
         .fas::before, .far::before, .fab::before {
             display: inline-block;
         }
+
+        /* Logo styles - 适配不同位置 */
+        .logo-img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* 底部 logo */
+        .footer-logo.logo-img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--space-md);
+        }
+
+        @media (max-width: 480px) {
+            .footer-logo.logo-img {
+                width: 48px;
+                height: 48px;
+            }
+        }
     </style>
     <!-- AOS Animation -->
     <link href="{% static '/css/aos.css' %}" rel="stylesheet">
@@ -43,62 +64,250 @@
     <link href="{% static '/css/common.css' %}" rel="stylesheet">
 
     {% block headcss %}
+    <style>
+        /* 页面容器 - 内容居中 */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        /* 页面标题横幅 */
+        .page-banner {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            padding: var(--space-4xl) 0;
+            text-align: center;
+        }
+
+        .banner-title {
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: var(--font-3xl);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-lg);
+        }
+
+        /* 右上角悬浮导航栏 */
+        .side-nav {
+            position: fixed;
+            top: 24px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
+            z-index: 9999;
+            padding: var(--space-sm) 0;
+        }
+
+        .side-nav-item {
+            position: relative;
+        }
+
+        .side-nav-link {
+            display: block;
+            padding: var(--space-sm) 0;
+            color: var(--text-secondary) !important;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            letter-spacing: 2px;
+            transition: all var(--transition-fast);
+        }
+
+        .side-nav-link:hover,
+        .side-nav-link.active {
+            color: var(--accent-gold) !important;
+        }
+
+        .side-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--accent-gold);
+        }
+
+        /* 右侧悬浮工具栏样式 */
+        .floating-toolbar {
+            position: fixed;
+            right: 40px;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+            z-index: 9998;
+        }
+
+        .toolbar-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary) !important;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: var(--bg-primary) !important;
+        }
+
+        /* 返回顶部按钮 */
+        .back-top {
+            cursor: pointer;
+        }
+
+        /* 微信弹窗 */
+        .toolbar-popup {
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-right: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .wechat-btn:hover .toolbar-popup {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toolbar-popup img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .toolbar-popup p {
+            text-align: center;
+            margin: var(--space-sm) 0 0;
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            min-height: 100vh;
+        }
+
+        /* 底部 logo */
+        .footer-logo.logo-img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--space-md);
+        }
+
+        /* Footer 限定在中间 */
+        .site-footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .site-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3xl) var(--space-lg);
+        }
+
+        /* Hero Banner 也限定在中间 */
+        .hero-banner {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 991px) {
+            .side-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-logo.logo-img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+    </style>
     {% endblock %}
 </head>
 <body>
-    <!-- Left Side Navigation -->
-    <nav class="side-nav" id="sideNav">
-        <div class="nav-header">
-            <a href="{% slugurl 'liang-ba' %}" class="nav-logo">
-                <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}">
-            </a>
+    <!-- 右上角悬浮导航栏 -->
+    <nav class="side-nav">
+        <div class="side-nav-item">
+            <a href="{% slugurl 'liang-ba' %}" class="side-nav-link" data-nav="home">首页</a>
         </div>
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="{% slugurl 'liang-ba' %}" class="nav-link" data-nav="home">
-                    <span class="nav-text">首页</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% slugurl 'our-advantages' %}" class="nav-link" data-nav="advantages">
-                    <span class="nav-text">优势</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{% slugurl 'our-future' %}" class="nav-link" data-nav="future">
-                    <span class="nav-text">未来</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/resume/" class="nav-link" data-nav="recruits">
-                    <span class="nav-text">加入</span>
-                </a>
-            </li>
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a href="/profile/" class="nav-link" data-nav="profile">
-                    <span class="nav-text">我的</span>
-                </a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-                <a href="/login/" class="nav-link" data-nav="login">
-                    <span class="nav-text">登录</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="/register/" class="nav-link" data-nav="register">
-                    <span class="nav-text">注册</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
+        <div class="side-nav-item">
+            <a href="{% slugurl 'our-advantages' %}" class="side-nav-link" data-nav="advantages">核心优势</a>
+        </div>
+        <div class="side-nav-item">
+            <a href="{% slugurl 'our-future' %}" class="side-nav-link" data-nav="future">未来愿景</a>
+        </div>
+        <div class="side-nav-item">
+            <a href="/resume/" class="side-nav-link" data-nav="recruits">延揽英才</a>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="side-nav-item">
+            <a href="/profile/" class="side-nav-link" data-nav="profile">我的</a>
+        </div>
+        {% else %}
+        <div class="side-nav-item">
+            <a href="/auth/" class="side-nav-link" data-nav="login">登录</a>
+        </div>
+        {% endif %}
     </nav>
 
     <!-- Mobile Header (hidden on desktop >991px) -->
     <header class="mobile-header">
         <a href="{% slugurl 'liang-ba' %}" class="mobile-logo">
-            <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}">
+            <img src="{% static 'images/liang_ba.svg' %}" alt="{{ companyinfo.name|default:'量霸' }}" class="logo-img">
+            <span class="logo-text" style="font-size: 18px; font-weight: 700; color: var(--text-primary);">量霸</span>
         </a>
         <button class="mobile-toggle" type="button" id="mobileToggleBtn">
             <i class="fas fa-bars"></i>
@@ -107,15 +316,14 @@
     <div class="mobile-nav-collapse" id="mobileNav">
         <ul class="mobile-nav-menu">
             <li><a href="{% slugurl 'liang-ba' %}">首页</a></li>
-            <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
-            <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
-            <li><a href="/resume/">加入我们</a></li>
+            <li><a href="{% slugurl 'our-advantages' %}">优势</a></li>
+            <li><a href="{% slugurl 'our-future' %}">未来</a></li>
+            <li><a href="/resume/">招聘</a></li>
             {% if user.is_authenticated %}
             <li><a href="/profile/">我的</a></li>
             <li><a href="/logout/">退出</a></li>
             {% else %}
-            <li><a href="/login/">登录</a></li>
-            <li><a href="/register/">注册</a></li>
+            <li><a href="/auth/">登录/注册</a></li>
             {% endif %}
             <li><a href="tel:{{ companyinfo.phone }}">{{ companyinfo.phone }}</a></li>
         </ul>
@@ -131,7 +339,7 @@
             <div class="footer-content">
                 <div class="footer-grid">
                     <div class="footer-brand">
-                        <img src="{{ MEDIA_URL }}{{ companyinfo.logo }}" alt="{{ companyinfo.name }}" class="footer-logo">
+                        <img src="{% static 'images/liang_ba.svg' %}" alt="{{ companyinfo.name|default:'量霸' }}" class="footer-logo logo-img">
                         <p class="brand-name">{{ companyinfo.name }}</p>
                         <p class="footer-desc">量化交易，从量霸开始</p>
                         <div class="social-links">
@@ -144,9 +352,9 @@
                         <h5>快速链接</h5>
                         <ul>
                             <li><a href="{% slugurl 'liang-ba' %}">首页</a></li>
-                            <li><a href="{% slugurl 'our-advantages' %}">我们的优势</a></li>
-                            <li><a href="{% slugurl 'our-future' %}">我们的未来</a></li>
-                            <li><a href="{% slugurl 'recruits' %}">加入我们</a></li>
+                            <li><a href="{% slugurl 'our-advantages' %}">优势</a></li>
+                            <li><a href="{% slugurl 'our-future' %}">未来</a></li>
+                            <li><a href="/resume/">招聘</a></li>
                         </ul>
                     </div>
                     <div class="footer-links-group">
@@ -159,7 +367,6 @@
                     </div>
                     <div class="footer-qrcode">
                         <img src="{{ MEDIA_URL }}{{ companyinfo.qrcode }}" alt="微信公众号">
-                        <span>扫码关注</span>
                     </div>
                 </div>
                 <div class="footer-bottom">
@@ -200,6 +407,29 @@
     {% endblock %}
 
     <script>
+        // CSRF token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Set CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        });
+
         // Initialize AOS
         AOS.init({
             easing: 'ease-out',
@@ -247,7 +477,7 @@
         // Set active nav link based on current page
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname;
-            document.querySelectorAll('.nav-link').forEach(function(link) {
+            document.querySelectorAll('.side-nav-link').forEach(function(link) {
                 const href = link.getAttribute('href');
                 if (currentPath === href || currentPath.endsWith(href)) {
                     link.classList.add('active');

@@ -4,6 +4,7 @@
 {% block title %}我的资料 - 量霸{% endblock %}
 
 {% block headcss %}
+{{ block.super }}
 <style>
 .profile-container {
     max-width: 800px;
@@ -396,77 +397,85 @@ select.form-control {
 
 {% block footjs %}
 <script>
-$(function() {
-    // Save profile
-    $('#profileForm').on('submit', function(e) {
-        e.preventDefault();
+(function() {
+    var $ = window.jQuery;
+    if (typeof $ === 'undefined') {
+        console.warn('jQuery not loaded');
+        return;
+    }
 
-        var formData = {
-            last_name: $('#last_name').val(),
-            first_name: $('#first_name').val(),
-            email: $('#email').val(),
-            phone: $('#phone').val(),
-            gender: $('#gender').val(),
-            birthday: $('#birthday').val(),
-            department: $('#department').val(),
-            position: $('#position').val(),
-            bio: $('#bio').val(),
-            weichat: $('#weichat').val()
-        };
+    $(function() {
+        // Save profile
+        $('#profileForm').on('submit', function(e) {
+            e.preventDefault();
 
-        var saveBtn = $('#saveBtn');
-        var alertDiv = $('#alert');
+            var formData = {
+                last_name: $('#last_name').val(),
+                first_name: $('#first_name').val(),
+                email: $('#email').val(),
+                phone: $('#phone').val(),
+                gender: $('#gender').val(),
+                birthday: $('#birthday').val(),
+                department: $('#department').val(),
+                position: $('#position').val(),
+                bio: $('#bio').val(),
+                weichat: $('#weichat').val()
+            };
 
-        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 保存中...');
+            var saveBtn = $('#saveBtn');
+            var alertDiv = $('#alert');
 
-        $.ajax({
-            url: '/profile/api/',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function(response) {
-                if (response.status === 'success') {
-                    alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
-                    setTimeout(function() {
-                        alertDiv.fadeOut();
-                    }, 3000);
-                } else {
-                    alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+            saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 保存中...');
+
+            $.ajax({
+                url: '/profile/api/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
+                        setTimeout(function() {
+                            alertDiv.fadeOut();
+                        }, 3000);
+                    } else {
+                        alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+                    }
+                },
+                error: function(xhr) {
+                    var message = '保存失败，请稍后重试';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+                    alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
+                },
+                complete: function() {
+                    saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> 保存修改');
                 }
-            },
-            error: function(xhr) {
-                var message = '保存失败，请稍后重试';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    message = xhr.responseJSON.message;
-                }
-                alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
-            },
-            complete: function() {
-                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> 保存修改');
+            });
+        });
+
+        // Cancel button
+        $('#cancelBtn').on('click', function() {
+            window.location.reload();
+        });
+
+        // Logout
+        $('#logoutBtn').on('click', function() {
+            if (confirm('确定要退出登录吗？')) {
+                $.ajax({
+                    url: '/logout/api/',
+                    type: 'POST',
+                    success: function() {
+                        window.location.href = '/';
+                    },
+                    error: function() {
+                        window.location.href = '/';
+                    }
+                });
             }
         });
     });
-
-    // Cancel button
-    $('#cancelBtn').on('click', function() {
-        window.location.reload();
-    });
-
-    // Logout
-    $('#logoutBtn').on('click', function() {
-        if (confirm('确定要退出登录吗？')) {
-            $.ajax({
-                url: '/logout/api/',
-                type: 'POST',
-                success: function() {
-                    window.location.href = '/';
-                },
-                error: function() {
-                    window.location.href = '/';
-                }
-            });
-        }
-    });
-});
+})();
 </script>
 {% endblock %}

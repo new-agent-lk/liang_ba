@@ -148,21 +148,21 @@ class ResumeSerializer(serializers.ModelSerializer):
     job_category_display = serializers.CharField(source='get_job_category_display', read_only=True)
     education_display = serializers.CharField(source='get_education_display', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
-    user_username = serializers.CharField(source='user.username', read_only=True)
+    position_title = serializers.CharField(source='position.title', read_only=True, allow_null=True)
     resume_file_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Resume
         fields = [
-            'id', 'user', 'user_username', 'name', 'phone', 'email', 'age',
+            'id', 'name', 'phone', 'email',
             'job_category', 'job_category_display', 'expected_salary',
             'education', 'education_display', 'school', 'major',
             'work_experience', 'skills', 'self_introduction',
-            'resume_file', 'resume_file_url',
-            'status', 'status_display', 'review_notes', 'reviewed_by',
-            'reviewed_at', 'created_at', 'updated_at'
+            'resume_file', 'resume_file_url', 'position', 'position_title',
+            'status', 'status_display', 'notes', 'reviewed_by',
+            'reviewed_at', 'created_at',
         ]
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at', 'reviewed_at']
+        read_only_fields = ['id', 'created_at', 'reviewed_at']
 
     def get_resume_file_url(self, obj):
         if obj.resume_file:
@@ -178,18 +178,15 @@ class ResumeReviewSerializer(serializers.Serializer):
 
 class JobPositionSerializer(serializers.ModelSerializer):
     """职位序列化器"""
-    job_category_display = serializers.CharField(source='get_job_category_display', read_only=True)
-    education_required_display = serializers.CharField(source='get_education_required_display', read_only=True)
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    recruitment_type_display = serializers.CharField(source='get_recruitment_type_display', read_only=True)
 
     class Meta:
         model = JobPosition
         fields = [
-            'id', 'title', 'department', 'job_category', 'job_category_display',
-            'location', 'salary_min', 'salary_max', 'salary_display',
-            'description', 'requirements', 'responsibilities',
-            'experience', 'education_required', 'education_required_display',
-            'headcount', 'status', 'status_display', 'sort_order',
-            'publish_date', 'expiry_date', 'created_at', 'updated_at'
+            'id', 'title', 'category', 'category_display', 'recruitment_type', 'recruitment_type_display',
+            'department', 'location', 'description', 'requirements',
+            'salary_range', 'is_active', 'sort_order',
+            'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']

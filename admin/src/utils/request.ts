@@ -55,8 +55,12 @@ request.interceptors.response.use(
 		if (response.status === 200 || response.status === 201) {
 			return res;
 		}
-		message.error(res.message || '请求失败');
-		return Promise.reject(new Error(res.message || '请求失败'));
+		// DELETE 请求返回 204 No Content 时，res 为空但请求成功
+		if (response.status === 204) {
+			return { status: 'success' };
+		}
+		message.error(res?.message || '请求失败');
+		return Promise.reject(new Error(res?.message || '请求失败'));
 	},
 	async (error: AxiosError) => {
 		const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };

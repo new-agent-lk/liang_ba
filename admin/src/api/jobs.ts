@@ -3,48 +3,48 @@ import { Resume, JobPosition, PaginatedResponse, PageParams, RESUME_STATUS_CHOIC
 
 // 简历 API
 export const getResumes = (params?: PageParams): Promise<PaginatedResponse<Resume>> => {
-  return request.get('/admin/resumes/', { params });
+  return request.get('/api/admin/resumes/', { params });
 };
 
 export const getResume = (id: number): Promise<Resume> => {
-  return request.get(`/admin/resumes/${id}/`);
+  return request.get(`/api/admin/resumes/${id}/`);
 };
 
 export const createResume = (data: Partial<Resume>): Promise<Resume> => {
-  return request.post('/admin/resumes/', data);
+  return request.post('/api/admin/resumes/', data);
 };
 
 export const updateResume = (id: number, data: Partial<Resume>): Promise<Resume> => {
-  return request.put(`/admin/resumes/${id}/`, data);
+  return request.put(`/api/admin/resumes/${id}/`, data);
 };
 
 export const deleteResume = (id: number): Promise<void> => {
-  return request.delete(`/admin/resumes/${id}/`);
+  return request.delete(`/api/admin/resumes/${id}/`);
 };
 
 export const reviewResume = (id: number, data: { status: string; review_notes?: string }): Promise<Resume> => {
-  return request.post(`/admin/resumes/${id}/review/`, data);
+  return request.post(`/api/admin/resumes/${id}/review/`, data);
 };
 
 // 职位 API
 export const getJobs = (params?: PageParams): Promise<PaginatedResponse<JobPosition>> => {
-  return request.get('/admin/jobs/', { params });
+  return request.get('/api/admin/jobs/', { params });
 };
 
 export const getJob = (id: number): Promise<JobPosition> => {
-  return request.get(`/admin/jobs/${id}/`);
+  return request.get(`/api/admin/jobs/${id}/`);
 };
 
 export const createJob = (data: Partial<JobPosition>): Promise<JobPosition> => {
-  return request.post('/admin/jobs/', data);
+  return request.post('/api/admin/jobs/', data);
 };
 
 export const updateJob = (id: number, data: Partial<JobPosition>): Promise<JobPosition> => {
-  return request.put(`/admin/jobs/${id}/`, data);
+  return request.put(`/api/admin/jobs/${id}/`, data);
 };
 
 export const deleteJob = (id: number): Promise<void> => {
-  return request.delete(`/admin/jobs/${id}/`);
+  return request.delete(`/api/admin/jobs/${id}/`);
 };
 
 // 获取选项列表的工具函数

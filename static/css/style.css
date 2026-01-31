@@ -180,91 +180,6 @@ button, input, select, textarea {
 }
 
 /* ============================================
-   左侧固定导航栏 - 简约文字版
-   ============================================ */
-.side-nav {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    background: transparent;
-    border-right: none;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--space-lg);
-    padding-top: var(--space-xl);
-    z-index: 1000;
-}
-
-.nav-header {
-    margin-bottom: var(--space-2xl);
-}
-
-.nav-logo {
-    display: block;
-    transition: transform var(--transition-base);
-}
-
-.nav-logo img {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-full);
-    object-fit: contain;
-}
-
-.nav-logo:hover {
-    transform: scale(1.05);
-}
-
-.nav-menu {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    width: 100%;
-}
-
-.nav-item {
-    width: 100%;
-}
-
-.nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--space-sm) 0;
-    color: var(--text-secondary) !important;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: var(--accent-primary) !important;
-}
-
-.nav-icon {
-    display: none;
-}
-
-.nav-text {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.5em;
-    text-indent: 0.5em;
-}
-
-.nav-footer {
-    display: none;
-}
-
-.contact-phone {
-    display: none;
-}
-
-/* ============================================
    移动端导航
    ============================================ */
 .mobile-header {
@@ -274,7 +189,7 @@ button, input, select, textarea {
     left: 0;
     right: 0;
     height: 60px;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-primary);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
@@ -284,8 +199,19 @@ button, input, select, textarea {
     z-index: 1000;
 }
 
-.mobile-logo img {
-    height: 36px;
+.mobile-header .mobile-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.mobile-header .mobile-logo img {
+    width: 32px;
+    height: 32px;
+}
+
+.mobile-logo .logo-img {
+    height: 32px;
     width: auto;
 }
 
@@ -341,7 +267,6 @@ button, input, select, textarea {
    主内容区域
    ============================================ */
 .main-content {
-    margin-left: var(--nav-width);
     min-height: 100vh;
 }
 
@@ -371,8 +296,9 @@ button, input, select, textarea {
 .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 800px;
-    padding: var(--space-3xl);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
 }
 
 .hero-badge {
@@ -634,6 +560,14 @@ button, input, select, textarea {
 .info-card .card-content {
     color: var(--text-secondary);
     line-height: 1.8;
+    text-align: center;
+}
+
+.info-card .card-content a {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--accent-gold);
+    padding: var(--space-sm) var(--space-lg);
 }
 
 /* ============================================
@@ -663,9 +597,6 @@ button, input, select, textarea {
 }
 
 .footer-logo {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-md);
     margin-bottom: var(--space-md);
 }
 
@@ -767,77 +698,6 @@ button, input, select, textarea {
 }
 
 /* ============================================
-   浮动工具栏
-   ============================================ */
-.floating-toolbar {
-    position: fixed;
-    right: 24px;
-    bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 999;
-}
-
-.toolbar-btn {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-full);
-    color: var(--text-secondary);
-    font-size: 16px;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    box-shadow: var(--shadow-md);
-}
-
-.toolbar-btn:hover {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    color: white;
-    transform: translateY(-3px);
-}
-
-.toolbar-popup {
-    position: absolute;
-    right: 64px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    text-align: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all var(--transition-fast);
-    white-space: nowrap;
-    box-shadow: var(--shadow-lg);
-}
-
-.wechat-btn:hover .toolbar-popup {
-    opacity: 1;
-    visibility: visible;
-}
-
-.toolbar-popup img {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 8px;
-    border-radius: var(--radius-sm);
-}
-
-.toolbar-popup p {
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-    margin: 0;
-}
-
-/* ============================================
    内页 Banner
    ============================================ */
 .page-banner {
@@ -861,12 +721,17 @@ button, input, select, textarea {
 .page-banner .banner-title {
     position: relative;
     z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
     font-size: clamp(32px, 4vw, 48px);
     color: var(--text-primary);
 }
 
 .page-content {
-    padding: var(--space-3xl) 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-3xl) var(--space-lg);
 }
 
 /* ============================================
@@ -934,12 +799,12 @@ button, input, select, textarea {
 }
 
 @media (max-width: 991px) {
-    .side-nav {
+    .top-nav {
         display: none;
     }
 
     .main-content {
-        margin-left: 0;
+        padding-top: 0;
     }
 
     .mobile-header {
@@ -986,6 +851,11 @@ button, input, select, textarea {
 
     .footer-brand {
         grid-column: span 1;
+    }
+
+    /* 移动端隐藏右侧导航 */
+    .side-nav {
+        display: none;
     }
 
     .floating-toolbar {

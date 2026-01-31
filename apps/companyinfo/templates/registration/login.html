@@ -9,133 +9,21 @@
 </div>
 
 <div class="page-content">
-    <div class="container">
-        <div class="auth-container">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <h2>欢迎回来</h2>
-                    <p>请登录您的账户</p>
-                </div>
-
-                <form method="post" class="auth-form">
-                    {% csrf_token %}
-
-                    {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <p>用户名或密码错误，请重试。</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="form-group">
-                        <label for="id_username">用户名</label>
-                        <input type="text" name="username" id="id_username" class="form-control"
-                               placeholder="请输入用户名" required autofocus>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_password">密码</label>
-                        <input type="password" name="password" id="id_password" class="form-control"
-                               placeholder="请输入密码" required>
-                    </div>
-
-                    <button type="submit" class="btn-primary btn-block">
-                        <i class="fas fa-sign-in-alt"></i> 登录
-                    </button>
-
-                    <input type="hidden" name="next" value="{{ next }}">
-                </form>
-
-                <div class="auth-footer">
-                    <p><a href="/">返回首页</a></p>
-                </div>
-            </div>
-        </div>
+    <div class="auth-container" style="text-align: center; padding: var(--space-3xl) 0;">
+        <p style="font-size: var(--font-lg); color: var(--text-secondary); margin-bottom: var(--space-xl);">
+            正在跳转到统一登录注册页面...
+        </p>
+        <a href="/auth/" class="btn-primary" style="display: inline-flex;">
+            点击这里直接前往
+        </a>
+        <meta http-equiv="refresh" content="2;url=/auth/">
     </div>
 </div>
 
 <style>
 .auth-container {
-    max-width: 400px;
+    max-width: 440px;
     margin: 0 auto;
-    padding: var(--space-2xl) 0;
-}
-
-.auth-card {
-    background: var(--bg-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--space-2xl);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: var(--space-2xl);
-}
-
-.auth-header h2 {
-    font-size: var(--font-2xl);
-    margin-bottom: var(--space-sm);
-}
-
-.auth-header p {
-    color: var(--text-secondary);
-}
-
-.auth-form .form-group {
-    margin-bottom: var(--space-lg);
-}
-
-.auth-form label {
-    display: block;
-    margin-bottom: var(--space-sm);
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.auth-form .form-control {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-size: var(--font-base);
-    transition: all var(--transition-fast);
-}
-
-.auth-form .form-control:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.btn-block {
-    width: 100%;
-    justify-content: center;
-    margin-top: var(--space-lg);
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--border-color);
-}
-
-.auth-footer a {
-    color: var(--accent-primary);
-    font-weight: 500;
-}
-
-.alert {
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-lg);
-}
-
-.alert-danger {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--accent-danger);
-    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 </style>
 {% endblock %}

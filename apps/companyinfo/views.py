@@ -122,12 +122,15 @@ class ResumeSubmitView(View):
 
     def post(self, request):
         try:
+            from django.utils import timezone
+            from datetime import timedelta
+            from django.db import transaction, IntegrityError
+
             # JobPosition 和 Resume 已在 models.py 中导入
 
             # 处理 JSON 数据（内联表单）和 FormData 数据（完整表单）
             content_type = request.content_type
             if content_type and 'application/json' in content_type:
-                import json
                 data = json.loads(request.body)
                 name = data.get('name', '')
                 phone = data.get('phone', '')
@@ -163,29 +166,49 @@ class ResumeSubmitView(View):
             else:
                 position = None
 
-            # 创建简历记录
-            resume = Resume(
-                name=name,
-                phone=phone,
-                email=email,
-                position=position,
-                job_category=job_category,
-                expected_salary=expected_salary,
-                education=education,
-                school=school,
-                major=major,
-                skills=skills,
-                work_experience=work_experience,
-                self_introduction=self_introduction,
-            )
+            # 使用数据库事务防止并发重复提交
+            with transaction.atomic():
+                # 使用行级锁检查最近1分钟内是否提交过相同邮箱的简历
+                one_minute_ago = timezone.now() - timedelta(minutes=1)
+                recent_count = Resume.objects.filter(
+                    email=email,
+                    created_at__gte=one_minute_ago
+                ).select_for_update().count()
 
-            # 处理文件上传
-            if request.FILES.get('resume_file'):
-                resume.resume_file = request.FILES.get('resume_file')
+                if recent_count > 0:
+                    return HttpResponse(json.dumps({
+                        "status": "failed",
+                        "message": "请勿重复提交，您刚刚已经投递过简历了"
+                    }), content_type='application/json')
 
-            resume.save()
+                # 创建简历记录
+                resume = Resume(
+                    name=name,
+                    phone=phone,
+                    email=email,
+                    position=position,
+                    job_category=job_category,
+                    expected_salary=expected_salary,
+                    education=education,
+                    school=school,
+                    major=major,
+                    skills=skills,
+                    work_experience=work_experience,
+                    self_introduction=self_introduction,
+                )
+
+                # 处理文件上传
+                if request.FILES.get('resume_file'):
+                    resume.resume_file = request.FILES.get('resume_file')
+
+                resume.save()
 
             return HttpResponse(json.dumps({"status": "success", "message": "简历投递成功！"}), content_type='application/json')
+        except IntegrityError:
+            return HttpResponse(json.dumps({
+                "status": "failed",
+                "message": "请勿重复提交，您刚刚已经投递过简历了"
+            }), content_type='application/json')
         except Exception as e:
             return HttpResponse(json.dumps({"status": "failed", "message": str(e)}), content_type='application/json')
 

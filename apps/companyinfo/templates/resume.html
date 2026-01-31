@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block headcss %}
+{{ block.super }}
 <style>
 .resume-tabs {
     display: flex;
@@ -25,8 +26,8 @@
 }
 
 .resume-tab.active {
-    color: var(--accent-primary);
-    border-bottom-color: var(--accent-primary);
+    color: var(--accent-gold);
+    border-bottom-color: var(--accent-gold);
 }
 
 .resume-tab-content {
@@ -90,13 +91,13 @@
 }
 
 .position-card .meta-item i {
-    color: var(--accent-primary);
+    color: var(--accent-gold);
 }
 
 .salary {
     font-size: var(--font-base);
     font-weight: 600;
-    color: var(--accent-primary);
+    color: var(--accent-gold);
 }
 
 .apply-btn {
@@ -104,8 +105,8 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-sm) var(--space-lg);
-    background: var(--accent-primary);
-    color: white;
+    background: var(--accent-gold);
+    color: var(--bg-primary);
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
     font-weight: 500;
@@ -116,8 +117,8 @@
 }
 
 .apply-btn:hover {
-    background: var(--accent-primary-dark);
-    color: white;
+    opacity: 0.9;
+    color: var(--bg-primary);
     text-decoration: none;
 }
 
@@ -159,16 +160,16 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-md) var(--space-2xl);
-    background: var(--accent-primary);
-    color: white;
+    background: var(--accent-gold);
+    color: var(--bg-primary);
     border-radius: var(--radius-md);
     font-weight: 500;
     transition: all var(--transition-fast);
 }
 
 .login-btn:hover {
-    background: var(--accent-primary-dark);
-    color: white;
+    opacity: 0.9;
+    color: var(--bg-primary);
 }
 
 @media (max-width: 768px) {
@@ -197,149 +198,165 @@
 
 <!-- Page Content -->
 <div class="page-content">
-    <div class="container">
-        <!-- 招聘类型切换 -->
-        <div class="resume-tabs">
-            <div class="resume-tab active" data-tab="campus">校园招聘</div>
-            <div class="resume-tab" data-tab="social">社会招聘</div>
-        </div>
+    <!-- 招聘类型切换 -->
+    <div class="resume-tabs">
+        <div class="resume-tab active" data-tab="campus">校园招聘</div>
+        <div class="resume-tab" data-tab="social">社会招聘</div>
+    </div>
 
-        <!-- 校园招聘内容 -->
-        <div class="resume-tab-content active" id="campus-content">
-            {% if campus_positions %}
-                {% for position in campus_positions %}
-                <div class="position-card">
-                    <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
-                        <h4>{{ position.title }}</h4>
-                        <span class="salary">{{ position.salary_range|default:'面议' }}</span>
-                    </div>
-                    <div class="meta">
-                        <div class="meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ position.location|default:'不限' }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-briefcase"></i>
-                            <span>{{ position.get_category_display }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-building"></i>
-                            <span>{{ position.department|default:'总部' }}</span>
-                        </div>
-                    </div>
-                    {% if position.description %}
-                    <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
-                    {% endif %}
-                    {% if position.requirements %}
-                    <div class="requirements">
-                        <strong>任职要求：</strong>
-                        {{ position.requirements|truncatewords:30|linebreaks }}
-                    </div>
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                    <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
-                        <i class="fas fa-paper-plane"></i> 立即申请
-                    </a>
-                    {% else %}
-                    <a href="/login/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
-                        <i class="fas fa-sign-in-alt"></i> 登录后申请
-                    </a>
-                    {% endif %}
+    <!-- 校园招聘内容 -->
+    <div class="resume-tab-content active" id="campus-content">
+        {% if campus_positions %}
+            {% for position in campus_positions %}
+            <div class="position-card">
+                <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                    <h4>{{ position.title }}</h4>
+                    <span class="salary">{{ position.salary_range|default:'面议' }}</span>
                 </div>
-                {% endfor %}
-            {% else %}
-            <div class="empty-message">
-                <i class="fas fa-briefcase"></i>
-                <h4>暂无校园招聘职位</h4>
-                <p>请关注后续招聘信息</p>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- 社会招聘内容 -->
-        <div class="resume-tab-content" id="social-content">
-            {% if social_positions %}
-                {% for position in social_positions %}
-                <div class="position-card">
-                    <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
-                        <h4>{{ position.title }}</h4>
-                        <span class="salary">{{ position.salary_range|default:'面议' }}</span>
+                <div class="meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ position.location|default:'不限' }}</span>
                     </div>
-                    <div class="meta">
-                        <div class="meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ position.location|default:'不限' }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-briefcase"></i>
-                            <span>{{ position.get_category_display }}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-building"></i>
-                            <span>{{ position.department|default:'总部' }}</span>
-                        </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>{{ position.get_category_display }}</span>
                     </div>
-                    {% if position.description %}
-                    <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
-                    {% endif %}
-                    {% if position.requirements %}
-                    <div class="requirements">
-                        <strong>任职要求：</strong>
-                        {{ position.requirements|truncatewords:30|linebreaks }}
+                    <div class="meta-item">
+                        <i class="fas fa-building"></i>
+                        <span>{{ position.department|default:'总部' }}</span>
                     </div>
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                    <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
-                        <i class="fas fa-paper-plane"></i> 立即申请
-                    </a>
-                    {% else %}
-                    <a href="/login/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
-                        <i class="fas fa-sign-in-alt"></i> 登录后申请
-                    </a>
-                    {% endif %}
                 </div>
-                {% endfor %}
-            {% else %}
-            <div class="empty-message">
-                <i class="fas fa-briefcase"></i>
-                <h4>暂无社会招聘职位</h4>
-                <p>请关注后续招聘信息</p>
+                {% if position.description %}
+                <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
+                {% endif %}
+                {% if position.requirements %}
+                <div class="requirements">
+                    <strong>任职要求：</strong>
+                    {{ position.requirements|truncatewords:30|linebreaks }}
+                </div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
+                    <i class="fas fa-paper-plane"></i> 立即申请
+                </a>
+                {% else %}
+                <a href="/auth/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
+                    <i class="fas fa-sign-in-alt"></i> 登录后申请
+                </a>
+                {% endif %}
             </div>
-            {% endif %}
-        </div>
-
-        {% if not user.is_authenticated %}
-        <div class="login-prompt">
-            <h4><i class="fas fa-user-circle"></i> 投递简历</h4>
-            <p>登录后即可投递简历</p>
-            <a href="/login/?next=/resume/" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> 立即登录
-            </a>
-            <p style="margin-top: var(--space-lg); margin-bottom: 0;">
-                还没有账号？<a href="/register/" style="color: var(--accent-primary);">立即注册</a>
-            </p>
+            {% endfor %}
+        {% else %}
+        <div class="empty-message">
+            <i class="fas fa-briefcase"></i>
+            <h4>暂无校园招聘职位</h4>
+            <p>请关注后续招聘信息</p>
         </div>
         {% endif %}
     </div>
+
+    <!-- 社会招聘内容 -->
+    <div class="resume-tab-content" id="social-content">
+        {% if social_positions %}
+            {% for position in social_positions %}
+            <div class="position-card">
+                <div class="position-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md);">
+                    <h4>{{ position.title }}</h4>
+                    <span class="salary">{{ position.salary_range|default:'面议' }}</span>
+                </div>
+                <div class="meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ position.location|default:'不限' }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>{{ position.get_category_display }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-building"></i>
+                        <span>{{ position.department|default:'总部' }}</span>
+                    </div>
+                </div>
+                {% if position.description %}
+                <div class="description">{{ position.description|truncatewords:50|linebreaks }}</div>
+                {% endif %}
+                {% if position.requirements %}
+                <div class="requirements">
+                    <strong>任职要求：</strong>
+                    {{ position.requirements|truncatewords:30|linebreaks }}
+                </div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <a href="/resume/submit/?position={{ position.id }}" class="apply-btn">
+                    <i class="fas fa-paper-plane"></i> 立即申请
+                </a>
+                {% else %}
+                <a href="/auth/?next=/resume/submit/?position={{ position.id }}" class="apply-btn">
+                    <i class="fas fa-sign-in-alt"></i> 登录后申请
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-message">
+            <i class="fas fa-briefcase"></i>
+            <h4>暂无社会招聘职位</h4>
+            <p>请关注后续招聘信息</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="login-prompt">
+        <h4><i class="fas fa-user-circle"></i> 投递简历</h4>
+        <p>登录后即可投递简历</p>
+        <a href="/auth/?next=/resume/" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> 立即登录
+        </a>
+        <p style="margin-top: var(--space-lg); margin-bottom: 0;">
+            还没有账号？<a href="/register/" style="color: var(--accent-gold);">立即注册</a>
+        </p>
+    </div>
+    {% endif %}
 </div>
 
 {% block footjs %}
 <script>
-$(function() {
-    // 标签切换
-    $('.resume-tab').on('click', function() {
-        var tab = $(this).data('tab');
-        $('.resume-tab').removeClass('active');
-        $(this).addClass('active');
-        $('.resume-tab-content').removeClass('active');
-        $('#' + tab + '-content').addClass('active');
+// Tab switching using vanilla JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    var tabs = document.querySelectorAll('.resume-tab');
+    var tabContents = document.querySelectorAll('.resume-tab-content');
+
+    // Tab click handler
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var targetTab = this.getAttribute('data-tab');
+
+            // Update active tab
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+
+            // Update active content
+            tabContents.forEach(function(content) {
+                content.classList.remove('active');
+                if (content.id === targetTab + '-content') {
+                    content.classList.add('active');
+                }
+            });
+        });
     });
 
     // URL 参数处理 - 根据 tab 参数切换标签
     var urlParams = new URLSearchParams(window.location.search);
     var tab = urlParams.get('tab');
     if (tab === 'social') {
-        $('.resume-tab[data-tab="social"]').click();
+        tabs.forEach(function(t) {
+            if (t.getAttribute('data-tab') === 'social') {
+                t.click();
+            }
+        });
     }
 });
 </script>

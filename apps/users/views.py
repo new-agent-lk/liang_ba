@@ -5,12 +5,106 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
+from django.views import generic
+from django.urls import reverse_lazy
 import json
+
+from apps.companyinfo.models import CompanyInfo
+
+
+class LoginView(generic.TemplateView):
+    """自定义登录页面"""
+    template_name = 'registration/login.html'
+    next_page = '/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['companyinfo'] = CompanyInfo.objects.first()
+        # 获取 next 参数
+        context['next'] = self.request.GET.get('next', self.next_page)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """处理登录 POST 请求"""
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        next_page = request.POST.get('next', self.next_page)
+
+        if not username or not password:
+            # 返回错误信息的简单方式
+            context = self.get_context_data(**kwargs)
+            context['form_errors'] = '用户名和密码不能为空'
+            return render(request, self.template_name, context)
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            context = self.get_context_data(**kwargs)
+            context['form_errors'] = '用户名或密码错误'
+            return render(request, self.template_name, context)
+
+        login(request, user)
+        return redirect(next_page)
+
+
+def auth_view(request):
+    """统一登录注册页面"""
+    companyinfo = CompanyInfo.objects.first()
+    context = {
+        'companyinfo': companyinfo,
+        'next': request.GET.get('next', '/profile/'),
+    }
+    return render(request, 'registration/auth.html', context)
+
+
+@require_http_methods(["POST"])
+def login_api(request):
+    """登录 API - 用于统一登录注册页面"""
+    try:
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return JsonResponse({
+                'status': 'error',
+                'message': '用户名和密码不能为空'
+            }, status=400)
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            return JsonResponse({
+                'status': 'error',
+                'message': '用户名或密码错误'
+            }, status=400)
+
+        login(request, user)
+        return JsonResponse({
+            'status': 'success',
+            'message': '登录成功',
+            'redirect': data.get('next', '/profile/')
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': '请求数据格式错误'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'登录失败: {str(e)}'
+        }, status=500)
 
 
 def register_view(request):
     """用户注册页面"""
-    return render(request, 'registration/register.html')
+    companyinfo = CompanyInfo.objects.first()
+    context = {
+        'companyinfo': companyinfo,
+    }
+    return render(request, 'registration/register.html', context)
 
 
 @require_http_methods(["POST"])
@@ -109,10 +203,12 @@ def profile_view(request):
 
     user = request.user
     profile = getattr(user, 'profile', None)
+    companyinfo = CompanyInfo.objects.first()
 
     context = {
         'user': user,
         'profile': profile,
+        'companyinfo': companyinfo,
     }
     return render(request, 'profile.html', context)
 
