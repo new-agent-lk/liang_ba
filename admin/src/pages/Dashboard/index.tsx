@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Statistic, Table, Typography, Spin } from 'antd';
 import {
 	UserOutlined,
-	MessageOutlined,
 } from '@ant-design/icons';
 import { getDashboardStats } from '@/api/dashboard';
 import { DashboardStats } from '@/types';
@@ -46,10 +45,16 @@ const Dashboard: React.FC = () => {
 			color: '#1890ff',
 		},
 		{
-			title: '留言总数',
-			value: stats?.total_messages || 0,
-			icon: <MessageOutlined />,
+			title: '职位总数',
+			value: stats?.total_jobs || 0,
+			icon: <UserOutlined />,
 			color: '#52c41a',
+		},
+		{
+			title: '简历总数',
+			value: stats?.total_resumes || 0,
+			icon: <UserOutlined />,
+			color: '#722ed1',
 		},
 	];
 
@@ -65,13 +70,14 @@ const Dashboard: React.FC = () => {
 	};
 
 	const barChartData = {
-		xAxis: ['用户', '留言'],
+		xAxis: ['用户', '职位', '简历'],
 		series: [
 			{
 				name: '数量',
 				data: [
 					stats?.total_users || 0,
-					stats?.total_messages || 0,
+					stats?.total_jobs || 0,
+					stats?.total_resumes || 0,
 				],
 			},
 		],
@@ -87,7 +93,6 @@ const Dashboard: React.FC = () => {
 					create: 'green',
 					update: 'blue',
 					delete: 'red',
-					message: '#eb2f96',
 				};
 				return (
 					<span style={{ color: colors[type] || '#666' }}>

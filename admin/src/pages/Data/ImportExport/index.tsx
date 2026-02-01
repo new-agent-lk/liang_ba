@@ -62,10 +62,8 @@ const ImportExport: React.FC = () => {
         <Card>
           <Table
             dataSource={[
-              { key: 'products', name: '产品数据', type: 'products', description: '导出所有产品信息' },
-              { key: 'news', name: '新闻数据', type: 'news', description: '导出所有新闻资讯' },
-              { key: 'cases', name: '案例数据', type: 'cases', description: '导出所有成功案例' },
-              { key: 'messages', name: '留言数据', type: 'messages', description: '导出所有用户留言' },
+              { key: 'jobs', name: '职位数据', type: 'jobs', description: '导出所有招聘职位' },
+              { key: 'resumes', name: '简历数据', type: 'resumes', description: '导出所有求职者简历' },
             ] as { key: string; name: string; type: string; description: string }[]}
             columns={[
               { title: '数据名称', dataIndex: 'name', key: 'name' },
@@ -93,8 +91,8 @@ const ImportExport: React.FC = () => {
         <Card>
           <Table
             dataSource={[
-              { name: '产品导入模板', type: 'product_template', size: '15KB' },
-              { name: '新闻导入模板', type: 'news_template', size: '12KB' },
+              { name: '职位导入模板', type: 'job_template', size: '15KB' },
+              { name: '简历导入模板', type: 'resume_template', size: '12KB' },
             ]}
             columns={[
               { title: '模板名称', dataIndex: 'name', key: 'name' },

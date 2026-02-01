@@ -7,7 +7,6 @@ export const ROUTES = {
   SETTINGS: '/system/settings',
   // 内容管理
   COMPANY_INFO: '/content/company-info',
-  MESSAGES: '/content/messages',
   RESUMES: '/content/resumes',
   JOBS: '/content/jobs',
   // 数据管理
@@ -36,7 +35,6 @@ export const MENU_CONFIG = [
     label: '内容管理',
     children: [
       { key: '/content/company-info', icon: 'HomeOutlined', label: '公司信息' },
-      { key: '/content/messages', icon: 'MessageOutlined', label: '留言管理' },
       { key: '/content/resumes', icon: 'FileTextOutlined', label: '简历管理' },
       { key: '/content/jobs', icon: 'TeamOutlined', label: '职位管理' },
     ],

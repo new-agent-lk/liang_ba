@@ -6,9 +6,8 @@ __date__ = "2020/6/13 1:03 下午"
 from django.contrib import admin
 
 from .models import (
-    CompanyInfo, 
+    CompanyInfo,
     FriendlyLinks,
-    GetMessages,
     Province,
     City
 )
@@ -28,15 +27,6 @@ class FriendlyLinksAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
     list_filter = ['title']
     search_fields = ['title']
-
-
-@admin.register(GetMessages)
-class GetMessagesAdmin(admin.ModelAdmin):
-    """配置后台游客留言"""
-    list_display = ['name', 'phone', 'email', 'is_handle']
-    list_filter = ['is_handle']
-    search_fields = ['name', 'phone', 'email']
-    list_per_page = 20
 
 
 @admin.register(Province)

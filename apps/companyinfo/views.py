@@ -15,27 +15,6 @@ from apps.companyinfo.models import *
 
 
 
-class GetMsgView(View):
-    """留言"""
-
-    def post(self, request):
-        name = request.POST.get('name', '')
-        phone = request.POST.get('phone', '')
-        email = request.POST.get('email', '')
-        msg = request.POST.get('msg', '')
-        try:
-            new_msg = GetMessages()
-            new_msg.name = name
-            new_msg.phone = phone
-            new_msg.email = email
-            new_msg.msg = msg
-            new_msg.save()
-            return HttpResponse(json.dumps({"status": "success"}), content_type='application/json')
-        except BaseException as e:
-            return HttpResponse(json.dumps({"status": "failed"}), content_type='application/json')
-
-
-
 class SearchView(View):
 
     def get(self, request):

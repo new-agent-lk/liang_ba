@@ -10,7 +10,6 @@ from .province import Province
 from .city import City
 from .company_info import CompanyInfo
 from .friendly_links import FriendlyLinks
-from .get_messages import GetMessages
 from .job_position import JobPosition
 from .resume import Resume
 
@@ -22,7 +21,6 @@ __all__ = [
     'City',
     'CompanyInfo',
     'FriendlyLinks',
-    'GetMessages',
     'JobPosition',
     'Resume',
 ]

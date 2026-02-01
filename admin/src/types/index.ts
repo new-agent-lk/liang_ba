@@ -73,7 +73,8 @@ export interface PageParams {
 // Dashboard stats
 export interface DashboardStats {
   total_users: number;
-  total_messages: number;
+  total_jobs: number;
+  total_resumes: number;
   recent_activities: Activity[];
 }
 
@@ -82,18 +83,6 @@ export interface Activity {
   type: string;
   content: string;
   created_at: string;
-}
-
-// Message types
-export interface Message {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  msg: string;
-  is_handle: boolean;
-  reply?: string;
-  add_time?: string;
 }
 
 // Company Info types

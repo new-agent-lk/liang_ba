@@ -5,14 +5,12 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .viewsets.public import LoginView, UserInfoView
 from .viewsets.users import UserViewSet
 from .viewsets.company import CompanyInfoView
-from .viewsets.messages import MessageViewSet
 from .viewsets.dashboard import DashboardStatsView
 from .viewsets.resumes import ResumeViewSet
 from .viewsets.jobs import JobPositionViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
-router.register(r'messages', MessageViewSet, basename='message')
 router.register(r'resumes', ResumeViewSet, basename='resume')
 router.register(r'jobs', JobPositionViewSet, basename='job')
 

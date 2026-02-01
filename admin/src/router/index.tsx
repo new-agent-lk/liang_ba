@@ -6,7 +6,6 @@ import Dashboard from '@/pages/Dashboard';
 import Users from '@/pages/System/Users';
 import Settings from '@/pages/System/Settings';
 import CompanyInfo from '@/pages/Content/CompanyInfo';
-import Messages from '@/pages/Content/Messages';
 import Resumes from '@/pages/Content/Resumes';
 import Jobs from '@/pages/Content/Jobs';
 import ImportExport from '@/pages/Data/ImportExport';
@@ -54,10 +53,6 @@ const router = createBrowserRouter([
       {
         path: 'content/company-info',
         element: <CompanyInfo />,
-      },
-      {
-        path: 'content/messages',
-        element: <Messages />,
       },
       {
         path: 'content/resumes',

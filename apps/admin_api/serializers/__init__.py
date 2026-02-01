@@ -10,9 +10,6 @@ from .user import (
 # Company serializers
 from .company import CompanyInfoSerializer, CompanyInfoUpdateSerializer
 
-# Message serializers
-from .message import MessageSerializer, MessageReplySerializer
-
 # Resume serializers
 from .resume import ResumeSerializer, ResumeReviewSerializer
 
@@ -29,9 +26,6 @@ __all__ = [
     # Company
     'CompanyInfoSerializer',
     'CompanyInfoUpdateSerializer',
-    # Message
-    'MessageSerializer',
-    'MessageReplySerializer',
     # Resume
     'ResumeSerializer',
     'ResumeReviewSerializer',
