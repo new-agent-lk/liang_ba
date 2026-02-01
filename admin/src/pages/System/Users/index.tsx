@@ -120,6 +120,7 @@ const Users: React.FC = () => {
         data={data}
         columns={columns}
         pagination={pagination}
+        onRefresh={refresh}
         onEdit={handleEdit}
         onDelete={(record) => (
           <Popconfirm

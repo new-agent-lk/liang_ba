@@ -293,8 +293,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20  # 每页数目
+    'DEFAULT_PAGINATION_CLASS': 'apps.admin_api.pagination.StandardPagination',
+    'PAGE_SIZE': 10  # 默认每页数量
 }
 
 # JWT 配置

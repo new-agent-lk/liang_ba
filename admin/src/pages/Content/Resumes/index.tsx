@@ -130,6 +130,7 @@ const Resumes: React.FC = () => {
         data={data}
         columns={columns}
         pagination={pagination}
+        onRefresh={refresh}
         onView={handleView}
         onEdit={handleReview}
         onDelete={handleDelete}

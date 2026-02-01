@@ -542,7 +542,11 @@
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <p>Copyright &copy; {{ companyinfo.current_year }} {{ companyinfo.name }} | 备案号: <a href="javascript:;">{{ companyinfo.record_nums }}</a></p>
+                    <p>
+                    Copyright &copy; {{ companyinfo.current_year }} {{ companyinfo.name }} | 备案号: <a href="javascript:;">{{ companyinfo.record_nums }} </a> |  
+                    <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011202014118" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+                    <img src="{% static '/images/备案图标.png' %}" style="float:left;"/>沪公网安备 31011202014118号</a>
+                    </p>
                 </div>
             </div>
         </footer>

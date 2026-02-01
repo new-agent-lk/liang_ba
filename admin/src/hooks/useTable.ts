@@ -31,6 +31,8 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
     total: 0,
   });
 
+  const [currentPageSize, setCurrentPageSize] = useState(10);
+
   const fetch = useCallback(
     async (page = 1, pageSize = 10) => {
       setLoading(true);
@@ -43,6 +45,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
           pageSize,
           total: response.count,
         }));
+        setCurrentPageSize(pageSize);
       } catch (error) {
         message.error('获取数据失败');
       } finally {
@@ -69,9 +72,11 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
 
   const onChange = useCallback(
     (page: number, pageSize: number) => {
-      fetch(page, pageSize);
+      // When pageSize changes, reset to page 1 to avoid requesting non-existent pages
+      const newPage = pageSize !== currentPageSize ? 1 : page;
+      fetch(newPage, pageSize);
     },
-    [fetch]
+    [fetch, currentPageSize]
   );
 
   // 组件挂载时自动获取数据

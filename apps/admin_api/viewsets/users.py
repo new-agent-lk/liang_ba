@@ -20,6 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
     用户管理视图集
     """
     queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):

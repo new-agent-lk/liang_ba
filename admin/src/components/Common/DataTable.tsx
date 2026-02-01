@@ -1,5 +1,5 @@
 import { Table, Pagination, Space, Button, ConfigProvider } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
 
 interface DataTableProps<T> {
   loading: boolean;
@@ -15,6 +15,7 @@ interface DataTableProps<T> {
   onEdit?: (record: T) => void;
   onDelete?: (record: T) => void;
   onView?: (record: T) => void;
+  onRefresh?: () => void;
 }
 
 function DataTable<T extends { id: number }>({
@@ -26,6 +27,7 @@ function DataTable<T extends { id: number }>({
   onEdit,
   onDelete,
   onView,
+  onRefresh,
 }: DataTableProps<T>) {
   const actionColumn = {
     title: '操作',
@@ -82,25 +84,38 @@ function DataTable<T extends { id: number }>({
         },
       }}
     >
-      <Table<T>
-        loading={loading}
-        dataSource={data}
-        columns={tableColumns}
-        rowKey={rowKey}
-        pagination={false}
-        bordered
-        size="middle"
-      />
-      <div style={{ marginTop: 16, textAlign: 'right' }}>
-        <Pagination
-          current={pagination.current}
-          pageSize={pagination.pageSize}
-          total={pagination.total}
-          onChange={pagination.onChange}
-          showSizeChanger
-          showQuickJumper
-          showTotal={(total) => `共 ${total} 条`}
+      <div style={{ marginLeft: 8 }}>
+        {onRefresh && (
+          <div style={{ marginBottom: 16, textAlign: 'left' }}>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={onRefresh}
+              loading={loading}
+            >
+              刷新
+            </Button>
+          </div>
+        )}
+        <Table<T>
+          loading={loading}
+          dataSource={data}
+          columns={tableColumns}
+          rowKey={rowKey}
+          pagination={false}
+          bordered
+          size="middle"
         />
+        <div style={{ marginTop: 16, textAlign: 'right' }}>
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onChange={pagination.onChange}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total) => `共 ${total} 条`}
+          />
+        </div>
       </div>
     </ConfigProvider>
   );
