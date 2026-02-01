@@ -106,25 +106,6 @@
     font-weight: 500;
 }
 
-.alert {
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-lg);
-    display: none;
-}
-
-.alert-success {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.alert-error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -151,8 +132,6 @@
                 <h2>创建账户</h2>
                 <p>加入量霸，开启量化交易之旅</p>
             </div>
-
-            <div id="alert" class="alert"></div>
 
             <form id="registerForm" class="auth-form">
                 {% csrf_token %}
@@ -249,21 +228,20 @@
             };
 
             var submitBtn = $('#submitBtn');
-            var alertDiv = $('#alert');
 
             // Basic validation
             if (!formData.username || !formData.email || !formData.password) {
-                alertDiv.removeClass('alert-success').addClass('alert-error').html('请填写所有必填字段').show();
+                Toast.error('请填写所有必填字段');
                 return;
             }
 
             if (formData.password !== formData.password_confirm) {
-                alertDiv.removeClass('alert-success').addClass('alert-error').html('两次输入的密码不一致').show();
+                Toast.error('两次输入的密码不一致');
                 return;
             }
 
             if (formData.password.length < 6) {
-                alertDiv.removeClass('alert-success').addClass('alert-error').html('密码长度不能少于6位').show();
+                Toast.error('密码长度不能少于6位');
                 return;
             }
 
@@ -276,12 +254,12 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     if (response.status === 'success') {
-                        alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
+                        Toast.success(response.message);
                         setTimeout(function() {
                             window.location.href = '/profile/';
                         }, 1000);
                     } else {
-                        alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+                        Toast.error(response.message);
                     }
                 },
                 error: function(xhr) {
@@ -289,7 +267,7 @@
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         message = xhr.responseJSON.message;
                     }
-                    alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
+                    Toast.error(message);
                 },
                 complete: function() {
                     submitBtn.prop('disabled', false).find('span').text('注册');

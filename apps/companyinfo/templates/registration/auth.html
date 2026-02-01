@@ -250,33 +250,6 @@
     gap: var(--space-md);
 }
 
-/* Alerts */
-.alert {
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-lg);
-    display: none;
-    font-size: var(--font-sm);
-}
-
-.alert-success {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.alert-error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.alert-danger {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
 /* Footer Links */
 .auth-footer {
     text-align: center;
@@ -294,66 +267,6 @@
 
 .auth-footer a:hover {
     color: var(--accent-gold-hover, #e6c200);
-}
-
-/* Social Login (Optional) */
-.social-login {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-}
-
-.social-login-title {
-    font-size: var(--font-sm);
-    color: var(--text-muted);
-    margin-bottom: var(--space-md);
-    position: relative;
-}
-
-.social-login-title::before,
-.social-login-title::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 60px;
-    height: 1px;
-    background: var(--border-color);
-}
-
-.social-login-title::before {
-    left: 0;
-}
-
-.social-login-title::after {
-    right: 0;
-}
-
-.social-buttons {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-md);
-}
-
-.social-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    background: var(--bg-primary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    text-decoration: none;
-}
-
-.social-btn:hover {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    transform: translateY(-2px);
 }
 
 /* Responsive */
@@ -398,8 +311,6 @@
                     <h2>欢迎回来</h2>
                     <p>请登录您的账户</p>
                 </div>
-
-                <div id="login-alert" class="alert"></div>
 
                 <form id="loginForm" class="auth-form" method="post">
                     {% csrf_token %}
@@ -447,8 +358,6 @@
                     <h2>创建账户</h2>
                     <p>加入量霸，开启量化交易之旅</p>
                 </div>
-
-                <div id="register-alert" class="alert"></div>
 
                 <form id="registerForm" class="auth-form">
                     {% csrf_token %}
@@ -613,12 +522,9 @@
                 };
 
                 var submitBtn = this.querySelector('button[type="submit"]');
-                var alertDiv = document.getElementById('login-alert');
 
                 if (!formData.username || !formData.password) {
-                    alertDiv.textContent = '请填写用户名和密码';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('请填写用户名和密码');
                     return;
                 }
 
@@ -638,17 +544,16 @@
                 })
                 .then(function(data) {
                     if (data.status === 'success') {
-                        window.location.href = data.redirect || '/profile/';
+                        Toast.success('登录成功');
+                        setTimeout(function() {
+                            window.location.href = data.redirect || '/profile/';
+                        }, 500);
                     } else {
-                        alertDiv.textContent = data.message || '登录失败，请稍后重试';
-                        alertDiv.className = 'alert alert-error';
-                        alertDiv.style.display = 'block';
+                        Toast.error(data.message || '登录失败，请稍后重试');
                     }
                 })
                 .catch(function() {
-                    alertDiv.textContent = '登录失败，请稍后重试';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('登录失败，请稍后重试');
                 })
                 .finally(function() {
                     submitBtn.disabled = false;
@@ -675,27 +580,20 @@
                 };
 
                 var submitBtn = document.getElementById('registerBtn');
-                var alertDiv = document.getElementById('register-alert');
 
                 // Basic validation
                 if (!formData.username || !formData.email || !formData.password) {
-                    alertDiv.textContent = '请填写所有必填字段';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('请填写所有必填字段');
                     return;
                 }
 
                 if (formData.password !== formData.password_confirm) {
-                    alertDiv.textContent = '两次输入的密码不一致';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('两次输入的密码不一致');
                     return;
                 }
 
                 if (formData.password.length < 6) {
-                    alertDiv.textContent = '密码长度不能少于6位';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('密码长度不能少于6位');
                     return;
                 }
 
@@ -715,22 +613,16 @@
                 })
                 .then(function(data) {
                     if (data.status === 'success') {
-                        alertDiv.textContent = data.message;
-                        alertDiv.className = 'alert alert-success';
-                        alertDiv.style.display = 'block';
+                        Toast.success(data.message);
                         setTimeout(function() {
                             window.location.href = '/profile/';
                         }, 1000);
                     } else {
-                        alertDiv.textContent = data.message;
-                        alertDiv.className = 'alert alert-error';
-                        alertDiv.style.display = 'block';
+                        Toast.error(data.message);
                     }
                 })
                 .catch(function() {
-                    alertDiv.textContent = '注册失败，请稍后重试';
-                    alertDiv.className = 'alert alert-error';
-                    alertDiv.style.display = 'block';
+                    Toast.error('注册失败，请稍后重试');
                 })
                 .finally(function() {
                     submitBtn.disabled = false;

@@ -174,25 +174,6 @@ select.form-control {
     background: var(--border-color);
 }
 
-.alert {
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-lg);
-    display: none;
-}
-
-.alert-success {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.alert-error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
 .info-display {
     background: var(--bg-secondary);
     padding: var(--space-lg);
@@ -266,8 +247,6 @@ select.form-control {
 <div class="page-content">
     <div class="container">
         <div class="profile-container">
-            <div id="alert" class="alert"></div>
-
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="profile-avatar">
@@ -399,6 +378,51 @@ select.form-control {
 
 {% block footjs %}
 <script>
+// Confirm Dialog Component
+(function() {
+    window.ConfirmDialog = {
+        show: function(message, onConfirm, onCancel) {
+            var overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+
+            var dialog = document.createElement('div');
+            dialog.className = 'confirm-dialog';
+
+            dialog.innerHTML = '<p>' + message + '</p><div class="confirm-buttons"><button class="confirm-btn confirm-cancel">取消</button><button class="confirm-btn confirm-ok">确定</button></div>';
+
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+
+            // Trigger animation
+            setTimeout(function() {
+                overlay.classList.add('show');
+                dialog.classList.add('show');
+            }, 10);
+
+            var okBtn = dialog.querySelector('.confirm-ok');
+            var cancelBtn = dialog.querySelector('.confirm-cancel');
+
+            var close = function(result) {
+                overlay.classList.remove('show');
+                dialog.classList.remove('show');
+                setTimeout(function() {
+                    document.body.removeChild(overlay);
+                    document.body.style.overflow = '';
+                }, 200);
+                if (result && onConfirm) onConfirm();
+                if (!result && onCancel) onCancel();
+            };
+
+            okBtn.addEventListener('click', function() { close(true); });
+            cancelBtn.addEventListener('click', function() { close(false); });
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) close(false); });
+
+            return { close: close };
+        }
+    };
+})();
+
 (function() {
     var $ = window.jQuery;
     if (typeof $ === 'undefined') {
@@ -425,7 +449,6 @@ select.form-control {
             };
 
             var saveBtn = $('#saveBtn');
-            var alertDiv = $('#alert');
 
             saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 保存中...');
 
@@ -436,12 +459,9 @@ select.form-control {
                 data: JSON.stringify(formData),
                 success: function(response) {
                     if (response.status === 'success') {
-                        alertDiv.removeClass('alert-error').addClass('alert-success').html(response.message).show();
-                        setTimeout(function() {
-                            alertDiv.fadeOut();
-                        }, 3000);
+                        Toast.success(response.message);
                     } else {
-                        alertDiv.removeClass('alert-success').addClass('alert-error').html(response.message).show();
+                        Toast.error(response.message || '保存失败，请稍后重试');
                     }
                 },
                 error: function(xhr) {
@@ -449,7 +469,7 @@ select.form-control {
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         message = xhr.responseJSON.message;
                     }
-                    alertDiv.removeClass('alert-success').addClass('alert-error').html(message).show();
+                    Toast.error(message);
                 },
                 complete: function() {
                     saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> 保存修改');
@@ -464,18 +484,24 @@ select.form-control {
 
         // Logout
         $('#logoutBtn').on('click', function() {
-            if (confirm('确定要退出登录吗？')) {
+            ConfirmDialog.show('确定要退出登录吗？', function() {
                 $.ajax({
                     url: '/logout/api/',
                     type: 'POST',
                     success: function() {
-                        window.location.href = '/';
+                        Toast.info('已退出登录');
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 500);
                     },
                     error: function() {
-                        window.location.href = '/';
+                        Toast.error('退出失败');
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 500);
                     }
                 });
-            }
+            });
         });
     });
 })();

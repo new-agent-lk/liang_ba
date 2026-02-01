@@ -19,7 +19,7 @@ $(function () {
         e.preventDefault();
         if ($('.toolbar .pop-code').length) {
             var qrCodeHtml = $('.toolbar .pop-code').html();
-            alert('微信：' + (typeof weichat !== 'undefined' ? weichat : '请扫描页面二维码'));
+            Toast.info('微信：' + (typeof weichat !== 'undefined' ? weichat : '请扫描页面二维码'));
         }
     });
 
@@ -279,7 +279,7 @@ function shoucang(sTitle, sURL) {
             window.sidebar.addPanel(sTitle, sURL, "");
         }
         catch (e) {
-            alert("您的浏览器不支持此功能，请使用Ctrl+D进行添加");
+            Toast.warning("您的浏览器不支持此功能，请使用Ctrl+D进行添加");
         }
     }
 }
@@ -292,10 +292,10 @@ function SetHome(obj,url){
 		  try{
 			  netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 		 }catch(e){
-			  alert("抱歉，此操作被浏览器拒绝！\n\n请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为'true'");
+			  Toast.warning("抱歉，此操作被浏览器拒绝！\n\n请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为'true'");
 		  }
 	   }else{
-		alert("抱歉，您所使用的浏览器无法完成此操作。\n\n您需要手动将【"+url+"】设置为首页。");
+		Toast.warning("抱歉，您所使用的浏览器无法完成此操作。\n\n您需要手动将【"+url+"】设置为首页。");
 	   }
   }
 }
