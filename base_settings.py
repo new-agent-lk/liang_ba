@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'apps.companyinfo.apps.CompanyinfoConfig',
     'apps.users.apps.UsersConfig',
     'apps.admin_api.apps.AdminApiConfig',
+    'apps.reports.apps.ReportsConfig',
 ]
 
 MIDDLEWARE = [

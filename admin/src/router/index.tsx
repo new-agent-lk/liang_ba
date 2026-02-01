@@ -9,6 +9,7 @@ import CompanyInfo from '@/pages/Content/CompanyInfo';
 import Resumes from '@/pages/Content/Resumes';
 import Jobs from '@/pages/Content/Jobs';
 import ImportExport from '@/pages/Data/ImportExport';
+import Reports from '@/pages/Research/Reports';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: 'data/import-export',
         element: <ImportExport />,
+      },
+      {
+        path: 'research/reports',
+        element: <Reports />,
       },
     ],
   },

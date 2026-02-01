@@ -210,3 +210,57 @@ export const JOB_STATUS_CHOICES = [
   { value: 'paused', label: '暂停招聘', color: 'warning' },
   { value: 'closed', label: '已关闭', color: 'error' },
 ];
+
+// Research Report types
+export interface ResearchReport {
+  id: number;
+  title: string;
+  summary: string;
+  content: string;
+  strategy_name: string;
+  strategy_type: string;
+  market: string;
+  annual_return?: number;
+  max_drawdown?: number;
+  sharpe_ratio?: number;
+  win_rate?: number;
+  profit_loss_ratio?: number;
+  total_trades: number;
+  backtest_start_date?: string;
+  backtest_end_date?: string;
+  strategy_params: Record<string, any>;
+  equity_curve_image?: string;
+  drawdown_image?: string;
+  monthly_returns_image?: string;
+  detail_image?: string;
+  attachment?: string;
+  tags: string;
+  author: number;
+  author_username?: string;
+  status: 'draft' | 'pending' | 'approved' | 'rejected' | 'published';
+  status_display?: string;
+  reviewer?: number;
+  reviewer_username?: string;
+  reviewed_at?: string;
+  review_notes?: string;
+  is_public: boolean;
+  is_top: boolean;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+  published_at?: string;
+}
+
+// Research strategy type choices
+export const RESEARCH_STRATEGY_TYPES = [
+  { value: 'momentum', label: '趋势跟踪' },
+  { value: 'mean_reversion', label: '均值回归' },
+  { value: 'arbitrage', label: '套利策略' },
+  { value: 'market_making', label: '做市策略' },
+  { value: 'high_frequency', label: '高频策略' },
+  { value: 'multi_factor', label: '多因子策略' },
+  { value: 'machine_learning', label: '机器学习' },
+  { value: 'event_driven', label: '事件驱动' },
+  { value: 'macro', label: '宏观策略' },
+  { value: 'other', label: '其他' },
+];

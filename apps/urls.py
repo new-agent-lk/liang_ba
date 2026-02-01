@@ -20,10 +20,14 @@ urlpatterns = [
     path('manage/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('api/admin/', include('apps.admin_api.urls')),
+    path('api/reports/', include('apps.reports.api_urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器
     path('search/', SearchView.as_view(), name='search'),
 
     path('news/', NewsListView.as_view(), name='news'),  # 新闻动态
+
+    # 研究报告
+    path('reports/', include('apps.reports.urls')),
 
     # 简历投递
     path('resume/', ResumeView.as_view(), name='resume'),

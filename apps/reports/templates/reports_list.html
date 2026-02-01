@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headcss %}
+{{ block.super }}
+<style>
+/* 报告列表页专用样式 */
+.reports-banner {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+}
+
+.reports-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+.reports-banner-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.reports-banner-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+/* 报告列表容器 */
+.reports-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent-primary);
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.reports-title {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.reports-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reports-filter label {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.reports-filter select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+}
+
+.reports-filter select:hover {
+    border-color: var(--accent-gold);
+}
+
+.reports-filter select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.reports-filter .clear-filter {
+    padding: 8px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color var(--transition-fast);
+}
+
+.reports-filter .clear-filter:hover {
+    color: var(--accent-primary);
+}
+
+/* 报告卡片列表 */
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.report-card {
+    display: flex;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-fast);
+}
+
+.report-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: var(--accent-gold);
+}
+
+.report-card-image {
+    width: 320px;
+    height: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.report-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.report-card:hover .report-card-image img {
+    transform: scale(1.05);
+}
+
+.report-card-content {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.report-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.report-card-desc {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.report-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.report-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.report-card-tag {
+    padding: 4px 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.report-card-tag.highlight {
+    background: rgba(24, 144, 255, 0.1);
+    color: var(--accent-primary);
+}
+
+/* 分页样式 */
+.reports-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    padding: 20px 0;
+}
+
+.reports-pagination a,
+.reports-pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-size: 14px;
+}
+
+.reports-pagination a:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.reports-pagination .current {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.reports-pagination .prev,
+.reports-pagination .next {
+    padding: 0 16px;
+}
+
+/* 空状态 */
+.reports-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-tertiary);
+    font-size: 16px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .report-card {
+        flex-direction: column;
+    }
+
+    .report-card-image {
+        width: 100%;
+        height: 180px;
+    }
+
+    .report-card-content {
+        padding: 16px;
+    }
+
+    .reports-banner-title {
+        font-size: 28px;
+    }
+
+    .reports-container {
+        padding: 24px 16px;
+    }
+
+    .reports-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .reports-filter {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .reports-filter select {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<div class="reports-banner">
+    <div class="reports-banner-title">深度研究报告</div>
+    <div class="reports-banner-subtitle">量化策略 · 回测分析 · 投资洞察</div>
+</div>
+
+<!-- 报告列表 -->
+<div class="reports-container">
+    {% if reports %}
+    <div class="reports-header">
+        <h2 class="reports-title">
+            {% if current_year %}
+                {{ current_year }}年{% if current_month %}{{ current_month }}月{% endif %}研究报告
+            {% else %}
+                最新研究报告
+            {% endif %}
+            <span style="font-size: 14px; color: var(--text-tertiary); font-weight: normal;">
+                (共 {% if reports %}{{ reports.paginator.count|default:reports|length }}{% else %}0{% endif %} 篇)
+            </span>
+        </h2>
+        <form class="reports-filter" method="get">
+            <label for="year">筛选：</label>
+            <select name="year" id="year" onchange="this.form.submit()">
+                <option value="">全部年份</option>
+                {% for year in available_years %}
+                <option value="{{ year }}" {% if current_year == year %}selected{% endif %}>{{ year }}年</option>
+                {% endfor %}
+            </select>
+            {% if available_months %}
+            <select name="month" id="month" onchange="this.form.submit()">
+                <option value="">全部月份</option>
+                {% for month in available_months %}
+                <option value="{{ month }}" {% if current_month == month %}selected{% endif %}>{{ month }}月</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            {% if current_year or current_month %}
+            <a href="{% url 'reports_list' %}" class="clear-filter">清除筛选</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="reports-list">
+        {% for report in reports %}
+        <a href="{% url 'report_detail' report.id %}" class="report-card">
+            <div class="report-card-image">
+                {% if report.detail_image %}
+                <img src="{{ report.detail_image.url }}" alt="{{ report.title }}"/>
+                {% elif report.equity_curve_image %}
+                <img src="{{ report.equity_curve_image.url }}" alt="{{ report.title }}"/>
+                {% else %}
+                <div class="report-card-image" style="background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-chart-line" style="font-size: 48px; color: var(--text-tertiary);"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="report-card-content">
+                <div>
+                    <h3 class="report-card-title">{{ report.title }}</h3>
+                    <p class="report-card-desc">{{ report.summary|truncatechars:120 }}</p>
+                </div>
+                <div>
+                    <div class="report-card-meta">
+                        <span class="author">作者：{{ report.author.username }}</span>
+                        <span class="date">{{ report.published_at|date:"Y-m-d" }}</span>
+                        <span class="views">阅读：{{ report.view_count }}</span>
+                    </div>
+                    <div class="report-card-tags">
+                        {% if report.strategy_type %}
+                        <span class="report-card-tag">{{ report.get_strategy_type_display }}</span>
+                        {% endif %}
+                        {% if report.annual_return %}
+                        <span class="report-card-tag highlight">年化收益：{{ report.annual_return }}%</span>
+                        {% endif %}
+                        {% if report.max_drawdown %}
+                        <span class="report-card-tag">最大回撤：{{ report.max_drawdown }}%</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- 分页开始 -->
+    {% if reports.paginator.num_pages > 1 %}
+    <div class="reports-pagination">
+        {% if reports.has_previous %}
+        <a href="?page={{ reports.previous_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="prev">上一页</a>
+        {% endif %}
+
+        {% for i in reports.paginator.page_range %}
+        {% if reports.number == i %}
+        <span class="current">{{ i }}</span>
+        {% else %}
+        <a href="?page={{ i }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}">{{ i }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if reports.has_next %}
+        <a href="?page={{ reports.next_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="next">下一页</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!-- 分页结束 -->
+
+    {% else %}
+    <div class="reports-empty">
+        <p>{% if current_year or current_month %}该时间段暂无研究报告{% else %}暂无研究报告{% endif %}</p>
+        {% if current_year or current_month %}
+        <a href="{% url 'reports_list' %}" style="color: var(--accent-primary); text-decoration: none; margin-top: 16px; display: inline-block;">查看全部报告</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

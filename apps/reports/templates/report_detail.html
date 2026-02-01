@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static reports_extras %}
+
+{% block headcss %}
+{{ block.super }}
+<style>
+/* 报告详情页专用样式 */
+.report-banner {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+}
+
+.report-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+.report-banner-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.3;
+}
+
+.report-banner-meta {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.report-banner-meta span {
+    margin: 0 15px;
+}
+
+/* 报告内容容器 - 居中显示 */
+.report-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 标题区域 */
+.report-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.report-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 回测指标区域 */
+.report-indicators {
+    background: var(--bg-secondary);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 32px;
+}
+
+.report-indicators h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.indicator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.indicator-item {
+    text-align: center;
+    padding: 16px 12px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+}
+
+.indicator-item .label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+}
+
+.indicator-item .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.indicator-item .value.positive {
+    color: #10b981;
+}
+
+.indicator-item .value.negative {
+    color: #ef4444;
+}
+
+.indicator-item .value.neutral {
+    color: var(--text-secondary);
+}
+
+.date-range {
+    margin-top: 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 图表区域 */
+.report-charts {
+    margin-bottom: 32px;
+}
+
+.report-charts h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.report-charts h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.chart-item {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.chart-item img {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 摘要区域 */
+.report-summary {
+    background: rgba(24, 144, 255, 0.05);
+    border: 1px solid rgba(24, 144, 255, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.report-summary h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.report-summary p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+/* 正文内容区域 */
+.report-content {
+    margin-bottom: 32px;
+}
+
+.report-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.article-content {
+    line-height: 1.9;
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.article-content p {
+    margin-bottom: 16px;
+}
+
+/* 标签区域 */
+.report-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.report-tags .label {
+    color: var(--text-tertiary);
+    font-size: 14px;
+}
+
+.report-tags .tag {
+    padding: 6px 14px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .report-banner-title {
+        font-size: 28px;
+    }
+
+    .report-detail-container {
+        padding: 24px 16px;
+    }
+
+    .report-title {
+        font-size: 24px;
+    }
+
+    .indicator-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .indicator-item {
+        padding: 12px 8px;
+    }
+
+    .indicator-item .value {
+        font-size: 20px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<div class="report-banner">
+    <h1 class="report-banner-title">{{ report.title }}</h1>
+    <div class="report-banner-meta">
+        <span>作者：{{ report.author.username }}</span>
+        <span>发布时间：{{ report.published_at|date:"Y-m-d" }}</span>
+        <span>阅读量：{{ report.view_count }}</span>
+    </div>
+</div>
+
+<!-- 报告内容 -->
+<div class="report-detail-container">
+    <!--回测指标开始-->
+    {% if report.annual_return or report.max_drawdown or report.sharpe_ratio or report.win_rate %}
+    <div class="report-indicators">
+        <h3>回测指标</h3>
+        <div class="indicator-grid">
+            {% if report.annual_return %}
+            <div class="indicator-item">
+                <span class="label">年化收益率</span>
+                <span class="value{% if report.annual_return > 0 %} positive{% else %} negative{% endif %}">{{ report.annual_return }}%</span>
+            </div>
+            {% endif %}
+
+            {% if report.max_drawdown %}
+            <div class="indicator-item">
+                <span class="label">最大回撤</span>
+                <span class="value negative">{{ report.max_drawdown }}%</span>
+            </div>
+            {% endif %}
+
+            {% if report.sharpe_ratio %}
+            <div class="indicator-item">
+                <span class="label">夏普比率</span>
+                <span class="value{% if report.sharpe_ratio > 1 %} positive{% else %} neutral{% endif %}">{{ report.sharpe_ratio }}</span>
+            </div>
+            {% endif %}
+
+            {% if report.win_rate %}
+            <div class="indicator-item">
+                <span class="label">胜率</span>
+                <span class="value">{{ report.win_rate }}%</span>
+            </div>
+            {% endif %}
+
+            {% if report.profit_loss_ratio %}
+            <div class="indicator-item">
+                <span class="label">盈亏比</span>
+                <span class="value">{{ report.profit_loss_ratio }}</span>
+            </div>
+            {% endif %}
+
+            {% if report.total_trades %}
+            <div class="indicator-item">
+                <span class="label">总交易次数</span>
+                <span class="value">{{ report.total_trades }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if report.backtest_start_date and report.backtest_end_date %}
+        <div class="date-range">
+            回测时间：{{ report.backtest_start_date }} 至 {{ report.backtest_end_date }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!--回测指标结束-->
+
+    <!--图表开始-->
+    {% if report.equity_curve_image or report.drawdown_image or report.monthly_returns_image %}
+    <div class="report-charts">
+        <h3>收益曲线</h3>
+        {% if report.equity_curve_image %}
+        <div class="chart-item">
+            <img src="{{ report.equity_curve_image.url }}" alt="资金曲线图"/>
+        </div>
+        {% endif %}
+
+        {% if report.drawdown_image %}
+        <div class="chart-item">
+            <h4>回撤图</h4>
+            <img src="{{ report.drawdown_image.url }}" alt="回撤图"/>
+        </div>
+        {% endif %}
+
+        {% if report.monthly_returns_image %}
+        <div class="chart-item">
+            <h4>月度收益</h4>
+            <img src="{{ report.monthly_returns_image.url }}" alt="月度收益图"/>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!--图表结束-->
+
+    <!--报告摘要开始-->
+    {% if report.summary %}
+    <div class="report-summary">
+        <h3>摘要</h3>
+        <p>{{ report.summary }}</p>
+    </div>
+    {% endif %}
+    <!--报告摘要结束-->
+
+    <!--报告内容开始-->
+    <div class="report-content">
+        <h3>报告正文</h3>
+        <div class="article-content">
+            {{ report.content|markdown_content|safe }}
+        </div>
+    </div>
+    <!--报告内容结束-->
+
+    <!--标签开始-->
+    {% if report_tags %}
+    <div class="report-tags">
+        <span class="label">标签：</span>
+        {% for tag in report_tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!--标签结束-->
+</div>
+{% endblock %}

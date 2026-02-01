@@ -11,6 +11,8 @@ export const ROUTES = {
   JOBS: '/content/jobs',
   // 数据管理
   IMPORT_EXPORT: '/data/import-export',
+  // 研究报告
+  REPORTS: '/research/reports',
 };
 
 // 菜单配置
@@ -37,6 +39,14 @@ export const MENU_CONFIG = [
       { key: '/content/company-info', icon: 'HomeOutlined', label: '公司信息' },
       { key: '/content/resumes', icon: 'FileTextOutlined', label: '简历管理' },
       { key: '/content/jobs', icon: 'TeamOutlined', label: '职位管理' },
+    ],
+  },
+  {
+    key: 'research',
+    icon: 'ReadOutlined',
+    label: '研究报告',
+    children: [
+      { key: '/research/reports', icon: 'FileSearchOutlined', label: '报告管理' },
     ],
   },
   {
