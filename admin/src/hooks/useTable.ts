@@ -17,6 +17,8 @@ interface UseTableResult<T> {
     total: number;
     onChange: (page: number, pageSize: number) => void;
   };
+  filters: Record<string, any>;
+  setFilters: (filters: Record<string, any>) => void;
   refresh: () => void;
   handleDelete: (id: number) => Promise<void>;
 }
@@ -30,14 +32,22 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
     pageSize: 10,
     total: 0,
   });
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   const [currentPageSize, setCurrentPageSize] = useState(10);
 
   const fetch = useCallback(
-    async (page = 1, pageSize = 10) => {
+    async (page = 1, pageSize = 10, filterParams?: Record<string, any>) => {
       setLoading(true);
       try {
-        const response = await fetchData({ page, page_size: pageSize });
+        const params: PageParams = { page, page_size: pageSize };
+        // 添加筛选参数
+        Object.entries(filterParams || filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            (params as any)[key] = value;
+          }
+        });
+        const response = await fetchData(params);
         setData(response.results || []);
         setPagination((prev) => ({
           ...prev,
@@ -52,7 +62,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
         setLoading(false);
       }
     },
-    [fetchData]
+    [fetchData, filters]
   );
 
   const handleDelete = useCallback(
@@ -90,6 +100,11 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
     pagination: {
       ...pagination,
       onChange,
+    },
+    filters,
+    setFilters: (newFilters: Record<string, any>) => {
+      setFilters(newFilters);
+      fetch(1, pagination.pageSize, newFilters);
     },
     refresh: () => fetch(),
     handleDelete,

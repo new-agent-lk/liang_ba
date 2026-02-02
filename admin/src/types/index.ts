@@ -154,24 +154,17 @@ export interface JobPosition {
   id: number;
   title: string;
   department: string;
-  job_category: string;
-  job_category_display?: string;
+  category: string;
+  category_display?: string;
+  recruitment_type: string;
+  recruitment_type_display?: string;
   location: string;
-  salary_min?: string;
-  salary_max?: string;
-  salary_display?: string;
+  salary_range?: string;
   description: string;
   requirements: string;
-  responsibilities?: string;
-  experience?: string;
-  education_required?: string;
-  education_required_display?: string;
-  headcount: number;
   status: 'draft' | 'active' | 'paused' | 'closed';
   status_display?: string;
   sort_order: number;
-  publish_date?: string;
-  expiry_date?: string;
   created_at: string;
   updated_at: string;
 }
@@ -209,6 +202,12 @@ export const JOB_STATUS_CHOICES = [
   { value: 'active', label: '招聘中', color: 'processing' },
   { value: 'paused', label: '暂停招聘', color: 'warning' },
   { value: 'closed', label: '已关闭', color: 'error' },
+];
+
+// Recruitment type choices
+export const RECRUITMENT_TYPE_CHOICES = [
+  { value: 'social', label: '社会招聘' },
+  { value: 'campus', label: '校园招聘' },
 ];
 
 // Research Report types

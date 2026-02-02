@@ -1,4 +1,5 @@
 import { Table, Pagination, Space, Button, ConfigProvider } from 'antd';
+import type { TableProps } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
 
 interface DataTableProps<T> {
@@ -16,6 +17,8 @@ interface DataTableProps<T> {
   onDelete?: (record: T) => void;
   onView?: (record: T) => void;
   onRefresh?: () => void;
+  onChange?: TableProps<T>['onChange'];
+  rowSelection?: TableProps<T>['rowSelection'];
 }
 
 function DataTable<T extends { id: number }>({
@@ -28,6 +31,8 @@ function DataTable<T extends { id: number }>({
   onDelete,
   onView,
   onRefresh,
+  onChange,
+  rowSelection,
 }: DataTableProps<T>) {
   const actionColumn = {
     title: '操作',
@@ -104,6 +109,8 @@ function DataTable<T extends { id: number }>({
           pagination={false}
           bordered
           size="middle"
+          rowSelection={rowSelection}
+          onChange={onChange}
         />
         <div style={{ marginTop: 16, textAlign: 'right' }}>
           <Pagination

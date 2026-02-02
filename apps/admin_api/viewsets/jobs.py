@@ -16,10 +16,10 @@ class JobPositionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = JobPosition.objects.all()
 
-        # 筛选状态 (is_active)
-        is_active = self.request.query_params.get('is_active')
-        if is_active is not None:
-            queryset = queryset.filter(is_active=is_active == 'true')
+        # 筛选状态
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = queryset.filter(status=status)
 
         # 筛选职位类别
         category = self.request.query_params.get('category')
@@ -30,5 +30,10 @@ class JobPositionViewSet(viewsets.ModelViewSet):
         recruitment_type = self.request.query_params.get('recruitment_type')
         if recruitment_type:
             queryset = queryset.filter(recruitment_type=recruitment_type)
+
+        # 筛选部门
+        department = self.request.query_params.get('department')
+        if department:
+            queryset = queryset.filter(department=department)
 
         return queryset.order_by('sort_order', '-created_at')

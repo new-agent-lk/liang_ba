@@ -7,6 +7,13 @@ from .choices import JOB_CATEGORY_CHOICES, RECRUITMENT_TYPE_CHOICES
 
 class JobPosition(models.Model):
     """招聘岗位"""
+    STATUS_CHOICES = [
+        ('draft', '草稿'),
+        ('active', '招聘中'),
+        ('paused', '暂停招聘'),
+        ('closed', '已关闭'),
+    ]
+
     title = models.CharField('岗位名称', max_length=100)
     category = models.CharField(
         '岗位类别',
@@ -26,7 +33,12 @@ class JobPosition(models.Model):
     requirements = models.TextField('任职要求', blank=True)
     salary_range = models.CharField('薪资范围', max_length=100, blank=True)
 
-    is_active = models.BooleanField('是否招聘中', default=True)
+    status = models.CharField(
+        '状态',
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='draft'
+    )
     sort_order = models.IntegerField('排序', default=0)
 
     created_at = models.DateTimeField('创建时间', auto_now_add=True)

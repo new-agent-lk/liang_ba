@@ -6,7 +6,7 @@ export const getCompanyInfo = (): Promise<CompanyInfo> => {
 };
 
 export const updateCompanyInfo = (data: FormData): Promise<CompanyInfo> => {
-  return request.put('/api/admin/company-info/', data, {
+  return request.patch('/api/admin/company-info/', data, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 };

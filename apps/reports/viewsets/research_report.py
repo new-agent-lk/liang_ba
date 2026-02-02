@@ -77,6 +77,15 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
             report.status = 'pending'
             report.save()
 
+    def perform_update(self, serializer):
+        report = serializer.instance
+        # 检查是否要删除图片（前端传 null 表示删除）
+        if 'detail_image' in serializer.validated_data and serializer.validated_data['detail_image'] is None:
+            # 删除现有图片文件
+            if report.detail_image:
+                report.detail_image.delete(save=False)
+        serializer.save()
+
     @action(detail=True, methods=['post'])
     def submit(self, request, pk=None):
         """提交审核"""

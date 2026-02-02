@@ -63,13 +63,14 @@ export const createReport = (data: Partial<ResearchReport>): Promise<ResearchRep
 
 export const updateReport = (id: number, data: Partial<ResearchReport>): Promise<ResearchReport> => {
   if (hasNewFiles(data)) {
-    return request.put(`/api/reports/reports/${id}/`, toFormData(data), {
+    return request.patch(`/api/reports/reports/${id}/`, toFormData(data), {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   }
   // 没有新文件时使用 PATCH 请求进行部分更新
-  // 需要移除 detail_image 等文件字段，因为它们是 URL 字符串不是文件
-  const { detail_image, equity_curve_image, drawdown_image, monthly_returns_image, attachment, ...cleanData } = data;
+  // 如果 detail_image 是 null，保留它用于删除图片
+  // 其他文件字段（URL 字符串）需要移除
+  const { equity_curve_image, drawdown_image, monthly_returns_image, attachment, ...cleanData } = data;
   return request.patch(`/api/reports/reports/${id}/`, cleanData);
 };
 
@@ -91,4 +92,8 @@ export const publishReport = (id: number): Promise<ResearchReport> => {
 
 export const unpublishReport = (id: number): Promise<ResearchReport> => {
   return request.post(`/api/reports/reports/${id}/unpublish/`);
+};
+
+export const updateReportStatus = (id: number, data: { status: string }): Promise<ResearchReport> => {
+  return request.patch(`/api/reports/reports/${id}/`, data);
 };

@@ -7,5 +7,5 @@ export const getCompanyInfo = () => {
 };
 
 export const updateCompanyInfo = (data: any) => {
-  return request.put('/api/admin/company-info/', data);
+  return request.patch('/api/admin/company-info/', data);
 };

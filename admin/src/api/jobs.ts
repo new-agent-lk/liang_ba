@@ -15,7 +15,7 @@ export const createResume = (data: Partial<Resume>): Promise<Resume> => {
 };
 
 export const updateResume = (id: number, data: Partial<Resume>): Promise<Resume> => {
-  return request.put(`/api/admin/resumes/${id}/`, data);
+  return request.patch(`/api/admin/resumes/${id}/`, data);
 };
 
 export const deleteResume = (id: number): Promise<void> => {
@@ -40,7 +40,11 @@ export const createJob = (data: Partial<JobPosition>): Promise<JobPosition> => {
 };
 
 export const updateJob = (id: number, data: Partial<JobPosition>): Promise<JobPosition> => {
-  return request.put(`/api/admin/jobs/${id}/`, data);
+  return request.patch(`/api/admin/jobs/${id}/`, data);
+};
+
+export const patchJob = (id: number, data: Partial<JobPosition>): Promise<JobPosition> => {
+  return request.patch(`/api/admin/jobs/${id}/`, data);
 };
 
 export const deleteJob = (id: number): Promise<void> => {
@@ -56,4 +60,8 @@ export const getResumeStatusLabel = (value: string): string => {
 export const getJobStatusLabel = (value: string): string => {
   const found = JOB_STATUS_CHOICES.find((item) => item.value === value);
   return found?.label || value;
+};
+
+export const updateJobStatus = (id: number, data: { status: string }): Promise<JobPosition> => {
+  return request.patch(`/api/admin/jobs/${id}/`, data);
 };

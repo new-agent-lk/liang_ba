@@ -1,17 +1,40 @@
 import React, { useState } from 'react';
-import { Table, Tag, Button, Space, Modal, Form, Input, Select, InputNumber, DatePicker, message, Popconfirm, Upload, UploadFile } from 'antd';
+import { Button, Space, Modal, Form, Input, Select, InputNumber, message, Popconfirm, Upload, UploadFile, Badge, Dropdown } from 'antd';
 import { UploadOutlined, FileTextOutlined } from '@ant-design/icons';
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, CheckOutlined, CloseOutlined, ReloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined, ExportOutlined } from '@ant-design/icons';
 import PageHeader from '@/components/Common/PageHeader';
 import DataTable from '@/components/Common/DataTable';
 import { MarkdownFormItem } from '@/components/Common/MarkdownEditor';
 import { useTable } from '@/hooks/useTable';
-import { getReports, createReport, updateReport, deleteReport, submitReport, reviewReport, publishReport, unpublishReport } from '@/api/reports';
+import { getReports, createReport, updateReport, deleteReport, submitReport, reviewReport, publishReport, unpublishReport, updateReportStatus } from '@/api/reports';
 import { ResearchReport, RESEARCH_STRATEGY_TYPES } from '@/types';
 import { useAuthStore } from '@/store/useAuthStore';
 
 const { TextArea } = Input;
 const { Option } = Select;
+
+// 状态配置 - 带颜色和图标
+const STATUS_CONFIG: Record<string, { label: string; color: string; bgColor: string; borderColor: string }> = {
+  draft: { label: '草稿', color: '#666', bgColor: '#f5f5f5', borderColor: '#d9d9d9' },
+  pending: { label: '待审核', color: '#1677ff', bgColor: '#e6f4ff', borderColor: '#91caff' },
+  approved: { label: '已通过', color: '#52c41a', bgColor: '#f6ffed', borderColor: '#b7eb8f' },
+  rejected: { label: '已拒绝', color: '#ff4d4f', bgColor: '#fff2f0', borderColor: '#ffccc7' },
+  published: { label: '已发布', color: '#722ed1', bgColor: '#f9f0ff', borderColor: '#d3adf7' },
+};
+
+// 统一的标签样式
+const getStatusTagStyle = (config: typeof STATUS_CONFIG[string]) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 4,
+  padding: '4px 10px',
+  borderRadius: 6,
+  backgroundColor: config.bgColor,
+  color: config.color,
+  fontSize: 13,
+  lineHeight: '20px',
+  fontWeight: 500,
+});
 
 const Reports: React.FC = () => {
   const [form] = Form.useForm();
@@ -24,6 +47,9 @@ const Reports: React.FC = () => {
   const [contentModalVisible, setContentModalVisible] = useState(false);
   const [contentEditReport, setContentEditReport] = useState<ResearchReport | null>(null);
   const [contentSubmitLoading, setContentSubmitLoading] = useState(false);
+  // 批量选择状态
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<ResearchReport[]>([]);
 
   const { user } = useAuthStore();
   const isSuperAdmin = user?.is_superuser || false;
@@ -40,7 +66,7 @@ const Reports: React.FC = () => {
       return true;
     }
     // 普通用户只能编辑自己的草稿或被拒绝的报告
-    if (report.author_id === currentUserId && (report.status === 'draft' || report.status === 'rejected')) {
+    if (report.author === currentUserId && (report.status === 'draft' || report.status === 'rejected')) {
       return true;
     }
     return false;
@@ -53,12 +79,49 @@ const Reports: React.FC = () => {
       return report.status === 'draft' || report.status === 'rejected';
     }
     // 普通用户只能删除自己的草稿或被拒绝的报告
-    return report.author_id === currentUserId && (report.status === 'draft' || report.status === 'rejected');
+    return report.author === currentUserId && (report.status === 'draft' || report.status === 'rejected');
+  };
+
+  // 检查是否可以编辑状态（超管可以编辑所有，普通用户只能编辑自己的）
+  const canEditStatus = (report: ResearchReport) => {
+    if (isSuperAdmin) return true;
+    return report.author === currentUserId;
+  };
+
+  // 编辑状态
+  const handleEditStatus = async (id: number, newStatus: string) => {
+    try {
+      await updateReportStatus(id, { status: newStatus });
+      message.success('状态更新成功');
+      refresh();
+    } catch (error) {
+      message.error('状态更新失败');
+    }
+  };
+
+  // 批量发布
+  const handleBulkPublish = async () => {
+    const approvedReports = selectedRows.filter(r => r.status === 'approved');
+    if (approvedReports.length === 0) {
+      message.warning('请选择已通过审核的报告进行发布');
+      return;
+    }
+    try {
+      for (const report of approvedReports) {
+        await publishReport(report.id);
+      }
+      message.success(`成功发布 ${approvedReports.length} 篇报告`);
+      setSelectedRowKeys([]);
+      setSelectedRows([]);
+      refresh();
+    } catch (error) {
+      message.error('批量发布失败');
+    }
   };
 
   // 检查是否可以提交审核
   const canSubmitForReview = (report: ResearchReport) => {
-    return report.author_id === currentUserId && report.status === 'draft';
+    return report.author === currentUserId && report.status === 'draft';
   };
 
   // 检查是否可以审核（部门负责人权限）
@@ -79,28 +142,6 @@ const Reports: React.FC = () => {
     return isSuperAdmin && report.status === 'published';
   };
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      draft: 'default',
-      pending: 'processing',
-      approved: 'success',
-      rejected: 'error',
-      published: 'blue',
-    };
-    return colors[status] || 'default';
-  };
-
-  const getStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      draft: '草稿',
-      pending: '待审核',
-      approved: '已通过',
-      rejected: '已拒绝',
-      published: '已发布',
-    };
-    return labels[status] || status;
-  };
-
   const handleAdd = () => {
     setCurrentReport(null);
     setIsEdit(false);
@@ -113,13 +154,24 @@ const Reports: React.FC = () => {
   const handleEdit = (record: ResearchReport) => {
     setCurrentReport(record);
     setIsEdit(true);
-    // 编辑时将图片URL转换为Upload组件需要的格式
-    const detailImageList = record.detail_image
-      ? [{ uid: '-1', name: 'detail_image', status: 'done', url: record.detail_image }]
-      : [];
-    setDetailImageFileList(detailImageList);
+
+    // 设置图片文件列表 - 使用 base64 数据
+    if (record.detail_image) {
+      setDetailImageFileList([{
+        uid: '-1',
+        name: 'detail_image.jpg',
+        status: 'done',
+        url: record.detail_image,
+        // base64 数据用于显示
+      }]);
+    } else {
+      setDetailImageFileList([]);
+    }
+
+    // 排除 detail_image，因为使用单独的状态管理
+    const { detail_image, ...recordWithoutImage } = record;
     form.setFieldsValue({
-      ...record,
+      ...recordWithoutImage,
       backtest_start_date: record.backtest_start_date ? new Date(record.backtest_start_date) : null,
       backtest_end_date: record.backtest_end_date ? new Date(record.backtest_end_date) : null,
     });
@@ -129,14 +181,34 @@ const Reports: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setSubmitLoading(true);
     try {
+      const submitData: any = { ...values };
+
+      // 处理图片上传
+      if (detailImageFileList.length > 0) {
+        const file = detailImageFileList[0];
+        // 如果有新上传的文件（originFileObj），添加到提交数据中
+        if (file.originFileObj) {
+          submitData.detail_image = [file];
+        }
+        // 如果是编辑模式且没有新文件，不传递 detail_image，保留原有图片
+      } else {
+        // 如果没有图片，设置为 null 移除图片
+        if (isEdit && currentReport) {
+          submitData.detail_image = null;
+        }
+      }
+
       if (isEdit && currentReport) {
-        await updateReport(currentReport.id, values);
+        await updateReport(currentReport.id, submitData);
         message.success('更新成功');
       } else {
-        await createReport(values);
+        await createReport(submitData);
         message.success('创建成功');
       }
       setModalVisible(false);
+      setDetailImageFileList([]);
+      form.resetFields();
+      // 刷新表格数据
       refresh();
     } catch (error) {
       message.error(isEdit ? '更新失败' : '创建失败');
@@ -248,8 +320,40 @@ const Reports: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      width: 90,
-      render: (v: string) => <Tag color={getStatusColor(v)}>{getStatusLabel(v)}</Tag>,
+      width: 130,
+      render: (v: string, record: ResearchReport) => {
+        const config = STATUS_CONFIG[v] || STATUS_CONFIG.draft;
+        if (canEditStatus(record)) {
+          const menuItems = Object.entries(STATUS_CONFIG).map(([key, cfg]) => ({
+            key,
+            label: (
+              <div style={getStatusTagStyle(cfg)}>
+                <span>{cfg.label}</span>
+              </div>
+            ),
+          }));
+          return (
+            <Dropdown
+              menu={{ items: menuItems, onClick: ({ key }) => handleEditStatus(record.id, key) }}
+              trigger={['click']}
+              placement="bottomLeft"
+            >
+              <Button
+                size="large"
+                type="text"
+                style={getStatusTagStyle(config)}
+              >
+                {config.label}
+              </Button>
+            </Dropdown>
+          );
+        }
+        return (
+          <div style={getStatusTagStyle(config)}>
+            <span>{config.label}</span>
+          </div>
+        );
+      },
     },
     { title: '作者', dataIndex: 'author_username', key: 'author', width: 80 },
     { title: '阅读量', dataIndex: 'view_count', key: 'view_count', width: 80 },
@@ -259,7 +363,7 @@ const Reports: React.FC = () => {
   const actionColumn = {
     title: '操作',
     key: 'action',
-    width: 380,
+    width: 320,
     render: (_: any, record: ResearchReport) => (
       <Space size="small">
         {canEditReport(record) && (
@@ -317,6 +421,14 @@ const Reports: React.FC = () => {
         title="研究报告"
         description={isSuperAdmin ? "管理所有研究报告（超管权限）" : "管理自己的研究报告"}
         actions={[
+          <Button
+            key="bulk-publish"
+            icon={<ExportOutlined />}
+            onClick={handleBulkPublish}
+            disabled={selectedRowKeys.length === 0}
+          >
+            批量发布 ({selectedRowKeys.length})
+          </Button>,
           <Button key="add" type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
             新建报告
           </Button>,
@@ -328,6 +440,13 @@ const Reports: React.FC = () => {
         columns={[...columns, actionColumn]}
         pagination={pagination}
         onRefresh={refresh}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys: React.Key[], rows: ResearchReport[]) => {
+            setSelectedRowKeys(keys);
+            setSelectedRows(rows);
+          },
+        }}
       />
 
       {/* 添加/编辑弹窗 */}
@@ -342,7 +461,7 @@ const Reports: React.FC = () => {
         }}
         footer={null}
         width={1000}
-        destroyOnClose
+        // destroyOnClose 已弃用，使用 closable + key 属性替代
         keyboard={false}
         maskClosable={false}
       >
@@ -409,29 +528,91 @@ const Reports: React.FC = () => {
             placeholder="支持 Markdown 语法，可使用 # 标题、**加粗**、- 列表、代码块等"
           />
 
-          <Form.Item name="detail_image" label="首页详情图" style={{ marginBottom: 16 }}>
-            <Upload
-              name="detail_image"
-              listType="picture-card"
-              maxCount={1}
-              fileList={detailImageFileList}
-              onChange={({ fileList }) => setDetailImageFileList(fileList)}
-              beforeUpload={() => false} // 阻止自动上传
-              withCredentials
-              accept="image/*"
-            >
-              {detailImageFileList.length >= 1 ? null : (
-                <div style={{ padding: 8 }}>
-                  <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>上传</div>
-                </div>
+          <Form.Item
+            name="detail_image"
+            label="首页详情图"
+            style={{ marginBottom: 16 }}
+          >
+            <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+              {/* 图片预览区域 */}
+              {detailImageFileList.length > 0 && (() => {
+                const file = detailImageFileList[0];
+                const previewUrl = file.url || (file.originFileObj ? URL.createObjectURL(file.originFileObj) : null);
+                if (!previewUrl) return null;
+                return (
+                  <div style={{
+                    width: 104,
+                    height: 104,
+                    border: '1px dashed #d9d9d9',
+                    borderRadius: 8,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#fafafa',
+                  }}>
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                    />
+                  </div>
+                );
+              })()}
+              {/* 上传按钮 */}
+              <Upload
+                name="detail_image"
+                listType="picture-card"
+                maxCount={1}
+                fileList={detailImageFileList}
+                onChange={({ fileList }) => {
+                  setDetailImageFileList(fileList);
+                }}
+                beforeUpload={() => false}
+                withCredentials
+                accept="image/*"
+                showUploadList={false}
+              >
+                {detailImageFileList.length >= 1 ? null : (
+                  <div style={{ padding: 8 }}>
+                    <UploadOutlined />
+                    <div style={{ marginTop: 8 }}>上传</div>
+                  </div>
+                )}
+              </Upload>
+              {/* 移除图片按钮 */}
+              {detailImageFileList.length > 0 && (
+                <Button
+                  type="text"
+                  danger
+                  size="small"
+                  onClick={() => setDetailImageFileList([])}
+                >
+                  移除
+                </Button>
               )}
-            </Upload>
+            </div>
           </Form.Item>
 
           <Form.Item name="tags" label="标签">
             <Input placeholder="多个标签用逗号分隔" />
           </Form.Item>
+
+          {/* 状态编辑 - 仅超管可编辑 */}
+          {isSuperAdmin && (
+            <Form.Item name="status" label="状态">
+              <Select placeholder="请选择状态">
+                {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
+                  <Option key={key} value={key}>
+                    <div style={getStatusTagStyle(cfg)}>
+                      <Badge color={cfg.color} />
+                      <span>{cfg.label}</span>
+                    </div>
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
 
           <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
             <Space>
@@ -454,7 +635,7 @@ const Reports: React.FC = () => {
         }}
         footer={null}
         width={900}
-        destroyOnClose
+        // destroyOnClose 已弃用，使用 closable + key 属性替代
       >
         <Form form={form} layout="vertical">
           <MarkdownFormItem

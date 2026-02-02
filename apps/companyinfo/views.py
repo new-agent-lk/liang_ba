@@ -71,7 +71,7 @@ class ResumeSubmitView(View):
             friendly_links = FriendlyLinks.objects.all()
 
             # 获取正在招聘的岗位 - JobPosition 已在 models.py 中导入
-            positions = JobPosition.objects.filter(is_active=True).order_by('sort_order')
+            positions = JobPosition.objects.filter(status='active').order_by('sort_order')
 
             # 获取当前用户信息
             user = request.user
@@ -220,10 +220,10 @@ class ResumeView(View):
 
             # 获取正在招聘的岗位 - JobPosition 已在 models.py 中导入
             campus_positions = JobPosition.objects.filter(
-                is_active=True, recruitment_type='campus'
+                status='active', recruitment_type='campus'
             ).order_by('sort_order')
             social_positions = JobPosition.objects.filter(
-                is_active=True, recruitment_type='social'
+                status='active', recruitment_type='social'
             ).order_by('sort_order')
 
             context = {

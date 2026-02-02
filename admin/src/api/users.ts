@@ -14,7 +14,7 @@ export const createUser = (data: Partial<User>): Promise<User> => {
 };
 
 export const updateUser = (id: number, data: Partial<User>): Promise<User> => {
-  return request.put(`/api/admin/users/${id}/`, data);
+  return request.patch(`/api/admin/users/${id}/`, data);
 };
 
 export const deleteUser = (id: number): Promise<void> => {
