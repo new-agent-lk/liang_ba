@@ -29,6 +29,9 @@ urlpatterns = [
     # 研究报告
     path('reports/', include('apps.reports.urls')),
 
+    # 量化因子分析
+    path('api/factorhub/', include('apps.factorhub.urls')),
+
     # 简历投递
     path('resume/', ResumeView.as_view(), name='resume'),
     path('resume/submit/', ResumeSubmitView.as_view(), name='resume_submit'),

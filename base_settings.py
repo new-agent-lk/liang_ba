@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.admin_api.apps.AdminApiConfig',
     'apps.reports.apps.ReportsConfig',
+    'apps.factorhub.apps.FactorhubConfig',
 ]
 
 MIDDLEWARE = [

@@ -13,6 +13,12 @@ export const ROUTES = {
   IMPORT_EXPORT: '/data/import-export',
   // 研究报告
   REPORTS: '/research/reports',
+  // 量化因子
+  FACTOR_HUB: '/factor-hub',
+  FACTOR_DATA: '/factor-hub/data',
+  FACTOR_LIST: '/factor-hub/factors',
+  FACTOR_ANALYSIS: '/factor-hub/analysis',
+  FACTOR_BACKTEST: '/factor-hub/backtest',
 };
 
 // 菜单配置
@@ -55,6 +61,18 @@ export const MENU_CONFIG = [
     label: '数据管理',
     children: [
       { key: '/data/import-export', icon: 'ImportOutlined', label: '导入导出' },
+    ],
+  },
+  {
+    key: 'factor-hub',
+    icon: 'StockOutlined',
+    label: '量化因子',
+    children: [
+      { key: '/factor-hub', icon: 'HomeOutlined', label: '概览' },
+      { key: '/factor-hub/data', icon: 'DatabaseOutlined', label: '数据管理' },
+      { key: '/factor-hub/factors', icon: 'SettingOutlined', label: '因子管理' },
+      { key: '/factor-hub/analysis', icon: 'LineChartOutlined', label: '因子分析' },
+      { key: '/factor-hub/backtest', icon: 'BarChartOutlined', label: '策略回测' },
     ],
   },
 ];

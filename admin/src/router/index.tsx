@@ -10,6 +10,11 @@ import Resumes from '@/pages/Content/Resumes';
 import Jobs from '@/pages/Content/Jobs';
 import ImportExport from '@/pages/Data/ImportExport';
 import Reports from '@/pages/Research/Reports';
+import FactorHubIndex from '@/pages/FactorHub';
+import FactorData from '@/pages/FactorHub/Data';
+import FactorList from '@/pages/FactorHub/Factors';
+import FactorAnalysis from '@/pages/FactorHub/Analysis';
+import FactorBacktest from '@/pages/FactorHub/Backtest';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -70,6 +75,16 @@ const router = createBrowserRouter([
       {
         path: 'research/reports',
         element: <Reports />,
+      },
+      {
+        path: 'factor-hub',
+        children: [
+          { index: true, element: <FactorHubIndex /> },
+          { path: 'data', element: <FactorData /> },
+          { path: 'factors', element: <FactorList /> },
+          { path: 'analysis', element: <FactorAnalysis /> },
+          { path: 'backtest', element: <FactorBacktest /> },
+        ],
       },
     ],
   },
