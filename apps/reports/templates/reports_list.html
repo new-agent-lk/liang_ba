@@ -326,7 +326,7 @@
             </select>
             {% endif %}
             {% if current_year or current_month %}
-            <a href="{% url 'reports_list' %}" class="clear-filter">清除筛选</a>
+            <a href="{% url 'report_list' %}" class="clear-filter">清除筛选</a>
             {% endif %}
         </form>
     </div>
@@ -399,7 +399,7 @@
     <div class="reports-empty">
         <p>{% if current_year or current_month %}该时间段暂无研究报告{% else %}暂无研究报告{% endif %}</p>
         {% if current_year or current_month %}
-        <a href="{% url 'reports_list' %}" style="color: var(--accent-primary); text-decoration: none; margin-top: 16px; display: inline-block;">查看全部报告</a>
+        <a href="{% url 'report_list' %}" style="color: var(--accent-primary); text-decoration: none; margin-top: 16px; display: inline-block;">查看全部报告</a>
         {% endif %}
     </div>
     {% endif %}

@@ -294,6 +294,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # 处理NaN值
+    'COERCE_DECIMAL_TO_STRING': False,
 
     'DEFAULT_PAGINATION_CLASS': 'apps.admin_api.pagination.StandardPagination',
     'PAGE_SIZE': 10  # 默认每页数量

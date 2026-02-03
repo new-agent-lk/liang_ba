@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    StatsView,
     StockListView,
     StockPoolView,
     DataFetchView,
@@ -15,6 +16,9 @@ from .views import (
 app_name = 'factorhub'
 
 urlpatterns = [
+    # 统计信息
+    path('stats/', StatsView.as_view(), name='stats'),
+
     # 股票数据
     path('stocks/', StockListView.as_view(), name='stock-list'),
     path('stock-pool/', StockPoolView.as_view(), name='stock-pool'),
