@@ -23,11 +23,12 @@ class UserSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
     password_confirm = serializers.CharField(write_only=True)
+    profile = UserProfileSerializer(required=False)
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'password_confirm', 'first_name',
-                  'last_name', 'is_staff', 'is_superuser']
+                  'last_name', 'is_staff', 'is_superuser', 'profile']
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
@@ -36,12 +37,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('password_confirm')
+        profile_data = validated_data.pop('profile', None)
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
 
-        # UserProfile 会通过信号自动创建
+        # 创建或更新 UserProfile
+        if profile_data:
+            UserProfile.objects.update_or_create(
+                user=user,
+                defaults=profile_data
+            )
 
         return user
 

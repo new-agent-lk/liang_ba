@@ -16,6 +16,38 @@ export interface User {
   profile?: UserProfile;
 }
 
+// 部门选项
+export const DEPARTMENT_CHOICES = [
+  { value: 'quant', label: '量化部' },
+  { value: 'risk', label: '风控部' },
+  { value: 'tech', label: '技术部' },
+  { value: 'research', label: '研究部' },
+  { value: 'hr', label: '人力资源部' },
+  { value: 'finance', label: '财务部' },
+  { value: 'admin', label: '行政部' },
+  { value: 'other', label: '其他' },
+];
+
+// 职位选项
+export const POSITION_CHOICES = [
+  { value: 'intern', label: '实习生' },
+  { value: 'junior', label: '初级' },
+  { value: 'middle', label: '中级' },
+  { value: 'senior', label: '高级' },
+  { value: 'expert', label: '专家' },
+  { value: 'manager', label: '经理' },
+  { value: 'director', label: '总监' },
+  { value: 'vp', label: '副总裁' },
+  { value: 'partner', label: '合伙人' },
+];
+
+// 性别选项
+export const GENDER_CHOICES = [
+  { value: 'M', label: '男' },
+  { value: 'F', label: '女' },
+  { value: 'O', label: '其他' },
+];
+
 export interface UserProfile {
   phone?: string;
   avatar?: string;

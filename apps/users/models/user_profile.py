@@ -45,6 +45,12 @@ class UserProfile(models.Model):
     # 其他信息
     bio = models.TextField('个人简介', blank=True, null=True)
     notes = models.TextField('备注', blank=True, null=True)
+    user_category = models.CharField('用户类型', max_length=50, default='job_seeker', choices=[
+        ('job_seeker', '求职者'),
+        ('investor', '投资者'),
+        ('partner', '合作伙伴'),
+        ('other', '其他'),
+    ])
     login_count = models.IntegerField('登录次数', default=0)
     last_login_ip = models.GenericIPAddressField('最后登录IP', blank=True, null=True)
 

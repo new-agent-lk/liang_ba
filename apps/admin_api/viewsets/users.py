@@ -34,11 +34,23 @@ class UserViewSet(viewsets.ModelViewSet):
         queryset = User.objects.all().select_related('profile')
         username = self.request.query_params.get('username')
         is_active = self.request.query_params.get('is_active')
+        department = self.request.query_params.get('department')
+        position = self.request.query_params.get('position')
+        is_staff = self.request.query_params.get('is_staff')
+        is_superuser = self.request.query_params.get('is_superuser')
 
         if username:
             queryset = queryset.filter(username__icontains=username)
         if is_active is not None:
             queryset = queryset.filter(is_active=is_active.lower() == 'true')
+        if department:
+            queryset = queryset.filter(profile__department=department)
+        if position:
+            queryset = queryset.filter(profile__position=position)
+        if is_staff is not None:
+            queryset = queryset.filter(is_staff=is_staff.lower() == 'true')
+        if is_superuser is not None:
+            queryset = queryset.filter(is_superuser=is_superuser.lower() == 'true')
 
         return queryset.order_by('-date_joined')
 
