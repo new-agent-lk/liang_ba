@@ -1,0 +1,180 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin static %}
+
+{% block title %}Log Rotation Dashboard{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .rotation-dashboard {
+        padding: 20px;
+    }
+    .rotation-header {
+        margin-bottom: 20px;
+    }
+    .status-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .status-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+    }
+    .status-card h3 {
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .status-card .size {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    .status-card .archived {
+        margin-top: 10px;
+        color: #6c757d;
+    }
+    .action-buttons {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+    .btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 13px;
+        border: none;
+        color: #fff;
+    }
+    .btn-primary {
+        background: #417690;
+    }
+    .btn-danger {
+        background: #ba2121;
+    }
+    .btn:hover {
+        opacity: 0.9;
+    }
+    .archived-files {
+        margin-top: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .archived-file {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 12px;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        color: #fff;
+    }
+    .status-badge.ok { background: #28a745; }
+    .status-badge.warning { background: #ffc107; color: #333; }
+    .status-badge.danger { background: #dc3545; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="rotation-dashboard">
+    <div class="rotation-header">
+        <h1>Log Rotation Dashboard</h1>
+        <p>Manage log file rotation and archival settings</p>
+        <a href="{% url 'admin:log-file-viewer' %}" class="btn btn-primary">View Logs</a>
+    </div>
+
+    <div class="status-cards">
+        {% for type, status in statuses.items %}
+        <div class="status-card">
+            <h3>
+                {{ type|title }} Logs
+                {% if status.exists %}
+                <span class="status-badge ok">Active</span>
+                {% else %}
+                <span class="status-badge warning">Missing</span>
+                {% endif %}
+            </h3>
+
+            <div class="size">{{ status.current_size_mb }} MB</div>
+            <div class="archived">{{ status.archived_files_count }} archived files</div>
+
+            <div class="action-buttons">
+                <button class="btn btn-danger"
+                        onclick="rotateLog('{{ type }}')">
+                    Rotate Now
+                </button>
+            </div>
+
+            {% if status.archived_files %}
+            <div class="archived-files">
+                {% for f in status.archived_files %}
+                <div class="archived-file">
+                    <span>{{ f.name }}</span>
+                    <span>{{ f.size_mb }} MB</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+async function rotateLog(logType) {
+    if (!confirm('Are you sure you want to rotate ' + logType + ' logs?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/admin/logs/rotation/action/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                action: 'rotate',
+                log_type: logType,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.rotated) {
+            alert('Successfully rotated ' + logType + ' logs');
+            location.reload();
+        } else {
+            alert('Rotation not needed: ' + result.reason);
+        }
+    } catch (error) {
+        alert('Failed to rotate logs: ' + error);
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

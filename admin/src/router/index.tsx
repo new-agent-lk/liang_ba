@@ -5,6 +5,7 @@ import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
 import Users from '@/pages/System/Users';
 import Settings from '@/pages/System/Settings';
+import Logs from '@/pages/System/Logs';
 import CompanyInfo from '@/pages/Content/CompanyInfo';
 import Resumes from '@/pages/Content/Resumes';
 import Jobs from '@/pages/Content/Jobs';
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: 'system/users',
         element: <Users />,
+      },
+      {
+        path: 'system/logs',
+        element: <Logs />,
       },
       {
         path: 'system/settings',

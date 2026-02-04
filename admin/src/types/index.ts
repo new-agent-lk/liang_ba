@@ -295,3 +295,121 @@ export const RESEARCH_STRATEGY_TYPES = [
   { value: 'macro', label: '宏观策略' },
   { value: 'other', label: '其他' },
 ];
+
+// Log types
+export type LogType = 'app' | 'error' | 'security' | 'performance' | 'django';
+
+export type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
+
+export interface LogEntry {
+  timestamp: string;
+  level: LogLevel;
+  logger: string;
+  message: string;
+  module?: string;
+  function?: string;
+  line?: number;
+  process_id?: number;
+  thread_id?: number;
+  trace_id?: string;
+  request_id?: string;
+  user_id?: number;
+  extra?: Record<string, unknown>;
+}
+
+export interface LogListResponse {
+  entries: LogEntry[];
+  total: number;
+  offset: number;
+  limit: number;
+  has_more: boolean;
+}
+
+export interface LogStats {
+  file_path: string;
+  file_size_mb: number;
+  last_modified: string;
+  level_counts: Record<LogLevel, number>;
+  total_entries: number;
+}
+
+export interface LogRotationStatus {
+  log_type: string;
+  policy: {
+    max_size_mb: number;
+    max_files: number;
+    max_age_days: number;
+    compress_old: boolean;
+  };
+  current_size_mb: number;
+  last_modified: string;
+  archived_files_count: number;
+  archived_files: Array<{
+    name: string;
+    size_mb: number;
+    modified: string;
+    is_compressed: boolean;
+  }>;
+}
+
+export interface LogRotationConfig {
+  id: number;
+  log_type: string;
+  max_size_mb: number;
+  max_files: number;
+  max_age_days: number;
+  compress_old: boolean;
+  enabled: boolean;
+  last_rotated?: string;
+  is_manually_paused: boolean;
+  create_time: string;
+}
+
+export interface LogViewerAccessLog {
+  id: number;
+  user_id: number;
+  username: string;
+  action: string;
+  log_type?: string;
+  filters_applied: Record<string, unknown>;
+  ip_address: string;
+  user_agent: string;
+  create_time: string;
+}
+
+// Log filter params
+export interface LogListParams {
+  log_type?: LogType;
+  level?: LogLevel;
+  trace_id?: string;
+  user_id?: number;
+  search?: string;
+  start_time?: string;
+  end_time?: string;
+  offset?: number;
+  limit?: number;
+}
+
+// Log rotation action params
+export interface LogRotationAction {
+  action: 'rotate' | 'pause' | 'resume';
+  log_type: LogType;
+}
+
+// Log type choices
+export const LOG_TYPE_CHOICES: { value: LogType; label: string }[] = [
+  { value: 'app', label: '应用日志' },
+  { value: 'error', label: '错误日志' },
+  { value: 'security', label: '安全日志' },
+  { value: 'performance', label: '性能日志' },
+  { value: 'django', label: 'Django日志' },
+];
+
+// Log level choices with colors
+export const LOG_LEVEL_CHOICES: { value: LogLevel; label: string; color: string }[] = [
+  { value: 'DEBUG', label: 'DEBUG', color: 'default' },
+  { value: 'INFO', label: 'INFO', color: 'processing' },
+  { value: 'WARNING', label: 'WARNING', color: 'warning' },
+  { value: 'ERROR', label: 'ERROR', color: 'error' },
+  { value: 'CRITICAL', label: 'CRITICAL', color: 'red' },
+];

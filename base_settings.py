@@ -83,6 +83,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+
+    # 日志中间件
+    'utils.middleware.request_trace.RequestTraceMiddleware',      # 1. 请求追踪（注入 trace_id）
+    'utils.middleware.performance.PerformanceMiddleware',          # 2. 性能监控
+    'utils.middleware.exception_logging.ExceptionLoggingMiddleware',  # 3. 异常捕获
+    'utils.middleware.security_audit.SecurityAuditMiddleware',    # 4. 安全审计
 ]
 
 ROOT_URLCONF = 'apps.urls'
@@ -347,62 +353,211 @@ CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
 # SESSION_COOKIE_HTTPONLY = True
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
-ADMINS = (
-    ('lk', 'lk_ernest@163.com'),
-)
-# 创建log文件的文件夹
+# 创建 log 文件的文件夹
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
 
-# 基本配置，可以复用的
+# ============================================================================
+# 日志系统配置
+# ============================================================================
+
+# 日志级别映射（方便调整）- DEBUG信息不记录到文件，仅控制台输出INFO及以上
+LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+CONSOLE_LOG_LEVEL = 'INFO'  # 控制台始终输出INFO及以上，不输出DEBUG
+FILE_LOG_LEVEL = 'INFO'  # 文件始终记录INFO及以上
+
+# 性能监控阈值
+PERFORMANCE_SLOW_REQUEST_THRESHOLD_MS = 1000  # 慢请求阈值（毫秒）
+
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": False,  # 禁用已经存在的logger实例
-    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-    "formatters": {  # 定义了两种日志格式
-        "verbose": {  # 详细
-            "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+    "disable_existing_loggers": False,
+
+    # 过滤器
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse"
         },
-        'simple': {  # 简单
-            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        "request_context": {
+            "()": "utils.logging.filters.RequestContextFilter",
+        },
+        "sensitive_data": {
+            "()": "utils.logging.filters.SensitiveDataFilter",
+        },
+        "rate_limit": {
+            "()": "utils.logging.filters.RateLimitFilter",
+            "rate": 100,
+            "per": 60,
         },
     },
-    "handlers": {  # 定义了三种日志处理方式
-        "mail_admins": {  # 只有debug=False且Error级别以上发邮件给admin
+
+    # 格式化器
+    "formatters": {
+        "json": {
+            "()": "utils.logging.formatters.JSONFormatter",
+        },
+        "detailed": {
+            "()": "utils.logging.formatters.DetailedFormatter",
+            "use_colors": True,
+        },
+        "simple": {
+            "()": "utils.logging.formatters.SimpleFormatter",
+        },
+    },
+
+    # 处理器
+    "handlers": {
+        # 控制台输出
+        "console": {
+            "level": CONSOLE_LOG_LEVEL,
+            "class": "logging.StreamHandler",
+            "formatter": "detailed",
+            "filters": ["request_context"],
+            "stream": "ext://sys.stdout",
+        },
+
+        # 通用应用日志
+        "file_app": {
+            "level": FILE_LOG_LEVEL,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'app.log'),
+            "maxBytes": 10 * 1024 * 1024,  # 10MB
+            "backupCount": 10,
+            "formatter": "json",
+            "encoding": "utf-8",
+            "filters": ["request_context", "sensitive_data"],
+        },
+
+        # 错误日志
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'error.log'),
+            "maxBytes": 10 * 1024 * 1024,
+            "backupCount": 20,
+            "formatter": "json",
+            "encoding": "utf-8",
+            "filters": ["request_context", "sensitive_data"],
+        },
+
+        # 性能日志
+        "file_performance": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'performance.log'),
+            "maxBytes": 10 * 1024 * 1024,
+            "backupCount": 5,
+            "formatter": "json",
+            "encoding": "utf-8",
+            "filters": ["request_context"],
+        },
+
+        # 安全审计日志（按天轮转）
+        "file_security": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'security.log'),
+            "when": "midnight",
+            "backupCount": 90,  # 保留90天
+            "formatter": "json",
+            "encoding": "utf-8",
+            "filters": ["request_context", "sensitive_data"],
+        },
+
+        # Django 原始日志（兼容性）
+        "file_django": {
+            "level": LOG_LEVEL,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'django.log'),
+            "maxBytes": 10 * 1024 * 1024,
+            "backupCount": 5,
+            "formatter": "simple",
+            "encoding": "utf-8",
+        },
+
+        # 邮件告警（生产环境）
+        "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
-        },
-        'file': {  # 对INFO级别以上信息以日志文件形式保存
-            'level': "INFO",
-            'class': 'logging.handlers.RotatingFileHandler',  # 滚动生成日志，切割
-            'filename': os.path.join(LOG_DIR, 'django.log'),  # 日志文件名
-            'maxBytes': 1024 * 1024 * 10,  # 单个日志文件最大为10M
-            'backupCount': 5,  # 日志备份文件最大数量
-            'formatter': 'simple',  # 简单格式
-            'encoding': 'utf-8',  # 放置中文乱码
-        },
-        "console": {  # 打印到终端console
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
+            "include_html": True,
         },
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+
+    # 日志器
     "loggers": {
-        "django.request": {  # Django的request发生error会自动记录
-            "handlers": ["mail_admins"],
-            "level": "ERROR",
-            "propagate": True,  # 向不向更高级别的logger传递
+        # Django 框架日志
+        "django": {
+            "handlers": ["console", "file_django"],
+            "level": LOG_LEVEL,
+            "propagate": False,
         },
-        "django.security.DisallowedHost": {  # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
-            "level": "ERROR",
-            "handlers": ["console", "mail_admins"],
-            "propagate": True,
+        "django.request": {
+            "handlers": ["console", "file_app", "file_error"],
+            "level": "INFO",
+            "propagate": False,
         },
+        "django.db.backends": {
+            "handlers": ["file_django"] if not DEBUG else ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        # 抑制模板变量查找失败的 DEBUG 日志（这些是正常的fallback行为）
+        "django.template": {
+            "handlers": [],
+            "level": "WARNING",
+            "propagate": False,
+        },
+
+        # 应用日志
+        "app": {
+            "handlers": ["console", "file_app"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+
+        # 请求日志
+        "app.request": {
+            "handlers": ["console", "file_app"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        # 错误日志
+        "app.error": {
+            "handlers": ["console", "file_error", "mail_admins"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+
+        # 性能日志
+        "app.performance": {
+            "handlers": ["file_performance"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        # 安全审计日志
+        "app.security": {
+            "handlers": ["console", "file_security"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        # FactorHub 日志
+        "app.factorhub": {
+            "handlers": ["console", "file_app"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+    },
+
+    # 根日志器
+    "root": {
+        "handlers": ["console", "file_app"],
+        "level": LOG_LEVEL,
     },
 }
 

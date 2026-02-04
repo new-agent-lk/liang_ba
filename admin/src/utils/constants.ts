@@ -5,6 +5,7 @@ export const ROUTES = {
   // 系统管理
   USERS: '/system/users',
   SETTINGS: '/system/settings',
+  LOGS: '/system/logs',
   // 内容管理
   COMPANY_INFO: '/content/company-info',
   RESUMES: '/content/resumes',
@@ -34,6 +35,7 @@ export const MENU_CONFIG = [
     label: '系统管理',
     children: [
       { key: '/system/users', icon: 'UserOutlined', label: '用户管理' },
+      { key: '/system/logs', icon: 'FileSearchOutlined', label: '日志管理' },
       { key: '/system/settings', icon: 'ToolOutlined', label: '系统设置' },
     ],
   },

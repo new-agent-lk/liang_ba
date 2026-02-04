@@ -7,8 +7,7 @@ from django.conf import settings
 from django.views.static import serve
 from django.views.generic import RedirectView
 from django.contrib import admin
-from django.urls import path, re_path
-from django.conf.urls import include
+from django.urls import path, re_path, include
 
 from apps.view import IndexView
 from apps.companyinfo.views import *  # 引入首页视图类

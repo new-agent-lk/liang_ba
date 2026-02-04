@@ -1,0 +1,199 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin static %}
+
+{% block title %}Log Viewer - {{ log_type|title }} Logs{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">
+<style>
+    .log-viewer {
+        padding: 20px;
+    }
+    .log-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .log-filters {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .log-filters form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+    .log-filters select, .log-filters input {
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .log-entries {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .log-entry {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 13px;
+    }
+    .log-entry:last-child {
+        border-bottom: none;
+    }
+    .log-entry.DEBUG { border-left: 4px solid #6c757d; }
+    .log-entry.INFO { border-left: 4px solid #28a745; }
+    .log-entry.WARNING { border-left: 4px solid #ffc107; }
+    .log-entry.ERROR { border-left: 4px solid #dc3545; }
+    .log-entry.CRITICAL { border-left: 4px solid #721c24; }
+    .log-timestamp { color: #6c757d; }
+    .log-level { font-weight: bold; }
+    .log-message { word-break: break-all; }
+    .log-meta {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #6c757d;
+    }
+    .log-extra {
+        background: #f8f9fa;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: pre-wrap;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .pagination a {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    .pagination a:hover {
+        background: #f8f9fa;
+    }
+    .log-tabs {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 20px;
+    }
+    .log-tab {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px 4px 0 0;
+        background: #f8f9fa;
+        cursor: pointer;
+        text-decoration: none;
+        color: #333;
+    }
+    .log-tab.active {
+        background: #fff;
+        border-bottom: 1px solid #fff;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="log-viewer">
+    <div class="log-header">
+        <h1>{{ log_type|title }} Logs</h1>
+        <a href="{% url 'admin:log-rotation-dashboard' %}" class="historylink">Rotation Dashboard</a>
+    </div>
+
+    <div class="log-tabs">
+        {% for lt in available_logs %}
+        <a href="{% url 'admin:log-file-viewer-type' log_type=lt %}"
+           class="log-tab {% if log_type == lt %}active{% endif %}">
+            {{ lt|title }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="log-filters">
+        <form method="get" action="{% url 'admin:log-file-viewer-type' log_type=log_type %}">
+            <input type="hidden" name="log_type" value="{{ log_type }}">
+
+            <label>Level:
+                <select name="level">
+                    <option value="">All</option>
+                    <option value="DEBUG" {% if level_filter == 'DEBUG' %}selected{% endif %}>DEBUG</option>
+                    <option value="INFO" {% if level_filter == 'INFO' %}selected{% endif %}>INFO</option>
+                    <option value="WARNING" {% if level_filter == 'WARNING' %}selected{% endif %}>WARNING</option>
+                    <option value="ERROR" {% if level_filter == 'ERROR' %}selected{% endif %}>ERROR</option>
+                    <option value="CRITICAL" {% if level_filter == 'CRITICAL' %}selected{% endif %}>CRITICAL</option>
+                </select>
+            </label>
+
+            <label>Trace ID:
+                <input type="text" name="trace_id" placeholder="trace_id" value="{{ trace_id_filter }}">
+            </label>
+
+            <label>Search:
+                <input type="text" name="search" placeholder="Search messages..." value="{{ search_filter }}">
+            </label>
+
+            <label>From:
+                <input type="datetime-local" name="start_time" step="1" value="{{ start_time_filter }}">
+            </label>
+
+            <label>To:
+                <input type="datetime-local" name="end_time" step="1" value="{{ end_time_filter }}">
+            </label>
+
+            <button type="submit">Filter</button>
+            <a href="{% url 'admin:log-file-viewer-type' log_type=log_type %}">Clear</a>
+        </form>
+    </div>
+
+    <div class="log-entries">
+        {% if entries %}
+            {% for entry in entries %}
+            <div class="log-entry {{ entry.level }}">
+                <div>
+                    <span class="log-timestamp">{{ entry.timestamp }}</span>
+                    <span class="log-level">[{{ entry.level }}]</span>
+                    <span class="log-message">{{ entry.message }}</span>
+                </div>
+                <div class="log-meta">
+                    {% if entry.logger %}Logger: {{ entry.logger }} | {% endif %}
+                    {% if entry.module %}Module: {{ entry.module }}{% endif %}
+                    {% if entry.function %}::{{ entry.function }}(){% endif %}
+                    {% if entry.trace_id and entry.trace_id != '-' %} | Trace: {{ entry.trace_id }}{% endif %}
+                    {% if entry.user_id %} | User: {{ entry.user_id }}{% endif %}
+                </div>
+                {% if entry.extra and entry.extra|length > 0 %}
+                <div class="log-extra">{{ entry.extra|pprint }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="log-entry">
+                <p style="text-align: center; color: #6c757d;">No log entries found</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="pagination">
+        {% if offset > 0 %}
+        <a href="?offset={{ prev_offset }}&limit={{ limit }}{% if params %}&{{ params }}{% endif %}">Previous</a>
+        {% endif %}
+
+        <span>Showing {{ entries|length }} entries (total: {{ total }})</span>
+
+        {% if has_more %}
+        <a href="?offset={{ next_offset }}&limit={{ limit }}{% if params %}&{{ params }}{% endif %}">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

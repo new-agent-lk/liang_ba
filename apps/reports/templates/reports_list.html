@@ -306,7 +306,7 @@
                 最新研究报告
             {% endif %}
             <span style="font-size: 14px; color: var(--text-tertiary); font-weight: normal;">
-                (共 {% if reports %}{{ reports.paginator.count|default:reports|length }}{% else %}0{% endif %} 篇)
+                (共 {% if reports %}{% if paginator %}{{ paginator.count }}{% else %}{{ reports|length }}{% endif %}{% else %}0{% endif %} 篇)
             </span>
         </h2>
         <form class="reports-filter" method="get">
@@ -358,7 +358,7 @@
                     </div>
                     <div class="report-card-tags">
                         {% if report.strategy_type %}
-                        <span class="report-card-tag">{{ report.get_strategy_type_display }}</span>
+                        <span class="report-card-tag">{{ report.strategy_type }}</span>
                         {% endif %}
                         {% if report.annual_return %}
                         <span class="report-card-tag highlight">年化收益：{{ report.annual_return }}%</span>
@@ -374,22 +374,22 @@
     </div>
 
     <!-- 分页开始 -->
-    {% if reports.paginator.num_pages > 1 %}
+    {% if page_obj and paginator.num_pages > 1 %}
     <div class="reports-pagination">
-        {% if reports.has_previous %}
-        <a href="?page={{ reports.previous_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="prev">上一页</a>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="prev">上一页</a>
         {% endif %}
 
-        {% for i in reports.paginator.page_range %}
-        {% if reports.number == i %}
+        {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
         <span class="current">{{ i }}</span>
         {% else %}
         <a href="?page={{ i }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}">{{ i }}</a>
         {% endif %}
         {% endfor %}
 
-        {% if reports.has_next %}
-        <a href="?page={{ reports.next_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="next">下一页</a>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&year={{ current_year|default:'' }}&month={{ current_month|default:'' }}" class="next">下一页</a>
         {% endif %}
     </div>
     {% endif %}
