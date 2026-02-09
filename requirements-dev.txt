@@ -1,0 +1,35 @@
+# Test dependencies - install separately or add to requirements.txt
+-r requirements.txt
+
+# Testing
+pytest>=8.3.0
+pytest-django>=4.9.0
+pytest-cov>=6.0.0
+pytest-xdist>=3.6.0
+pytest-mock>=3.14.0
+factory-boy>=3.3.0
+faker>=30.0.0
+
+# Coverage
+coverage>=7.6.0
+
+# Type checking (for CI)
+mypy>=1.14.0
+django-stubs>=5.1.0
+types-requests>=2.32.0
+types-redis>=4.6.0
+types-pytz>=2024.2.0
+
+# Linting & Formatting
+ruff>=0.9.0
+black>=24.10.0
+isort>=5.13.0
+
+# Pre-commit
+pre-commit>=4.2.0
+identify>=2.6.0
+
+# Security scanning
+trivy>=0.56.0
+bandit>=1.7.10
+safety>=3.0.0

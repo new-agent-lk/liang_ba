@@ -1,0 +1,30 @@
+# Ruff - The extremely fast Python linter
+
+target-version = "py310"
+line-length = 100
+
+[lint]
+# Enable pycodestyle (E), Pyflakes (F), isort (I), and flake8-quotes (Q)
+select = ["E", "F", "I", "Q", "W"]
+# Disable rules that conflict with Black or are unnecessary
+ignore = [
+    "E501",  # Line too long - handled by black
+    "E731",  # Do not assign a lambda expression
+]
+
+[lint.per-file-ignores]
+# Ignore unused imports in __init__.py
+"__init__.py" = ["F401"]
+# Ignore django settings in migrations
+"migrations/*.py" = ["F401", "E402"]
+
+[format]
+# Use Black-compatible formatting
+quote-style = "double"
+indent-style = "space"
+
+[lint.isort]
+# Known first-party apps
+known-first-party = ["apps", "liang_ba"]
+# Force single-line imports
+force-single-line = false

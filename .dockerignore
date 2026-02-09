@@ -1,0 +1,75 @@
+# CI/CD
+.github/
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+docs/
+README.md
+DEPLOYMENT.md
+CLAUDE.md
+*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.env/
+.env.*
+.env.local
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Frontend
+admin/node_modules/
+admin/dist/
+admin/coverage/
+
+# Logs
+logs/
+*.log
+
+# CI artifacts
+.github/workflows/.cache/
+.docker/
+
+# Development
+docker-compose.yml
+docker-compose.override.yml
+
+# Database
+*.sqlite3
+*.db
+
+# Misc
+*.bak
+*~
+tmp/
+temp/
+.claude/

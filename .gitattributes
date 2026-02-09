@@ -1,0 +1,58 @@
+# Git configuration
+
+# Set default branch
+[init]
+	defaultBranch = main
+
+# Enable GPG signing for commits (optional)
+# [commit]
+# 	gpgsign = true
+
+# Use LF line endings for all files
+[core]
+	autocrlf = input
+	# Exclude file patterns for git clean
+	excludesfile = .gitignore
+	# Enable lazy checkout for large repos
+	lazycheckout = true
+
+# Pull strategy - rebase on top of main
+[pull]
+	rebase = true
+
+# Merge strategy
+[merge]
+	# Use default merge strategy
+	# ff = false  # Set to false to always create merge commits
+	conflictstyle = merge
+
+# Rebase autosquash
+[rebase]
+	autoSquash = true
+	autoStash = true
+
+# Diff settings
+[diff]
+	# Colorized diff
+	color = auto
+	# Show function names in diff
+	funcname = ^\\w+$
+
+# Log format
+[log]
+	# Date format
+	date = iso
+	# Show signature verification status
+	showSignature = false
+
+# Submodule settings
+[submodule]
+	fetchJobs = 4
+
+# Branch protection
+[branch]
+	autoSetupRebase = always
+
+# Credential helper (use system default)
+[credential]
+	helper =

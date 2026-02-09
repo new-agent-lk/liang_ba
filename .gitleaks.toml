@@ -1,0 +1,36 @@
+# GitLeaks - Secret Scanning Configuration
+
+[tool:trufflehog]
+# Exclude directories
+exclude_paths = [
+    ".git/",
+    "node_modules/",
+    "vendor/",
+    ".venv/",
+    "venv/",
+    "docs/",
+    "*.md",
+    "*.txt",
+    "*.lock",
+    "go.sum",
+    "package-lock.json",
+    "yarn.lock",
+]
+
+# Allow specific patterns (false positives)
+[[rules]]
+    description = "Allow fake AWS keys in tests"
+    regex = "AKIA[0-9A-Z]{16}"
+    tags = ["false_positive"]
+
+[[rules]]
+    description = "Allow example API keys"
+    regex = "sk-[a-zA-Z0-9]{20,}"
+    tags = ["example", "false_positive"]
+
+# High entropy strings to ignore
+[entropy]
+    enabled = true
+    match_string = true
+    gold = 3.5
+    red = 4.5

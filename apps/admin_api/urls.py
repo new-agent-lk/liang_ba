@@ -16,6 +16,7 @@ from .viewsets.logs import (
     LogRotationArchivedFilesView,
     LogViewerAccessLogView,
 )
+from .viewsets.health import HealthCheckView, SimpleHealthCheckView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
@@ -34,6 +35,10 @@ urlpatterns = [
 
     # Dashboard
     path('dashboard/stats/', DashboardStatsView.as_view(), name='dashboard-stats'),
+
+    # Health check endpoints
+    path('health/', HealthCheckView.as_view(), name='health-check'),
+    path('health/simple/', SimpleHealthCheckView.as_view(), name='simple-health-check'),
 
     # Log viewing endpoints
     path('logs/', LogListView.as_view(), name='log-list'),
