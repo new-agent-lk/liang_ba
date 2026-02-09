@@ -11,8 +11,10 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    env_file:
+      - .env.prod
     environment:
-      - DJANGO_SETTINGS_MODULE=local_settings
+      - DJANGO_SETTINGS_MODULE=production_settings
       - PYTHONUNBUFFERED=1
     volumes:
       - ./media:/home/ubuntu/liang_ba/media
@@ -70,7 +72,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # Nginx 反向代理（可选）
+  # Nginx 反向代理
   nginx:
     image: nginx:alpine
     container_name: liang_ba_nginx
@@ -84,8 +86,29 @@ services:
       - ./static:/static:ro
       - ./media:/media:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./certbot/www:/var/www/certbot:ro
     depends_on:
       - web
+    networks:
+      - liang_ba_network
+
+  # Certbot - Let's Encrypt 证书自动更新
+  certbot:
+    image: certbot/certbot:latest
+    container_name: liang_ba_certbot
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl:rw
+      - ./certbot/www:/var/www/certbot:rw
+      - ./certbot/log:/var/log/certbot:rw
+    depends_on:
+      - nginx
+    entrypoint: "/bin/sh -c"
+    command:
+      - |
+        while true; do
+          certbot renew --quiet --deploy-hook "nginx -s reload"
+          sleep 12h
+        done
     networks:
       - liang_ba_network
 
