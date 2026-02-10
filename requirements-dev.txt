@@ -30,6 +30,5 @@ pre-commit>=4.2.0
 identify>=2.6.0
 
 # Security scanning
-trivy>=0.56.0
 bandit>=1.7.10
 safety>=3.0.0
