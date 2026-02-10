@@ -1,37 +1,41 @@
 #!/bin/bash
-# 获取 Let's Encrypt SSL 证书
+set -euo pipefail
 
-# 配置
+# 获取 Let's Encrypt SSL 证书（webroot 模式，不占用宿主机 80 端口）
+
 DOMAIN="liangbax.com"
+WWW_DOMAIN="www.liangbax.com"
 EMAIL="liangbax@126.com"
+COMPOSE_FILE="docker-compose.prod.yml"
 
-echo "正在为 $DOMAIN 获取 SSL 证书..."
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT_DIR"
+
+echo "正在为 $DOMAIN 和 $WWW_DOMAIN 获取 SSL 证书..."
 
 # 创建必要目录
-mkdir -p nginx/ssl certbot/www certbot/log
+mkdir -p certbot/www certbot/conf certbot/log
 
-# 停止 nginx（如果正在运行）
-docker-compose -f docker-compose.prod.yml stop nginx 2>/dev/null || true
+# 确保 nginx 运行（由 nginx 处理 /.well-known/acme-challenge/）
+if ! docker compose -f "$COMPOSE_FILE" ps --status running nginx >/dev/null 2>&1; then
+    echo "启动 nginx 服务..."
+    docker compose -f "$COMPOSE_FILE" up -d nginx
+fi
 
-# 获取证书（支持根域名和 www 子域名）
-docker run --rm \
-    -v $(pwd)/nginx/ssl:/etc/nginx/ssl:rw \
-    -v $(pwd)/certbot/www:/var/www/certbot:rw \
-    -v $(pwd)/certbot/log:/var/log/certbot:rw \
-    certbot/certbot:latest \
+# 使用 webroot 验证，不需要绑定宿主机 80 端口
+docker compose -f "$COMPOSE_FILE" run --rm certbot \
     certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
-    --email=$EMAIL \
+    --email="$EMAIL" \
     --agree-tos \
     --no-eff-email \
-    -d $DOMAIN \
-    -d www.$DOMAIN
+    -d "$DOMAIN" \
+    -d "$WWW_DOMAIN"
 
-# 重新启动 nginx
-docker-compose -f docker-compose.prod.yml start nginx
+# 重载 nginx 应用新证书
+docker compose -f "$COMPOSE_FILE" exec nginx nginx -s reload
 
-echo "证书获取完成！"
-echo "证书文件位于: nginx/ssl/"
-echo ""
-echo "注意：证书将在 90 天后自动续期"
+echo "证书获取完成。"
+echo "证书目录: certbot/conf/live/$DOMAIN/"
+echo "下一步: 安装自动续期任务（scripts/renew-cert.sh + crontab）"

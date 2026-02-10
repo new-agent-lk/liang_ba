@@ -75,21 +75,23 @@ exit
 - http://localhost/admin/ - Django 管理后台
 - http://localhost/health - Nginx 健康检查
 
-### 6. 配置 HTTPS（可选）
+### 6. 配置 HTTPS（Let's Encrypt + 自动续期）
 
 ```bash
-# 创建 SSL 证书目录
-mkdir -p nginx/ssl
+# 1) 首次签发证书（liangbax.com + www.liangbax.com）
+./init-ssl.sh
 
-# 复制证书文件
-cp /path/to/your/cert.pem nginx/ssl/
-cp /path/to/your/key.pem nginx/ssl/
+# 2) 安装自动续期 cron（每天 03:17 执行）
+./scripts/install-renew-cron.sh
 
-# 编辑 nginx/conf.d/default.conf，取消 HTTPS 配置的注释
-
-# 重启 Nginx
-docker-compose -f docker-compose.prod.yml restart nginx
+# 3) 手动验证一次续期流程
+./scripts/renew-cert.sh
 ```
+
+说明：
+- 首次签发后，证书位于 `certbot/conf/live/liangbax.com/`
+- 续期日志位于 `certbot/log/renew.log`
+- Nginx 会在续期检查后自动 reload 以应用新证书
 
 ## 常用命令
 
