@@ -100,8 +100,6 @@ def sample_market_data(db):
     """Create sample market data for testing."""
     from datetime import date, timedelta
 
-    import pandas as pd
-
     from apps.factorhub.models import MarketData
 
     today = date.today()
@@ -117,7 +115,6 @@ def sample_market_data(db):
         "amount": [100000000 + i * 1000000 for i in range(10)],
     }
 
-    df = pd.DataFrame(data)
     market_data = MarketData.objects.create(
         ts_code="000001.SZ",
         trade_date=today.strftime("%Y%m%d"),

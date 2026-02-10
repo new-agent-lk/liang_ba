@@ -67,7 +67,11 @@ jobs:
 
       - run: |
           cat > local_settings.py << EOF
+          from base_settings import *
+
           DEBUG = True
+          SECRET_KEY = 'test-secret-key'
+
           DATABASES = {
               'default': {
                   'ENGINE': 'django.db.backends.postgresql',
@@ -78,11 +82,16 @@ jobs:
                   'PORT': '5432',
               }
           }
-          CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
+
+          CACHES = {
+              'default': {
+                  'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+              }
+          }
+
           REDIS_HOST = '127.0.0.1'
           REDIS_PORT = 6379
           EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-          SECRET_KEY = 'test-secret-key'
           EOF
 
       - run: python manage.py migrate --run-syncdb
