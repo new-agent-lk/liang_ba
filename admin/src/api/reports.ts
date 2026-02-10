@@ -1,5 +1,5 @@
-import request from '@/utils/request';
-import { ResearchReport, PaginatedResponse, PageParams } from '@/types';
+import request from "@/utils/request";
+import { ResearchReport, PaginatedResponse, PageParams } from "@/types";
 
 // 检测数据中是否包含新上传的文件（不是已有图片的URL）
 const hasNewFiles = (data: any): boolean => {
@@ -44,33 +44,46 @@ const toFormData = (data: any): FormData => {
   return formData;
 };
 
-export const getReports = (params?: PageParams): Promise<PaginatedResponse<ResearchReport>> => {
-  return request.get('/api/reports/reports/', { params });
+export const getReports = (
+  params?: PageParams,
+): Promise<PaginatedResponse<ResearchReport>> => {
+  return request.get("/api/reports/reports/", { params });
 };
 
 export const getReport = (id: number): Promise<ResearchReport> => {
   return request.get(`/api/reports/reports/${id}/`);
 };
 
-export const createReport = (data: Partial<ResearchReport>): Promise<ResearchReport> => {
+export const createReport = (
+  data: Partial<ResearchReport>,
+): Promise<ResearchReport> => {
   if (hasNewFiles(data)) {
-    return request.post('/api/reports/reports/', toFormData(data), {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return request.post("/api/reports/reports/", toFormData(data), {
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
-  return request.post('/api/reports/reports/', data);
+  return request.post("/api/reports/reports/", data);
 };
 
-export const updateReport = (id: number, data: Partial<ResearchReport>): Promise<ResearchReport> => {
+export const updateReport = (
+  id: number,
+  data: Partial<ResearchReport>,
+): Promise<ResearchReport> => {
   if (hasNewFiles(data)) {
     return request.patch(`/api/reports/reports/${id}/`, toFormData(data), {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
   // 没有新文件时使用 PATCH 请求进行部分更新
   // 如果 detail_image 是 null，保留它用于删除图片
   // 其他文件字段（URL 字符串）需要移除
-  const { equity_curve_image, drawdown_image, monthly_returns_image, attachment, ...cleanData } = data;
+  const {
+    equity_curve_image,
+    drawdown_image,
+    monthly_returns_image,
+    attachment,
+    ...cleanData
+  } = data;
   return request.patch(`/api/reports/reports/${id}/`, cleanData);
 };
 
@@ -82,7 +95,10 @@ export const submitReport = (id: number): Promise<ResearchReport> => {
   return request.post(`/api/reports/reports/${id}/submit/`);
 };
 
-export const reviewReport = (id: number, data: { status: string; review_notes?: string }): Promise<ResearchReport> => {
+export const reviewReport = (
+  id: number,
+  data: { status: string; review_notes?: string },
+): Promise<ResearchReport> => {
   return request.post(`/api/reports/reports/${id}/review/`, data);
 };
 
@@ -94,6 +110,9 @@ export const unpublishReport = (id: number): Promise<ResearchReport> => {
   return request.post(`/api/reports/reports/${id}/unpublish/`);
 };
 
-export const updateReportStatus = (id: number, data: { status: string }): Promise<ResearchReport> => {
+export const updateReportStatus = (
+  id: number,
+  data: { status: string },
+): Promise<ResearchReport> => {
   return request.patch(`/api/reports/reports/${id}/`, data);
 };

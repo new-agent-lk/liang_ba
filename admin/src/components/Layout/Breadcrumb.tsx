@@ -1,18 +1,25 @@
-import React from 'react';
-import { Breadcrumb as AntBreadcrumb, ConfigProvider } from 'antd';
-import { useLocation, Link } from 'react-router-dom';
-import { MENU_CONFIG } from '@/utils/constants';
+import React from "react";
+import { Breadcrumb as AntBreadcrumb, ConfigProvider } from "antd";
+import { useLocation, Link } from "react-router-dom";
+import { MENU_CONFIG } from "@/utils/constants";
 
 const Breadcrumb: React.FC = () => {
   const location = useLocation();
 
-  const findBreadcrumbs = (path: string, items: any[], current: string[] = []): string[] => {
+  const findBreadcrumbs = (
+    path: string,
+    items: any[],
+    current: string[] = [],
+  ): string[] => {
     for (const item of items) {
       if (item.key === path) {
         return [...current, item.label];
       }
       if (item.children) {
-        const found = findBreadcrumbs(path, item.children, [...current, item.label]);
+        const found = findBreadcrumbs(path, item.children, [
+          ...current,
+          item.label,
+        ]);
         if (found.length > 0) {
           return found;
         }
@@ -28,21 +35,26 @@ const Breadcrumb: React.FC = () => {
       theme={{
         components: {
           Breadcrumb: {
-            itemColor: '#666',
-            lastItemColor: '#333',
-            separatorColor: '#ccc',
+            itemColor: "#666",
+            lastItemColor: "#333",
+            separatorColor: "#ccc",
           },
         },
       }}
     >
       <AntBreadcrumb
-        style={{ margin: '16px 0' }}
+        style={{ margin: "16px 0" }}
         items={breadcrumbs.map((label, index) => ({
           title:
             index === breadcrumbs.length - 1 ? (
               label
             ) : (
-              <Link to={MENU_CONFIG.find((item) => item.label === breadcrumbs[index])?.key || '#'}>
+              <Link
+                to={
+                  MENU_CONFIG.find((item) => item.label === breadcrumbs[index])
+                    ?.key || "#"
+                }
+              >
                 {label}
               </Link>
             ),

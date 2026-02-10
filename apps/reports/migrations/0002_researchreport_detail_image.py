@@ -4,15 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('reports', '0001_initial'),
+        ("reports", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='researchreport',
-            name='detail_image',
-            field=models.ImageField(blank=True, help_text='显示在报告列表页的封面图', null=True, upload_to='reports/detail/%Y/%m/', verbose_name='首页详情图'),
+            model_name="researchreport",
+            name="detail_image",
+            field=models.ImageField(
+                blank=True,
+                help_text="显示在报告列表页的封面图",
+                null=True,
+                upload_to="reports/detail/%Y/%m/",
+                verbose_name="首页详情图",
+            ),
         ),
     ]

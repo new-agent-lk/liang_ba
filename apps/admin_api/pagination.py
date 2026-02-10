@@ -6,6 +6,7 @@ class StandardPagination(PageNumberPagination):
     标准分页类
     支持前端通过 page_size 参数控制每页数量
     """
+
     page_size = 10  # 默认每页数量
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100  # 最大每页数量

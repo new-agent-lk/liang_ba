@@ -1,8 +1,10 @@
-import request from '@/utils/request';
-import { User, PaginatedResponse, PageParams } from '@/types';
+import request from "@/utils/request";
+import { User, PaginatedResponse, PageParams } from "@/types";
 
-export const getUsers = (params?: PageParams): Promise<PaginatedResponse<User>> => {
-  return request.get('/api/admin/users/', { params });
+export const getUsers = (
+  params?: PageParams,
+): Promise<PaginatedResponse<User>> => {
+  return request.get("/api/admin/users/", { params });
 };
 
 export const getUser = (id: number): Promise<User> => {
@@ -10,7 +12,7 @@ export const getUser = (id: number): Promise<User> => {
 };
 
 export const createUser = (data: Partial<User>): Promise<User> => {
-  return request.post('/api/admin/users/', data);
+  return request.post("/api/admin/users/", data);
 };
 
 export const updateUser = (id: number, data: Partial<User>): Promise<User> => {

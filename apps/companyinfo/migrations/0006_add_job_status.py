@@ -4,19 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('companyinfo', '0005_delete_getmessages'),
+        ("companyinfo", "0005_delete_getmessages"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='jobposition',
-            name='is_active',
+            model_name="jobposition",
+            name="is_active",
         ),
         migrations.AddField(
-            model_name='jobposition',
-            name='status',
-            field=models.CharField(choices=[('draft', '草稿'), ('active', '招聘中'), ('paused', '暂停招聘'), ('closed', '已关闭')], default='draft', max_length=20, verbose_name='状态'),
+            model_name="jobposition",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("draft", "草稿"),
+                    ("active", "招聘中"),
+                    ("paused", "暂停招聘"),
+                    ("closed", "已关闭"),
+                ],
+                default="draft",
+                max_length=20,
+                verbose_name="状态",
+            ),
         ),
     ]

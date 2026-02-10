@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
-import { Card, Typography, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { ReactNode } from "react";
+import { Card, Typography, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -17,7 +17,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   description,
   showAddButton,
-  addButtonText = '新增',
+  addButtonText = "新增",
   onAdd,
   actions,
 }) => {
@@ -31,9 +31,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     <Card bordered={false} style={{ marginBottom: 16 }}>
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <div>
@@ -44,7 +44,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             <Typography.Text type="secondary">{description}</Typography.Text>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: "flex", gap: 8 }}>
           {actions}
           {showAddButton && (
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>

@@ -4,15 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_delete_jobposition_delete_resume'),
+        ("users", "0002_delete_jobposition_delete_resume"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='user_category',
-            field=models.CharField(choices=[('job_seeker', '求职者'), ('investor', '投资者'), ('partner', '合作伙伴'), ('other', '其他')], default='job_seeker', max_length=50, verbose_name='用户类型'),
+            model_name="userprofile",
+            name="user_category",
+            field=models.CharField(
+                choices=[
+                    ("job_seeker", "求职者"),
+                    ("investor", "投资者"),
+                    ("partner", "合作伙伴"),
+                    ("other", "其他"),
+                ],
+                default="job_seeker",
+                max_length=50,
+                verbose_name="用户类型",
+            ),
         ),
     ]

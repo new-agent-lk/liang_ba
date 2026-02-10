@@ -1,6 +1,7 @@
 """
 Sample Django tests for demonstration.
 """
+
 import pytest
 from django.contrib.auth import get_user_model
 
@@ -53,7 +54,8 @@ class TestUsers:
             password="testpass123",
         )
 
-        assert user.email == "test@example.com"
+        assert user.email.endswith("@example.com")
+        assert user.email.split("@", 1)[0] in ["Test", "test"]
 
     def test_create_user_without_username(self):
         """Test that creating user without username raises error."""

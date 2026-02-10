@@ -6,13 +6,12 @@
 
 import time
 import uuid
-import logging
 from typing import Callable
 
 from django.utils.deprecation import MiddlewareMixin
 
-from utils.logging.context import set_context, get_context
 from utils.logging import get_request_logger
+from utils.logging.context import set_context
 
 logger = get_request_logger()
 
@@ -34,7 +33,7 @@ class RequestTraceMiddleware(MiddlewareMixin):
 
     def __call__(self, request):
         # 生成或获取 trace_id
-        trace_id = request.headers.get('X-Trace-ID') or str(uuid.uuid4())
+        trace_id = request.headers.get("X-Trace-ID") or str(uuid.uuid4())
         request_id = str(uuid.uuid4())[:8]
 
         # 获取客户端 IP
@@ -44,7 +43,7 @@ class RequestTraceMiddleware(MiddlewareMixin):
         set_context(
             trace_id=trace_id,
             request_id=request_id,
-            user_id=getattr(request.user, 'id', None),
+            user_id=getattr(request.user, "id", None),
             client_ip=client_ip,
         )
 
@@ -66,8 +65,8 @@ class RequestTraceMiddleware(MiddlewareMixin):
         self._log_request_completed(request, response, duration_ms)
 
         # 添加响应头
-        response['X-Trace-ID'] = trace_id
-        response['X-Request-ID'] = request_id
+        response["X-Trace-ID"] = trace_id
+        response["X-Request-ID"] = request_id
 
         return response
 
@@ -75,15 +74,15 @@ class RequestTraceMiddleware(MiddlewareMixin):
         """记录请求开始"""
         try:
             logger.info(
-                'Request started',
+                "Request started",
                 extra={
-                    'extra_data': {
-                        'method': request.method,
-                        'path': request.path,
-                        'query_string': request.META.get('QUERY_STRING', '') or '',
-                        'user_agent': request.headers.get('User-Agent', '-')[:200],
+                    "extra_data": {
+                        "method": request.method,
+                        "path": request.path,
+                        "query_string": request.META.get("QUERY_STRING", "") or "",
+                        "user_agent": request.headers.get("User-Agent", "-")[:200],
                     }
-                }
+                },
             )
         except Exception:
             pass  # 日志记录失败不应影响请求处理
@@ -92,23 +91,23 @@ class RequestTraceMiddleware(MiddlewareMixin):
         """记录请求完成"""
         try:
             logger.info(
-                'Request completed',
+                "Request completed",
                 extra={
-                    'extra_data': {
-                        'method': request.method,
-                        'path': request.path,
-                        'status_code': response.status_code,
-                        'duration_ms': round(duration_ms, 2),
+                    "extra_data": {
+                        "method": request.method,
+                        "path": request.path,
+                        "status_code": response.status_code,
+                        "duration_ms": round(duration_ms, 2),
                     }
-                }
+                },
             )
         except Exception:
             pass
 
     def _get_client_ip(self, request) -> str:
         """获取客户端真实 IP"""
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
             # 取第一个 IP（最原始的客户端）
-            return x_forwarded_for.split(',')[0].strip()
-        return request.META.get('REMOTE_ADDR', '-')
+            return x_forwarded_for.split(",")[0].strip()
+        return request.META.get("REMOTE_ADDR", "-")

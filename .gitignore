@@ -11,7 +11,7 @@ coverage/
 
 # Environment
 .env.local
-.env.production.local
+.env.prod
 .env.test.local
 
 # Logs

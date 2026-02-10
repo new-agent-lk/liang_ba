@@ -9,102 +9,98 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-import sys
+
 import os
 from datetime import timedelta
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(__file__)
 
-WKHTMLTOIMAGE = os.path.join(BASE_DIR, 'bin', 'wkhtmltoimage', 'wkhtmltoimage')
-SCREENSHOT_WORK_PATH = os.path.join(BASE_DIR, 'bin', 'node_tool')
-TMP_DIR = os.path.join(BASE_DIR, 'media', 'tmp')
+WKHTMLTOIMAGE = os.path.join(BASE_DIR, "bin", "wkhtmltoimage", "wkhtmltoimage")
+SCREENSHOT_WORK_PATH = os.path.join(BASE_DIR, "bin", "node_tool")
+TMP_DIR = os.path.join(BASE_DIR, "media", "tmp")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z2r4^xv_o3+@d6))0rkpt*1cx&2#!30#!^@g1!wo6x=#yb6b5!'
+SECRET_KEY = "z2r4^xv_o3+@d6))0rkpt*1cx&2#!30#!^@g1!wo6x=#yb6b5!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail',
-    'modelcluster',
-    'taggit',
-
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'ckeditor',  # 富文本编辑器
-    'ckeditor_uploader',  # 富文本编辑器文件上传
-    'django_extensions',
-    'django_crontab',
-    'rest_framework',
-    'rest_framework_simplejwt',  # JWT 认证
-    'django_filters',
-    'corsheaders',
-
-    'apps.wagtail_apps.apps.WagtailAppsConfig',
-    'apps.companyinfo.apps.CompanyinfoConfig',
-    'apps.users.apps.UsersConfig',
-    'apps.admin_api.apps.AdminApiConfig',
-    'apps.reports.apps.ReportsConfig',
-    'apps.factorhub.apps.FactorhubConfig',
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
+    "modelcluster",
+    "taggit",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "ckeditor",  # 富文本编辑器
+    "ckeditor_uploader",  # 富文本编辑器文件上传
+    "django_extensions",
+    "django_crontab",
+    "rest_framework",
+    "rest_framework_simplejwt",  # JWT 认证
+    "django_filters",
+    "corsheaders",
+    "apps.wagtail_apps.apps.WagtailAppsConfig",
+    "apps.companyinfo.apps.CompanyinfoConfig",
+    "apps.users.apps.UsersConfig",
+    "apps.admin_api.apps.AdminApiConfig",
+    "apps.reports.apps.ReportsConfig",
+    "apps.factorhub.apps.FactorhubConfig",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
-
     # 日志中间件
-    'utils.middleware.request_trace.RequestTraceMiddleware',      # 1. 请求追踪（注入 trace_id）
-    'utils.middleware.performance.PerformanceMiddleware',          # 2. 性能监控
-    'utils.middleware.exception_logging.ExceptionLoggingMiddleware',  # 3. 异常捕获
-    'utils.middleware.security_audit.SecurityAuditMiddleware',    # 4. 安全审计
+    "utils.middleware.request_trace.RequestTraceMiddleware",  # 1. 请求追踪（注入 trace_id）
+    "utils.middleware.performance.PerformanceMiddleware",  # 2. 性能监控
+    "utils.middleware.exception_logging.ExceptionLoggingMiddleware",  # 3. 异常捕获
+    "utils.middleware.security_audit.SecurityAuditMiddleware",  # 4. 安全审计
 ]
 
-ROOT_URLCONF = 'apps.urls'
+ROOT_URLCONF = "apps.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',  # 在前端使用{{ MEDIA_URL }} 自动添加项目media路径
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.media",  # 在前端使用{{ MEDIA_URL }} 自动添加项目media路径
             ],
         },
     },
@@ -121,19 +117,19 @@ TEMPLATES = [
     # }
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION = "wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liang_ba',  # 请换成新建的数据库名称
-        'USER': 'root',
-        'PASSWORD': '123456',  # 请换成自己的密码
-        'HOST': '127.0.0.1',  # 如果不能连接，改成localhost
-        'POST': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "liang_ba",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
@@ -143,36 +139,36 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = "zh-hans"
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = "Asia/Shanghai"
 
 USE_I18N = True
 
@@ -183,161 +179,209 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_URL = "/static/"
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 配置用户上传的文件
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 需要配置TEMPLATES，已配置
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # 需要配置TEMPLATES，已配置
 
 # 配置后台管理系统可修改的主题颜色
 JET_THEMES = [
     {
-        'theme': 'default',  # theme folder name
-        'color': '#47bac1',  # color of the theme's button in user menu
-        'title': 'Default'  # theme title
+        "theme": "default",  # theme folder name
+        "color": "#47bac1",  # color of the theme's button in user menu
+        "title": "Default",  # theme title
     },
-    {
-        'theme': 'green',
-        'color': '#44b78b',
-        'title': 'Green'
-    },
-    {
-        'theme': 'light-green',
-        'color': '#2faa60',
-        'title': 'Light Green'
-    },
-    {
-        'theme': 'light-violet',
-        'color': '#a464c4',
-        'title': 'Light Violet'
-    },
-    {
-        'theme': 'light-blue',
-        'color': '#5EADDE',
-        'title': 'Light Blue'
-    },
-    {
-        'theme': 'light-gray',
-        'color': '#222',
-        'title': 'Light Gray'
-    }
+    {"theme": "green", "color": "#44b78b", "title": "Green"},
+    {"theme": "light-green", "color": "#2faa60", "title": "Light Green"},
+    {"theme": "light-violet", "color": "#a464c4", "title": "Light Violet"},
+    {"theme": "light-blue", "color": "#5EADDE", "title": "Light Blue"},
+    {"theme": "light-gray", "color": "#222", "title": "Light Gray"},
 ]
 
 # 富文本编辑器
 CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_IMAGE_BACKEND = "pillow"
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'update': ['Image', 'Update', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
-        'skin': 'moono',
-        'toolbar_Basic': [
-            ['Source', '-', 'Bold', 'Italic']
+    "default": {
+        "update": [
+            "Image",
+            "Update",
+            "Table",
+            "HorizontalRule",
+            "Smiley",
+            "SpecialChar",
+            "PageBreak",
         ],
-        'toolbar_YourCustomToolbarConfig': [
-            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
-            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
-            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
-            {'name': 'forms',
-             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
-                       'HiddenField']},
-            '/',
-            {'name': 'basicstyles',
-             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
-            {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
-                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
-                       'Language']},
-            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
-            {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
-            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
-            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
-            {'name': 'yourcustomtools', 'items': [
-                # 自定义控件
-                'Preview',
-                'Maximize',
-            ]},
+        "skin": "moono",
+        "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+        "toolbar_YourCustomToolbarConfig": [
+            {
+                "name": "document",
+                "items": ["Source", "-", "Save", "NewPage", "Preview", "Print", "-", "Templates"],
+            },
+            {
+                "name": "clipboard",
+                "items": [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
+                    "-",
+                    "Undo",
+                    "Redo",
+                ],
+            },
+            {"name": "editing", "items": ["Find", "Replace", "-", "SelectAll"]},
+            {
+                "name": "forms",
+                "items": [
+                    "Form",
+                    "Checkbox",
+                    "Radio",
+                    "TextField",
+                    "Textarea",
+                    "Select",
+                    "Button",
+                    "ImageButton",
+                    "HiddenField",
+                ],
+            },
+            "/",
+            {
+                "name": "basicstyles",
+                "items": [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "RemoveFormat",
+                ],
+            },
+            {
+                "name": "paragraph",
+                "items": [
+                    "NumberedList",
+                    "BulletedList",
+                    "-",
+                    "Outdent",
+                    "Indent",
+                    "-",
+                    "Blockquote",
+                    "CreateDiv",
+                    "-",
+                    "JustifyLeft",
+                    "JustifyCenter",
+                    "JustifyRight",
+                    "JustifyBlock",
+                    "-",
+                    "BidiLtr",
+                    "BidiRtl",
+                    "Language",
+                ],
+            },
+            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
+            {
+                "name": "insert",
+                "items": [
+                    "Image",
+                    "Flash",
+                    "Table",
+                    "HorizontalRule",
+                    "Smiley",
+                    "SpecialChar",
+                    "PageBreak",
+                    "Iframe",
+                ],
+            },
+            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
+            {"name": "colors", "items": ["TextColor", "BGColor"]},
+            {"name": "tools", "items": ["Maximize", "ShowBlocks"]},
+            {
+                "name": "yourcustomtools",
+                "items": [
+                    # 自定义控件
+                    "Preview",
+                    "Maximize",
+                ],
+            },
         ],
-        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
-        'tabSpaces': 4,
-        'extraPlugins': ','.join(
+        "toolbar": "YourCustomToolbarConfig",  # put selected toolbar config here
+        "tabSpaces": 4,
+        "extraPlugins": ",".join(
             [
                 # your extra plugins here
-                'div',
-                'autolink',
-                'autoembed',
-                'embedsemantic',
-                'autogrow',
+                "div",
+                "autolink",
+                "autoembed",
+                "embedsemantic",
+                "autogrow",
                 # 'devtools',
-                'widget',
-                'lineutils',
-                'clipboard',
-                'dialog',
-                'dialogui',
-                'elementspath'
-            ]),
+                "widget",
+                "lineutils",
+                "clipboard",
+                "dialog",
+                "dialogui",
+                "elementspath",
+            ]
+        ),
     }
 }
 
 DJANGO_SETTINGS_MODULE = True
 
-WAGTAIL_SITE_NAME = 'Liang Ba'
+WAGTAIL_SITE_NAME = "Liang Ba"
 
 TAGGIT_CASE_INSENSITIVE = True
 
 WAGTAIL_ENABLE_UPDATE_CHECK = False
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     # JWT 认证配置
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     # 处理NaN值
-    'COERCE_DECIMAL_TO_STRING': False,
-
-    'DEFAULT_PAGINATION_CLASS': 'apps.admin_api.pagination.StandardPagination',
-    'PAGE_SIZE': 10  # 默认每页数量
+    "COERCE_DECIMAL_TO_STRING": False,
+    "DEFAULT_PAGINATION_CLASS": "apps.admin_api.pagination.StandardPagination",
+    "PAGE_SIZE": 10,  # 默认每页数量
 }
 
 # JWT 配置
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # 访问令牌有效期60分钟
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 刷新令牌有效期7天
-    'ROTATE_REFRESH_TOKENS': True,  # 刷新时轮换刷新令牌
-    'BLACKLIST_AFTER_ROTATION': True,  # 轮换后将旧令牌加入黑名单
-    'UPDATE_LAST_LOGIN': True,  # 更新最后登录时间
-    
-    'ALGORITHM': 'HS256',  # 算法
-    'SIGNING_KEY': SECRET_KEY,  # 签名密钥
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
-    'LEEWAY': 0,
-    
-    'AUTH_HEADER_TYPES': ('Bearer',),  # 认证头类型
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-    
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-    
-    'JTI_CLAIM': 'jti',
-    
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # 访问令牌有效期60分钟
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 刷新令牌有效期7天
+    "ROTATE_REFRESH_TOKENS": True,  # 刷新时轮换刷新令牌
+    "BLACKLIST_AFTER_ROTATION": True,  # 轮换后将旧令牌加入黑名单
+    "UPDATE_LAST_LOGIN": True,  # 更新最后登录时间
+    "ALGORITHM": "HS256",  # 算法
+    "SIGNING_KEY": SECRET_KEY,  # 签名密钥
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+    "AUTH_HEADER_TYPES": ("Bearer",),  # 认证头类型
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+    "JTI_CLAIM": "jti",
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -346,7 +390,7 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 # 定时器配置
 CRONJOBS = []
 # 指定中文编码格式
-CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
+CRONTAB_COMMAND_PREFIX = "LANG_ALL=zh_cn.UTF-8"
 
 # https
 # SESSION_COOKIE_SECURE = True
@@ -364,9 +408,9 @@ if not os.path.exists(LOG_DIR):
 # ============================================================================
 
 # 日志级别映射（方便调整）- DEBUG信息不记录到文件，仅控制台输出INFO及以上
-LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
-CONSOLE_LOG_LEVEL = 'INFO'  # 控制台始终输出INFO及以上，不输出DEBUG
-FILE_LOG_LEVEL = 'INFO'  # 文件始终记录INFO及以上
+LOG_LEVEL = "DEBUG" if DEBUG else "INFO"
+CONSOLE_LOG_LEVEL = "INFO"  # 控制台始终输出INFO及以上，不输出DEBUG
+FILE_LOG_LEVEL = "INFO"  # 文件始终记录INFO及以上
 
 # 性能监控阈值
 PERFORMANCE_SLOW_REQUEST_THRESHOLD_MS = 1000  # 慢请求阈值（毫秒）
@@ -374,12 +418,9 @@ PERFORMANCE_SLOW_REQUEST_THRESHOLD_MS = 1000  # 慢请求阈值（毫秒）
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-
     # 过滤器
     "filters": {
-        "require_debug_false": {
-            "()": "django.utils.log.RequireDebugFalse"
-        },
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
         "request_context": {
             "()": "utils.logging.filters.RequestContextFilter",
         },
@@ -392,7 +433,6 @@ LOGGING = {
             "per": 60,
         },
     },
-
     # 格式化器
     "formatters": {
         "json": {
@@ -406,7 +446,6 @@ LOGGING = {
             "()": "utils.logging.formatters.SimpleFormatter",
         },
     },
-
     # 处理器
     "handlers": {
         # 控制台输出
@@ -417,66 +456,60 @@ LOGGING = {
             "filters": ["request_context"],
             "stream": "ext://sys.stdout",
         },
-
         # 通用应用日志
         "file_app": {
             "level": FILE_LOG_LEVEL,
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'app.log'),
+            "filename": os.path.join(LOG_DIR, "app.log"),
             "maxBytes": 10 * 1024 * 1024,  # 10MB
             "backupCount": 10,
             "formatter": "json",
             "encoding": "utf-8",
             "filters": ["request_context", "sensitive_data"],
         },
-
         # 错误日志
         "file_error": {
             "level": "ERROR",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'error.log'),
+            "filename": os.path.join(LOG_DIR, "error.log"),
             "maxBytes": 10 * 1024 * 1024,
             "backupCount": 20,
             "formatter": "json",
             "encoding": "utf-8",
             "filters": ["request_context", "sensitive_data"],
         },
-
         # 性能日志
         "file_performance": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'performance.log'),
+            "filename": os.path.join(LOG_DIR, "performance.log"),
             "maxBytes": 10 * 1024 * 1024,
             "backupCount": 5,
             "formatter": "json",
             "encoding": "utf-8",
             "filters": ["request_context"],
         },
-
         # 安全审计日志（按天轮转）
         "file_security": {
             "level": "INFO",
             "class": "logging.handlers.TimedRotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'security.log'),
+            "filename": os.path.join(LOG_DIR, "security.log"),
             "when": "midnight",
             "backupCount": 90,  # 保留90天
             "formatter": "json",
             "encoding": "utf-8",
             "filters": ["request_context", "sensitive_data"],
         },
-
         # Django 原始日志（兼容性）
         "file_django": {
             "level": LOG_LEVEL,
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'django.log'),
+            "filename": os.path.join(LOG_DIR, "django.log"),
             "maxBytes": 10 * 1024 * 1024,
             "backupCount": 5,
             "formatter": "simple",
             "encoding": "utf-8",
         },
-
         # 邮件告警（生产环境）
         "mail_admins": {
             "level": "ERROR",
@@ -485,7 +518,6 @@ LOGGING = {
             "include_html": True,
         },
     },
-
     # 日志器
     "loggers": {
         # Django 框架日志
@@ -510,42 +542,36 @@ LOGGING = {
             "level": "WARNING",
             "propagate": False,
         },
-
         # 应用日志
         "app": {
             "handlers": ["console", "file_app"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
-
         # 请求日志
         "app.request": {
             "handlers": ["console", "file_app"],
             "level": "INFO",
             "propagate": False,
         },
-
         # 错误日志
         "app.error": {
             "handlers": ["console", "file_error", "mail_admins"],
             "level": "ERROR",
             "propagate": False,
         },
-
         # 性能日志
         "app.performance": {
             "handlers": ["file_performance"],
             "level": "INFO",
             "propagate": False,
         },
-
         # 安全审计日志
         "app.security": {
             "handlers": ["console", "file_security"],
             "level": "INFO",
             "propagate": False,
         },
-
         # FactorHub 日志
         "app.factorhub": {
             "handlers": ["console", "file_app"],
@@ -553,7 +579,6 @@ LOGGING = {
             "propagate": False,
         },
     },
-
     # 根日志器
     "root": {
         "handlers": ["console", "file_app"],
@@ -564,7 +589,7 @@ LOGGING = {
 WAGTAIL_I18N_ENABLED = True
 
 WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
-    ("zh-hans", 'Chinese'),
+    ("zh-hans", "Chinese"),
     ("en", "English"),
     ("de", "Deutsch"),
     ("ar", "العربيّة"),

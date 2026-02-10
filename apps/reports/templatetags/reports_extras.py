@@ -9,9 +9,11 @@ register = template.Library()
 def markdown_content(value):
     """Convert markdown to HTML"""
     if not value:
-        return ''
-    return mark_safe(markdown.markdown(
-        value,
-        extensions=['markdown.extensions.fenced_code', 'markdown.extensions.tables'],
-        output_format='html5'
-    ))
+        return ""
+    return mark_safe(
+        markdown.markdown(
+            value,
+            extensions=["markdown.extensions.fenced_code", "markdown.extensions.tables"],
+            output_format="html5",
+        )
+    )

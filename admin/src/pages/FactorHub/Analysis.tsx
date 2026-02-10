@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
-import { Card, Row, Col, Form, Select, Button, Table, Statistic, Space, Typography, Spin } from 'antd';
-import { LineChartOutlined } from '@ant-design/icons';
-import { analyzeIC, analyzeDecile } from '@/api/factorhub';
+import React, { useState } from "react";
+import {
+  Card,
+  Row,
+  Col,
+  Form,
+  Select,
+  Button,
+  Table,
+  Statistic,
+  Space,
+  Typography,
+  Spin,
+} from "antd";
+import { LineChartOutlined } from "@ant-design/icons";
+import { analyzeIC, analyzeDecile } from "@/api/factorhub";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -9,7 +21,7 @@ const { Text } = Typography;
 const FactorAnalysisPage: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [analysisType, setAnalysisType] = useState<'ic' | 'decile'>('ic');
+  const [analysisType, setAnalysisType] = useState<"ic" | "decile">("ic");
   const [results, setResults] = useState<any>(null);
 
   const handleAnalyze = async () => {
@@ -17,7 +29,7 @@ const FactorAnalysisPage: React.FC = () => {
       const values = await form.validateFields();
       setLoading(true);
 
-      if (analysisType === 'ic') {
+      if (analysisType === "ic") {
         const response = await analyzeIC({
           factor_name: values.factor_name,
           method: values.method,
@@ -31,15 +43,20 @@ const FactorAnalysisPage: React.FC = () => {
         setResults(response.data);
       }
     } catch (error: any) {
-      console.error('分析失败', error);
+      console.error("分析失败", error);
     } finally {
       setLoading(false);
     }
   };
 
   const icColumns = [
-    { title: '日期', dataIndex: 'date', key: 'date' },
-    { title: 'IC值', dataIndex: 'ic', key: 'ic', render: (v: number) => v?.toFixed(4) },
+    { title: "日期", dataIndex: "date", key: "date" },
+    {
+      title: "IC值",
+      dataIndex: "ic",
+      key: "ic",
+      render: (v: number) => v?.toFixed(4),
+    },
   ];
 
   return (
@@ -90,7 +107,7 @@ const FactorAnalysisPage: React.FC = () => {
           <Form.Item
             name="factor_name"
             label="选择因子"
-            rules={[{ required: true, message: '请选择因子' }]}
+            rules={[{ required: true, message: "请选择因子" }]}
           >
             <Select style={{ width: 180 }} placeholder="选择因子">
               <Option value="ma20">MA20</Option>
@@ -111,7 +128,7 @@ const FactorAnalysisPage: React.FC = () => {
             </Select>
           </Form.Item>
 
-          {analysisType === 'ic' && (
+          {analysisType === "ic" && (
             <Form.Item name="method" label="计算方法" initialValue="spearman">
               <Select style={{ width: 120 }}>
                 <Option value="spearman">Spearman</Option>
@@ -120,7 +137,7 @@ const FactorAnalysisPage: React.FC = () => {
             </Form.Item>
           )}
 
-          {analysisType === 'decile' && (
+          {analysisType === "decile" && (
             <Form.Item name="n_deciles" label="分层数" initialValue={10}>
               <Select style={{ width: 100 }}>
                 <Option value={5}>5层</Option>
@@ -143,7 +160,7 @@ const FactorAnalysisPage: React.FC = () => {
       </Card>
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: 40 }}>
+        <div style={{ textAlign: "center", padding: 40 }}>
           <Spin size="large" />
           <div style={{ marginTop: 16 }}>
             <Text>正在计算分析结果...</Text>
@@ -155,30 +172,43 @@ const FactorAnalysisPage: React.FC = () => {
         <Row gutter={24}>
           <Col span={16}>
             <Card title="IC序列图">
-              <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' }}>
+              <div
+                style={{
+                  height: 300,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#f5f5f5",
+                }}
+              >
                 <Text type="secondary">IC时序图展示区域 (Plotly Chart)</Text>
               </div>
             </Card>
           </Col>
           <Col span={8}>
             <Card title="分析统计">
-              <Space direction="vertical" style={{ width: '100%' }}>
+              <Space direction="vertical" style={{ width: "100%" }}>
                 <div>
                   <Text>样本数量：</Text>
-                  <Text strong>{results.sample_count || '-'}</Text>
+                  <Text strong>{results.sample_count || "-"}</Text>
                 </div>
                 <div>
                   <Text>IC均值：</Text>
-                  <Text strong>{results.ic_mean?.toFixed(4) || '-'}</Text>
+                  <Text strong>{results.ic_mean?.toFixed(4) || "-"}</Text>
                 </div>
                 <div>
                   <Text>t统计量：</Text>
-                  <Text strong>{results.t_statistic?.toFixed(2) || '-'}</Text>
+                  <Text strong>{results.t_statistic?.toFixed(2) || "-"}</Text>
                 </div>
                 <div>
                   <Text>p值：</Text>
-                  <Text strong style={{ color: results?.t_p_value < 0.05 ? '#52c41a' : undefined }}>
-                    {results.t_p_value?.toFixed(4) || '-'}
+                  <Text
+                    strong
+                    style={{
+                      color: results?.t_p_value < 0.05 ? "#52c41a" : undefined,
+                    }}
+                  >
+                    {results.t_p_value?.toFixed(4) || "-"}
                   </Text>
                 </div>
               </Space>
@@ -191,7 +221,10 @@ const FactorAnalysisPage: React.FC = () => {
                   value={results.long_short_return * 100}
                   precision={2}
                   suffix="%"
-                  valueStyle={{ color: results.long_short_return > 0 ? '#52c41a' : '#ff4d4f' }}
+                  valueStyle={{
+                    color:
+                      results.long_short_return > 0 ? "#52c41a" : "#ff4d4f",
+                  }}
                 />
               </Card>
             )}

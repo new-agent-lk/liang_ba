@@ -1,15 +1,16 @@
 """
 辅助函数集合
 """
+
+from typing import Union
+
 import pandas as pd
-import numpy as np
-from typing import Union, Optional
 
 
 def format_number(num: Union[float, int], decimals: int = 4) -> str:
     """格式化数字"""
     if pd.isna(num):
-        return '-'
+        return "-"
     if abs(num) < 0.0001 and num != 0:
         return f"{num:.2e}"
     return f"{num:.{decimals}f}"
@@ -18,7 +19,7 @@ def format_number(num: Union[float, int], decimals: int = 4) -> str:
 def format_percentage(num: Union[float, int], decimals: int = 2) -> str:
     """格式化百分比"""
     if pd.isna(num):
-        return '-'
+        return "-"
     return f"{num * 100:.{decimals}f}%"
 
 
@@ -55,7 +56,7 @@ def validate_stock_code(code: str) -> bool:
         return False
     if not code.isdigit():
         return False
-    if code[0] not in ['0', '3', '6']:
+    if code[0] not in ["0", "3", "6"]:
         return False
     return True
 
@@ -65,17 +66,18 @@ def normalize_stock_code(code: str) -> str:
     code = str(code).strip()
     # 补齐6位
     while len(code) < 6:
-        code = '0' + code
+        code = "0" + code
     return code[-6:]
 
 
-def format_date(date_str: str, input_format: str = '%Y%m%d') -> str:
+def format_date(date_str: str, input_format: str = "%Y%m%d") -> str:
     """格式化日期"""
     try:
         from datetime import datetime
+
         if isinstance(date_str, str):
             dt = datetime.strptime(date_str, input_format)
-            return dt.strftime('%Y-%m-%d')
+            return dt.strftime("%Y-%m-%d")
         return str(date_str)
     except:
         return date_str
@@ -85,9 +87,10 @@ def save_to_cache(data, filename: str, cache_dir: str):
     """保存数据到缓存"""
     import os
     import pickle
+
     os.makedirs(cache_dir, exist_ok=True)
     filepath = os.path.join(cache_dir, filename)
-    with open(filepath, 'wb') as f:
+    with open(filepath, "wb") as f:
         pickle.dump(data, f)
     return filepath
 
@@ -97,6 +100,7 @@ def load_from_cache(filename: str, cache_dir: str, max_age_days: int = 7):
     import os
     import pickle
     from datetime import datetime, timedelta
+
     filepath = os.path.join(cache_dir, filename)
     if not os.path.exists(filepath):
         return None
@@ -105,5 +109,5 @@ def load_from_cache(filename: str, cache_dir: str, max_age_days: int = 7):
     if datetime.now() - file_time > timedelta(days=max_age_days):
         os.remove(filepath)
         return None
-    with open(filepath, 'rb') as f:
+    with open(filepath, "rb") as f:
         return pickle.load(f)

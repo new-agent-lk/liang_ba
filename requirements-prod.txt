@@ -1,0 +1,5 @@
+# Production requirements - minimal dependencies for running the app
+-r requirements.txt
+
+# Production only (no dev tools)
+uv

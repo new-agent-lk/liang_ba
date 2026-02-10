@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, Typography, Upload, message, Row, Col, Spin } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
-import { getCompanyInfo, updateCompanyInfo } from '@/api/company';
-import { CompanyInfo } from '@/types';
+import React, { useEffect, useState } from "react";
+import {
+  Form,
+  Input,
+  Button,
+  Card,
+  Typography,
+  Upload,
+  message,
+  Row,
+  Col,
+  Spin,
+} from "antd";
+import { InboxOutlined } from "@ant-design/icons";
+import type { UploadFile, UploadProps } from "antd";
+import { getCompanyInfo, updateCompanyInfo } from "@/api/company";
+import { CompanyInfo } from "@/types";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -28,34 +39,40 @@ const CompanyInfoPage: React.FC = () => {
       const data = await getCompanyInfo();
       setCompanyInfo(data);
       form.setFieldsValue(data);
-      
+
       // 设置图片预览
       if (data.logo_url) {
-        setLogoFileList([{
-          uid: '-1',
-          name: 'logo.png',
-          status: 'done',
-          url: data.logo_url,
-        }]);
+        setLogoFileList([
+          {
+            uid: "-1",
+            name: "logo.png",
+            status: "done",
+            url: data.logo_url,
+          },
+        ]);
       }
       if (data.qrcode_url) {
-        setQrcodeFileList([{
-          uid: '-1',
-          name: 'qrcode.png',
-          status: 'done',
-          url: data.qrcode_url,
-        }]);
+        setQrcodeFileList([
+          {
+            uid: "-1",
+            name: "qrcode.png",
+            status: "done",
+            url: data.qrcode_url,
+          },
+        ]);
       }
       if (data.topimg_url) {
-        setTopimgFileList([{
-          uid: '-1',
-          name: 'topimg.png',
-          status: 'done',
-          url: data.topimg_url,
-        }]);
+        setTopimgFileList([
+          {
+            uid: "-1",
+            name: "topimg.png",
+            status: "done",
+            url: data.topimg_url,
+          },
+        ]);
       }
     } catch (error) {
-      message.error('获取公司信息失败');
+      message.error("获取公司信息失败");
     } finally {
       setLoading(false);
     }
@@ -65,37 +82,44 @@ const CompanyInfoPage: React.FC = () => {
     setSubmitting(true);
     try {
       const formData = new FormData();
-      
+
       // 添加文本字段
-      Object.keys(values).forEach(key => {
-        if (values[key] !== undefined && values[key] !== null && !['logo', 'qrcode', 'topimg'].includes(key)) {
+      Object.keys(values).forEach((key) => {
+        if (
+          values[key] !== undefined &&
+          values[key] !== null &&
+          !["logo", "qrcode", "topimg"].includes(key)
+        ) {
           formData.append(key, values[key]);
         }
       });
 
       // 添加图片文件
       if (logoFileList.length > 0 && logoFileList[0].originFileObj) {
-        formData.append('logo', logoFileList[0].originFileObj);
+        formData.append("logo", logoFileList[0].originFileObj);
       }
       if (qrcodeFileList.length > 0 && qrcodeFileList[0].originFileObj) {
-        formData.append('qrcode', qrcodeFileList[0].originFileObj);
+        formData.append("qrcode", qrcodeFileList[0].originFileObj);
       }
       if (topimgFileList.length > 0 && topimgFileList[0].originFileObj) {
-        formData.append('topimg', topimgFileList[0].originFileObj);
+        formData.append("topimg", topimgFileList[0].originFileObj);
       }
 
       await updateCompanyInfo(formData);
-      message.success('公司信息更新成功');
+      message.success("公司信息更新成功");
       fetchCompanyInfo();
     } catch (error) {
-      message.error('更新公司信息失败');
+      message.error("更新公司信息失败");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const uploadProps = (fileList: UploadFile[], setFileList: (files: UploadFile[]) => void): UploadProps => ({
-    listType: 'picture-card' as const,
+  const uploadProps = (
+    fileList: UploadFile[],
+    setFileList: (files: UploadFile[]) => void,
+  ): UploadProps => ({
+    listType: "picture-card" as const,
     fileList,
     maxCount: 1,
     beforeUpload: () => false,
@@ -106,7 +130,7 @@ const CompanyInfoPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: 100 }}>
+      <div style={{ textAlign: "center", padding: 100 }}>
         <Spin size="large" />
       </div>
     );
@@ -136,7 +160,7 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="公司名称"
                 name="name"
-                rules={[{ required: true, message: '请输入公司名称' }]}
+                rules={[{ required: true, message: "请输入公司名称" }]}
               >
                 <Input placeholder="请输入公司名称" />
               </Form.Item>
@@ -145,7 +169,7 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="联系人"
                 name="linkman"
-                rules={[{ required: true, message: '请输入联系人' }]}
+                rules={[{ required: true, message: "请输入联系人" }]}
               >
                 <Input placeholder="请输入联系人" />
               </Form.Item>
@@ -157,7 +181,7 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="联系电话"
                 name="telephone"
-                rules={[{ required: true, message: '请输入联系电话' }]}
+                rules={[{ required: true, message: "请输入联系电话" }]}
               >
                 <Input placeholder="请输入联系电话" />
               </Form.Item>
@@ -166,7 +190,7 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="电话"
                 name="phone"
-                rules={[{ required: true, message: '请输入电话' }]}
+                rules={[{ required: true, message: "请输入电话" }]}
               >
                 <Input placeholder="请输入电话" />
               </Form.Item>
@@ -175,10 +199,7 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col xs={24} md={12}>
-              <Form.Item
-                label="传真"
-                name="fax"
-              >
+              <Form.Item label="传真" name="fax">
                 <Input placeholder="请输入传真" />
               </Form.Item>
             </Col>
@@ -186,7 +207,13 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="邮箱"
                 name="email"
-                rules={[{ required: true, type: 'email', message: '请输入有效的邮箱地址' }]}
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "请输入有效的邮箱地址",
+                  },
+                ]}
               >
                 <Input placeholder="请输入邮箱" />
               </Form.Item>
@@ -195,18 +222,12 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col xs={24} md={12}>
-              <Form.Item
-                label="邮编"
-                name="postcode"
-              >
+              <Form.Item label="邮编" name="postcode">
                 <Input placeholder="请输入邮编" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item
-                label="微信号"
-                name="weichat"
-              >
+              <Form.Item label="微信号" name="weichat">
                 <Input placeholder="请输入微信号" />
               </Form.Item>
             </Col>
@@ -214,18 +235,12 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col xs={24} md={12}>
-              <Form.Item
-                label="客服QQ"
-                name="qq"
-              >
+              <Form.Item label="客服QQ" name="qq">
                 <Input placeholder="请输入客服QQ" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item
-                label="备案号"
-                name="record_nums"
-              >
+              <Form.Item label="备案号" name="record_nums">
                 <Input placeholder="请输入备案号" />
               </Form.Item>
             </Col>
@@ -236,7 +251,7 @@ const CompanyInfoPage: React.FC = () => {
               <Form.Item
                 label="详细地址"
                 name="address"
-                rules={[{ required: true, message: '请输入详细地址' }]}
+                rules={[{ required: true, message: "请输入详细地址" }]}
               >
                 <Input placeholder="请输入详细地址" />
               </Form.Item>
@@ -245,10 +260,7 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col span={24}>
-              <Form.Item
-                label="关于我们摘要"
-                name="digest"
-              >
+              <Form.Item label="关于我们摘要" name="digest">
                 <TextArea rows={3} placeholder="请输入关于我们摘要" />
               </Form.Item>
             </Col>
@@ -307,10 +319,7 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col span={24}>
-              <Form.Item
-                label="公司简介"
-                name="info"
-              >
+              <Form.Item label="公司简介" name="info">
                 <TextArea rows={6} placeholder="请输入公司简介" />
               </Form.Item>
             </Col>
@@ -318,10 +327,7 @@ const CompanyInfoPage: React.FC = () => {
 
           <Row gutter={24}>
             <Col span={24}>
-              <Form.Item
-                label="荣誉资质"
-                name="honor"
-              >
+              <Form.Item label="荣誉资质" name="honor">
                 <TextArea rows={6} placeholder="请输入荣誉资质" />
               </Form.Item>
             </Col>
@@ -330,7 +336,12 @@ const CompanyInfoPage: React.FC = () => {
           <Row gutter={24}>
             <Col span={24}>
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={submitting} size="large">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={submitting}
+                  size="large"
+                >
                   保存公司信息
                 </Button>
               </Form.Item>

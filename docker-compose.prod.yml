@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    image: liang_ba:prod
+    image: ${WEB_IMAGE:-liang_ba:prod}
     container_name: liang_ba_web
     restart: unless-stopped
     ports:
@@ -32,25 +32,23 @@ services:
       retries: 3
       start_period: 40s
 
-  # MySQL 数据库
+  # PostgreSQL 数据库
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     container_name: liang_ba_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-changeme}
-      MYSQL_DATABASE: ${DB_NAME:-liang_ba}
-      MYSQL_USER: ${DB_USER:-liang_ba_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: ${DB_NAME:-liang_ba}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
-      - db_data:/var/lib/mysql
-      - ./bin/mysql-init:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql/data
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       - liang_ba_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-changeme}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-liang_ba}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -61,13 +59,13 @@ services:
     container_name: liang_ba_redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     networks:
       - liang_ba_network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -79,36 +77,13 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./static:/static:ro
       - ./media:/media:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - ./certbot/www:/var/www/certbot:ro
     depends_on:
       - web
-    networks:
-      - liang_ba_network
-
-  # Certbot - Let's Encrypt 证书自动更新
-  certbot:
-    image: certbot/certbot:latest
-    container_name: liang_ba_certbot
-    volumes:
-      - ./nginx/ssl:/etc/nginx/ssl:rw
-      - ./certbot/www:/var/www/certbot:rw
-      - ./certbot/log:/var/log/certbot:rw
-    depends_on:
-      - nginx
-    entrypoint: "/bin/sh -c"
-    command:
-      - |
-        while true; do
-          certbot renew --quiet --deploy-hook "nginx -s reload"
-          sleep 12h
-        done
     networks:
       - liang_ba_network
 

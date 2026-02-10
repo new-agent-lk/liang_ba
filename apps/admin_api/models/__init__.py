@@ -1,15 +1,15 @@
 from apps.admin_api.models.system_log import (
-    SystemLogIndex,
-    LogRotationConfig,
-    LogViewerAccessLog,
-    LogType,
     LogLevel,
+    LogRotationConfig,
+    LogType,
+    LogViewerAccessLog,
+    SystemLogIndex,
 )
 
 __all__ = [
-    'SystemLogIndex',
-    'LogRotationConfig',
-    'LogViewerAccessLog',
-    'LogType',
-    'LogLevel',
+    "SystemLogIndex",
+    "LogRotationConfig",
+    "LogViewerAccessLog",
+    "LogType",
+    "LogLevel",
 ]

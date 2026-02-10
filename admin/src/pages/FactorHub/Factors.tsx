@@ -1,7 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Select, Tag, Table, Button, Space, Typography, Descriptions, Modal, Input, message } from 'antd';
-import { SettingOutlined, PlusOutlined, CalculatorOutlined } from '@ant-design/icons';
-import { getFactorList } from '@/api/factorhub';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  Row,
+  Col,
+  Select,
+  Tag,
+  Table,
+  Button,
+  Space,
+  Typography,
+  Descriptions,
+  Modal,
+  Input,
+  message,
+} from "antd";
+import {
+  SettingOutlined,
+  PlusOutlined,
+  CalculatorOutlined,
+} from "@ant-design/icons";
+import { getFactorList } from "@/api/factorhub";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -9,7 +27,7 @@ const { Text } = Typography;
 const FactorListPage: React.FC = () => {
   const [factors, setFactors] = useState<any[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [selectedFactor, setSelectedFactor] = useState<any>(null);
   const [customModalVisible, setCustomModalVisible] = useState(false);
@@ -23,7 +41,7 @@ const FactorListPage: React.FC = () => {
         setCategories(response.data.categories || []);
       }
     } catch (error) {
-      message.error('获取因子列表失败');
+      message.error("获取因子列表失败");
     } finally {
       setLoading(false);
     }
@@ -39,18 +57,18 @@ const FactorListPage: React.FC = () => {
   };
 
   const categoryColors: Record<string, string> = {
-    technical: 'blue',
-    momentum: 'green',
-    volatility: 'orange',
-    volume: 'purple',
-    valuation: 'red',
+    technical: "blue",
+    momentum: "green",
+    volatility: "orange",
+    volume: "purple",
+    valuation: "red",
   };
 
   const columns = [
     {
-      title: '因子名称',
-      dataIndex: 'name',
-      key: 'name',
+      title: "因子名称",
+      dataIndex: "name",
+      key: "name",
       width: 120,
       render: (name: string, record: any) => (
         <Space>
@@ -65,24 +83,22 @@ const FactorListPage: React.FC = () => {
       ),
     },
     {
-      title: '分类',
-      dataIndex: 'category',
-      key: 'category',
+      title: "分类",
+      dataIndex: "category",
+      key: "category",
       width: 100,
       render: (category: string) => (
-        <Tag color={categoryColors[category] || 'default'}>
-          {category}
-        </Tag>
+        <Tag color={categoryColors[category] || "default"}>{category}</Tag>
       ),
     },
     {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       width: 100,
       render: (_: any, record: any) => (
         <Button
@@ -103,22 +119,35 @@ const FactorListPage: React.FC = () => {
       <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>
-            <Statistic title="总因子数" value={factors.length} prefix={<SettingOutlined />} />
+            <Statistic
+              title="总因子数"
+              value={factors.length}
+              prefix={<SettingOutlined />}
+            />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="技术指标" value={factors.filter(f => f.category === 'technical').length} />
+            <Statistic
+              title="技术指标"
+              value={factors.filter((f) => f.category === "technical").length}
+            />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="动量因子" value={factors.filter(f => f.category === 'momentum').length} />
+            <Statistic
+              title="动量因子"
+              value={factors.filter((f) => f.category === "momentum").length}
+            />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic title="成交量因子" value={factors.filter(f => f.category === 'volume').length} />
+            <Statistic
+              title="成交量因子"
+              value={factors.filter((f) => f.category === "volume").length}
+            />
           </Card>
         </Col>
       </Row>
@@ -134,8 +163,10 @@ const FactorListPage: React.FC = () => {
               value={selectedCategory}
               onChange={handleCategoryChange}
             >
-              {categories.map(cat => (
-                <Option key={cat} value={cat}>{cat}</Option>
+              {categories.map((cat) => (
+                <Option key={cat} value={cat}>
+                  {cat}
+                </Option>
               ))}
             </Select>
             <Button
@@ -173,13 +204,17 @@ const FactorListPage: React.FC = () => {
       >
         {selectedFactor && (
           <Descriptions column={1}>
-            <Descriptions.Item label="因子名称">{selectedFactor.name}</Descriptions.Item>
+            <Descriptions.Item label="因子名称">
+              {selectedFactor.name}
+            </Descriptions.Item>
             <Descriptions.Item label="分类">
               <Tag color={categoryColors[selectedFactor.category]}>
                 {selectedFactor.category}
               </Tag>
             </Descriptions.Item>
-            <Descriptions.Item label="描述">{selectedFactor.description}</Descriptions.Item>
+            <Descriptions.Item label="描述">
+              {selectedFactor.description}
+            </Descriptions.Item>
           </Descriptions>
         )}
       </Modal>
@@ -189,9 +224,9 @@ const FactorListPage: React.FC = () => {
         title="创建自定义因子"
         open={customModalVisible}
         onCancel={() => setCustomModalVisible(false)}
-        onOk={() => message.success('自定义因子创建成功')}
+        onOk={() => message.success("自定义因子创建成功")}
       >
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: "100%" }}>
           <div>
             <Text strong>因子名称：</Text>
             <Input placeholder="请输入因子名称" style={{ marginTop: 8 }} />
@@ -214,10 +249,14 @@ const FactorListPage: React.FC = () => {
 };
 
 // 简单的Statistic组件
-const Statistic: React.FC<{ title: string; value: number; prefix?: React.ReactNode }> = ({ title, value, prefix }) => (
+const Statistic: React.FC<{
+  title: string;
+  value: number;
+  prefix?: React.ReactNode;
+}> = ({ title, value, prefix }) => (
   <div>
-    <div style={{ color: '#999', fontSize: 14 }}>{title}</div>
-    <div style={{ fontSize: 24, fontWeight: 'bold' }}>
+    <div style={{ color: "#999", fontSize: 14 }}>{title}</div>
+    <div style={{ fontSize: 24, fontWeight: "bold" }}>
       {prefix} {value}
     </div>
   </div>

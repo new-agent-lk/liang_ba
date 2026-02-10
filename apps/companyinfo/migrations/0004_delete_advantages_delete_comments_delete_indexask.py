@@ -4,19 +4,18 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('companyinfo', '0003_add_jobposition_resume'),
+        ("companyinfo", "0003_add_jobposition_resume"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='Advantages',
+            name="Advantages",
         ),
         migrations.DeleteModel(
-            name='Comments',
+            name="Comments",
         ),
         migrations.DeleteModel(
-            name='IndexAsk',
+            name="IndexAsk",
         ),
     ]

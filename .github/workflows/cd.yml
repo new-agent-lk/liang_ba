@@ -1,125 +1,49 @@
-name: CD Pipeline
+name: CD
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main, master]
+    tags: ['v*']
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
-      rollback:
-        description: 'Rollback to previous version'
-        required: false
-        default: false
-        type: boolean
 
 env:
   REGISTRY: docker.io
   IMAGE_NAME: kang523/liang-ba
-  COMPOSE_FILE: docker-compose.prod.yml
 
 jobs:
-  # ============================================
-  # JOB: Deploy to Staging
-  # ============================================
-  deploy-staging:
-    name: Deploy to Staging
+  build:
+    name: Build & Deploy
     runs-on: ubuntu-latest
-    environment: staging
-    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'staging'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Download latest Docker image
-        run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-
-      - name: Deploy to Staging Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            cd /data/wwwroot/liang_ba
-
-            # Backup current state
-            echo "Creating backup..."
-            backup_dir="backup_$(date +%Y%m%d_%H%M%S)"
-            mkdir -p $backup_dir
-            cp -r docker-compose.prod.yml $backup_dir/ 2>/dev/null || true
-            cp -r .env $backup_dir/ 2>/dev/null || true
-
-            # Pull latest images
-            echo "Pulling latest images..."
-            docker compose -f docker-compose.prod.yml pull
-
-            # Run migrations
-            echo "Running database migrations..."
-            docker compose -f docker-compose.prod.yml exec -T web python manage.py migrate --noinput
-
-            # Collect static files
-            echo "Collecting static files..."
-            docker compose -f docker-compose.prod.yml exec -T web python manage.py collectstatic --noinput
-
-            # Restart services
-            echo "Restarting services..."
-            docker compose -f docker-compose.prod.yml down --remove-orphans
-            docker compose -f docker-compose.prod.yml up -d
-
-            # Wait for services to be healthy
-            echo "Waiting for services..."
-            sleep 30
-
-            # Health check
-            echo "Performing health check..."
-            if curl -sf http://localhost/api/admin/health > /dev/null 2>&1; then
-              echo "Health check passed!"
-            else
-              echo "Health check failed, checking logs..."
-              docker compose -f docker-compose.prod.yml logs --tail=50
-              exit 1
-            fi
-
-            echo "Deployment to staging completed successfully!"
-
-  # ============================================
-  # JOB: Deploy to Production
-  # ============================================
-  deploy-production:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    environment: production
-    needs: [deploy-staging]
-    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.environment == 'production'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get image tag
+      - name: Set image tag
         id: vars
         run: |
-          TAG=${GITHUB_REF#refs/tags/}
+          if [[ ${{ github.ref }} == refs/tags/v* ]]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          else
+            TAG=latest
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-      - name: Download Docker image
-        run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Deploy to Production Server
-        uses: appleboy/ssh-action@v1.0.3
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.prod
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
@@ -128,234 +52,23 @@ jobs:
             set -e
 
             cd /data/wwwroot/liang_ba
-
             TAG=${{ steps.vars.outputs.tag }}
-            CURRENT_TAG=$(cat .current_version 2>/dev/null || echo "")
 
-            # Create backup of current state
-            echo "Creating backup..."
-            backup_dir="backup_${TAG}_$(date +%Y%m%d_%H%M%S)"
-            mkdir -p $backup_dir
-            cp docker-compose.prod.yml $backup_dir/ 2>/dev/null || true
-            cp -r uploads $backup_dir/ 2>/dev/null || true
-            cp -r static $backup_dir/ 2>/dev/null || true
+            export WEB_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
+            docker pull "$WEB_IMAGE"
 
-            # Tag current image as rollback target
-            if [ -n "$CURRENT_TAG" ]; then
-              docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$TAG
-            fi
-
-            # Save version
-            echo $TAG > .current_version
-
-            # Pull latest image
-            echo "Pulling image $TAG..."
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
-
-            # Update .env with new image tag
-            sed -i "s|image: .*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG|" docker-compose.prod.yml
-
-            # Run migrations with backup
-            echo "Running database migrations..."
-            docker compose -f docker-compose.prod.yml exec -T web python manage.py migrate --noinput || {
-              echo "Migration failed, rolling back..."
-              docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$TAG ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
-              docker compose -f docker-compose.prod.yml down
-              docker compose -f docker-compose.prod.yml up -d
-              exit 1
-            }
-
-            # Collect static files
-            echo "Collecting static files..."
-            docker compose -f docker-compose.prod.yml exec -T web python manage.py collectstatic --noinput 2>/dev/null || true
-
-            # Graceful restart using docker-compose
-            echo "Restarting services with zero-downtime..."
-            docker compose -f docker-compose.prod.yml down --remove-orphans
-            docker compose -f docker-compose.prod.yml up -d
-
-            # Wait for services
-            echo "Waiting for services..."
-            sleep 45
-
-            # Health check
-            MAX_RETRIES=12
-            RETRY_COUNT=0
-            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              if curl -sf http://localhost/health > /dev/null 2>&1; then
-                echo "Health check passed!"
-                break
-              fi
-              RETRY_COUNT=$((RETRY_COUNT + 1))
-              echo "Waiting for health check... ($RETRY_COUNT/$MAX_RETRIES)"
-              sleep 5
-            done
-
-            if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-              echo "Health check failed, initiating rollback..."
-              docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$TAG ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
-              sed -i "s|image: .*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$TAG|" docker-compose.prod.yml
-              docker compose -f docker-compose.prod.yml down
-              docker compose -f docker-compose.prod.yml up -d
-              exit 1
-            fi
-
-            # Clean up old images
-            echo "Cleaning up old images..."
-            docker image prune -f
-
-            echo "Deployment to production completed successfully!"
-
-      - name: Notify Deployment
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-              "text": "Deployment Successful",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Deployment to Production Completed*\nVersion: ${{ steps.vars.outputs.tag }}"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  # ============================================
-  # JOB: Rollback
-  # ============================================
-  rollback:
-    name: Rollback
-    runs-on: ubuntu-latest
-    environment: production
-    if: github.event.inputs.rollback == 'true'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get previous tag
-        id: vars
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          if [ -z "$PREV_TAG" ]; then
-            PREV_TAG=$(git rev-list --tags --max-count=2 --skip=1 | head -1)
-          fi
-          echo "previous_tag=$PREV_TAG" >> $GITHUB_OUTPUT
-
-      - name: Rollback to Previous Version
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          script: |
-            set -e
-
-            cd /data/wwwroot/liang_ba
-
-            ROLLBACK_TAG=${{ steps.vars.outputs.previous_tag }}
-
-            if [ -z "$ROLLBACK_TAG" ]; then
-              echo "No previous tag found for rollback"
-              exit 1
-            fi
-
-            echo "Rolling back to $ROLLBACK_TAG..."
-
-            # Pull rollback image
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$ROLLBACK_TAG
-
-            # Update compose file
-            sed -i "s|image: .*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$ROLLBACK_TAG|" docker-compose.prod.yml
-
-            # Restart services
-            docker compose -f docker-compose.prod.yml down --remove-orphans
-            docker compose -f docker-compose.prod.yml up -d
+            docker compose pull db redis
+            docker compose up -d
 
             sleep 30
 
-            # Verify
-            if curl -sf http://localhost/health > /dev/null 2>&1; then
-              echo "Rollback successful to $ROLLBACK_TAG"
+            docker compose exec -T web python manage_prod.py migrate --noinput
+
+            if curl -sf http://localhost/api/admin/health > /dev/null; then
+              echo "Deployment successful!"
             else
-              echo "Rollback verification failed"
-              docker compose -f docker-compose.prod.yml logs --tail=20
+              docker compose logs --tail=30
               exit 1
             fi
 
-  # ============================================
-  # JOB: Smoke Tests
-  # ============================================
-  smoke-tests:
-    name: Smoke Tests
-    runs-on: ubuntu-latest
-    needs: [deploy-production]
-    if: always() && needs.deploy-production.result == 'success'
-    steps:
-      - name: Run Smoke Tests
-        run: |
-          echo "Running smoke tests..."
-
-          # Test API endpoints
-          API_URLS=(
-            "http://localhost/api/admin/health/simple/"
-            "http://localhost/api/admin/health/"
-            "http://localhost/api/admin/dashboard/stats/"
-          )
-
-          FAILED=0
-          for url in "${API_URLS[@]}"; do
-            if curl -sf -o /dev/null -w "%{http_code}" "$url" | grep -q "200\|401\|403"; then
-              echo "[PASS] $url"
-            else
-              echo "[FAIL] $url"
-              FAILED=1
-            fi
-          done
-
-          if [ $FAILED -eq 1 ]; then
-            echo "Smoke tests failed!"
-            exit 1
-          fi
-
-          echo "All smoke tests passed!"
-
-  # ============================================
-  # JOB: Database Backup
-  # ============================================
-  backup:
-    name: Create Database Backup
-    runs-on: ubuntu-latest
-    needs: [deploy-production]
-    if: needs.deploy-production.result == 'success'
-    steps:
-      - name: Create Backup
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          script: |
-            set -e
-
-            cd /data/wwwroot/liang_ba
-
-            BACKUP_DIR="backups"
-            mkdir -p $BACKUP_DIR
-
-            # Create timestamped backup
-            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-            BACKUP_FILE="$BACKUP_DIR/liang_ba_$TIMESTAMP.sql.gz"
-
-            echo "Creating database backup: $BACKUP_FILE"
-            docker compose -f docker-compose.prod.yml exec -T db mysqldump -u root -prootpass liang_ba | gzip > $BACKUP_FILE
-
-            # Keep only last 7 backups
-            ls -t $BACKUP_DIR/*.sql.gz | tail -n +8 | xargs rm -f 2>/dev/null || true
-
-            echo "Backup created successfully!"
-            ls -lh $BACKUP_DIR/*.sql.gz | tail -5
+            docker image prune -f

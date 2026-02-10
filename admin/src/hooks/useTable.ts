@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-import { message } from 'antd';
-import { PageParams, PaginatedResponse } from '@/types';
+import { useState, useCallback, useEffect } from "react";
+import { message } from "antd";
+import { PageParams, PaginatedResponse } from "@/types";
 
 interface UseTableOptions<T> {
   fetchData: (params?: PageParams) => Promise<PaginatedResponse<T>>;
@@ -43,7 +43,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
         const params: PageParams = { page, page_size: pageSize };
         // 添加筛选参数
         Object.entries(filterParams || filters).forEach(([key, value]) => {
-          if (value !== undefined && value !== null && value !== '') {
+          if (value !== undefined && value !== null && value !== "") {
             (params as any)[key] = value;
           }
         });
@@ -57,12 +57,12 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
         }));
         setCurrentPageSize(pageSize);
       } catch (error) {
-        message.error('获取数据失败');
+        message.error("获取数据失败");
       } finally {
         setLoading(false);
       }
     },
-    [fetchData, filters]
+    [fetchData, filters],
   );
 
   const handleDelete = useCallback(
@@ -70,14 +70,14 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
       if (!deleteData) return;
       try {
         await deleteData(id);
-        message.success('删除成功');
+        message.success("删除成功");
         fetch();
         onSuccess?.();
       } catch (error) {
-        message.error('删除失败');
+        message.error("删除失败");
       }
     },
-    [deleteData, fetch, onSuccess]
+    [deleteData, fetch, onSuccess],
   );
 
   const onChange = useCallback(
@@ -86,7 +86,7 @@ export function useTable<T>(options: UseTableOptions<T>): UseTableResult<T> {
       const newPage = pageSize !== currentPageSize ? 1 : page;
       fetch(newPage, pageSize);
     },
-    [fetch, currentPageSize]
+    [fetch, currentPageSize],
   );
 
   // 组件挂载时自动获取数据

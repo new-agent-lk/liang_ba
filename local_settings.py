@@ -3,14 +3,13 @@ from base_settings import *
 DEBUG = True
 
 DATABASES = {
-    'default': {
-        'TEST_CHARSET': 'utf8',
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'liang_ba',   # 请换成新建的数据库名称
-        'USER': 'root',
-        'PASSWORD': 'Kang0716.',  # 请换成自己的密码
-        'HOST': '172.18.4.63',  # 如果不能连接，改成localhost
-        'POST': 3306,
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "liang_ba",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -21,9 +20,8 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
-        'KEY_PREFIX': 'LB-'
+        "KEY_PREFIX": "LB-",
     }
 }
 
-WAGTAILADMIN_BASE_URL = 'http://172.18.4.63:9999'
-
+WAGTAILADMIN_BASE_URL = "http://172.18.4.63:9999"

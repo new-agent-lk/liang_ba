@@ -4,14 +4,12 @@
 使用 ContextVar 管理请求链路追踪信息
 """
 
+import uuid
 from contextvars import ContextVar
 from typing import Any, Dict, Optional
-import uuid
 
 # 请求上下文存储
-_request_context: ContextVar[Dict[str, Any]] = ContextVar(
-    'request_context', default={}
-)
+_request_context: ContextVar[Dict[str, Any]] = ContextVar("request_context", default={})
 
 
 def set_context(**kwargs) -> None:
@@ -46,9 +44,9 @@ def get_trace_id() -> str:
         当前请求的 trace_id
     """
     ctx = _request_context.get()
-    if 'trace_id' not in ctx:
+    if "trace_id" not in ctx:
         return str(uuid.uuid4())
-    return ctx['trace_id']
+    return ctx["trace_id"]
 
 
 def get_request_id() -> str:
@@ -59,9 +57,9 @@ def get_request_id() -> str:
         当前请求的 request_id
     """
     ctx = _request_context.get()
-    if 'request_id' not in ctx:
-        return '-'
-    return ctx['request_id']
+    if "request_id" not in ctx:
+        return "-"
+    return ctx["request_id"]
 
 
 def get_user_id() -> Optional[int]:
@@ -71,7 +69,7 @@ def get_user_id() -> Optional[int]:
     Returns:
         当前用户 ID，未登录返回 None
     """
-    return get_context('user_id')
+    return get_context("user_id")
 
 
 def get_client_ip() -> str:
@@ -81,7 +79,7 @@ def get_client_ip() -> str:
     Returns:
         客户端 IP 地址
     """
-    return get_context('client_ip', '-')
+    return get_context("client_ip", "-")
 
 
 def clear_context() -> None:

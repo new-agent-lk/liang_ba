@@ -4,15 +4,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtail_apps', '0004_companydailypage_companydailypagebannerimage'),
+        ("wagtail_apps", "0004_companydailypage_companydailypagebannerimage"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='companycontentpage',
-            name='category',
-            field=models.CharField(choices=[('Our Opinions', 'Our Opinions'), ('Our Advantages', 'Our Advantages'), ('Our Future', 'Our Future'), ('Recruits', 'Recruits'), ('Daily', 'Daily')], default='Our Opinions', max_length=255, verbose_name='文章分类'),
+            model_name="companycontentpage",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("Our Opinions", "Our Opinions"),
+                    ("Our Advantages", "Our Advantages"),
+                    ("Our Future", "Our Future"),
+                    ("Recruits", "Recruits"),
+                    ("Daily", "Daily"),
+                ],
+                default="Our Opinions",
+                max_length=255,
+                verbose_name="文章分类",
+            ),
         ),
     ]

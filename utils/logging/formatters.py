@@ -35,7 +35,7 @@ class JSONFormatter(logging.Formatter):
         include_user_id: bool = True,
         include_request_id: bool = True,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.include_trace_id = include_trace_id
@@ -45,53 +45,53 @@ class JSONFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """格式化日志记录为 JSON 字符串"""
         log_data: Dict[str, Any] = {
-            'timestamp': self._get_timestamp(),
-            'level': self._clean_levelname(record.levelname),
-            'logger': record.name,
-            'message': record.getMessage(),
-            'module': record.module,
-            'function': record.funcName,
-            'line': record.lineno,
-            'process_id': record.process,
-            'thread_id': record.thread,
+            "timestamp": self._get_timestamp(),
+            "level": self._clean_levelname(record.levelname),
+            "logger": record.name,
+            "message": record.getMessage(),
+            "module": record.module,
+            "function": record.funcName,
+            "line": record.lineno,
+            "process_id": record.process,
+            "thread_id": record.thread,
         }
 
         # 添加 trace_id
-        if self.include_trace_id and hasattr(record, 'trace_id'):
-            log_data['trace_id'] = record.trace_id
+        if self.include_trace_id and hasattr(record, "trace_id"):
+            log_data["trace_id"] = record.trace_id
 
         # 添加 request_id
-        if self.include_request_id and hasattr(record, 'request_id'):
-            log_data['request_id'] = record.request_id
+        if self.include_request_id and hasattr(record, "request_id"):
+            log_data["request_id"] = record.request_id
 
         # 添加用户信息
-        if self.include_user_id and hasattr(record, 'user_id'):
-            log_data['user_id'] = record.user_id
+        if self.include_user_id and hasattr(record, "user_id"):
+            log_data["user_id"] = record.user_id
 
         # 添加异常信息
         if record.exc_info:
-            log_data['exception'] = self._format_exception(record.exc_info)
+            log_data["exception"] = self._format_exception(record.exc_info)
 
         # 添加额外字段
-        if hasattr(record, 'extra_data'):
-            log_data['extra'] = record.extra_data
+        if hasattr(record, "extra_data"):
+            log_data["extra"] = record.extra_data
 
         # 添加日志特定字段
-        if hasattr(record, 'request_path'):
-            log_data['request_path'] = record.request_path
-        if hasattr(record, 'request_method'):
-            log_data['request_method'] = record.request_method
-        if hasattr(record, 'status_code'):
-            log_data['status_code'] = record.status_code
-        if hasattr(record, 'duration_ms'):
-            log_data['duration_ms'] = record.duration_ms
+        if hasattr(record, "request_path"):
+            log_data["request_path"] = record.request_path
+        if hasattr(record, "request_method"):
+            log_data["request_method"] = record.request_method
+        if hasattr(record, "status_code"):
+            log_data["status_code"] = record.status_code
+        if hasattr(record, "duration_ms"):
+            log_data["duration_ms"] = record.duration_ms
 
         return json.dumps(log_data, ensure_ascii=False, default=str)
 
     def _get_timestamp(self) -> str:
         """获取 ISO 格式时间戳"""
         now = datetime.now(timezone.utc)
-        return now.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        return now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     def _format_exception(self, exc_info) -> Optional[Dict[str, str]]:
         """格式化异常信息"""
@@ -99,17 +99,18 @@ class JSONFormatter(logging.Formatter):
             return None
 
         return {
-            'type': exc_info[0].__name__ if exc_info[0] else 'Unknown',
-            'message': str(exc_info[1]) if exc_info[1] else '',
-            'traceback': self.formatException(exc_info) if exc_info[1] else '',
+            "type": exc_info[0].__name__ if exc_info[0] else "Unknown",
+            "message": str(exc_info[1]) if exc_info[1] else "",
+            "traceback": self.formatException(exc_info) if exc_info[1] else "",
         }
 
     def _clean_levelname(self, levelname: str) -> str:
         """清理 ANSI 颜色代码"""
         import re
+
         # 移除 ANSI 转义序列
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        return ansi_escape.sub('', levelname)
+        ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+        return ansi_escape.sub("", levelname)
 
 
 class DetailedFormatter(logging.Formatter):
@@ -122,42 +123,29 @@ class DetailedFormatter(logging.Formatter):
 
     # ANSI 颜色代码
     COLORS = {
-        'DEBUG': '\033[36m',    # 青色
-        'INFO': '\033[32m',     # 绿色
-        'WARNING': '\033[33m',  # 黄色
-        'ERROR': '\033[31m',    # 红色
-        'CRITICAL': '\033[35m', # 紫色
+        "DEBUG": "\033[36m",  # 青色
+        "INFO": "\033[32m",  # 绿色
+        "WARNING": "\033[33m",  # 黄色
+        "ERROR": "\033[31m",  # 红色
+        "CRITICAL": "\033[35m",  # 紫色
     }
-    RESET = '\033[0m'
+    RESET = "\033[0m"
 
-    def __init__(
-        self,
-        use_colors: bool = True,
-        fmt: str = None,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, use_colors: bool = True, fmt: str = None, *args, **kwargs):
         # 默认格式
-        default_fmt = (
-            '[%(asctime)s][%(levelname)s][%(name)s]'
-            '[trace_id:%(trace_id)s] %(message)s'
-        )
+        default_fmt = "[%(asctime)s][%(levelname)s][%(name)s][trace_id:%(trace_id)s] %(message)s"
         super().__init__(fmt=fmt or default_fmt, *args, **kwargs)
         self.use_colors = use_colors
 
     def format(self, record: logging.LogRecord) -> str:
         """格式化日志记录"""
         # 确保有 trace_id
-        if not hasattr(record, 'trace_id'):
-            record.trace_id = '-'
+        if not hasattr(record, "trace_id"):
+            record.trace_id = "-"
 
         # 添加颜色
         if self.use_colors and record.levelname in self.COLORS:
-            record.levelname = (
-                self.COLORS[record.levelname] +
-                record.levelname +
-                self.RESET
-            )
+            record.levelname = self.COLORS[record.levelname] + record.levelname + self.RESET
 
         return super().format(record)
 
@@ -171,9 +159,7 @@ class SimpleFormatter(logging.Formatter):
     """
 
     def __init__(self, fmt: str = None, *args, **kwargs):
-        default_fmt = (
-            '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d] %(message)s'
-        )
+        default_fmt = "[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d] %(message)s"
         super().__init__(fmt=fmt or default_fmt, *args, **kwargs)
 
     def format(self, record: logging.LogRecord) -> str:

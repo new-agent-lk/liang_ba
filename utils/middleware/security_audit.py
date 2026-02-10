@@ -4,8 +4,7 @@
 记录安全相关事件（登录、权限变更、敏感操作等）
 """
 
-import logging
-from typing import Callable, Optional, List
+from typing import Callable, Optional
 
 from django.http import HttpRequest, HttpResponse
 from django.utils.deprecation import MiddlewareMixin
@@ -16,16 +15,16 @@ logger = get_security_logger()
 
 # 需要审计的路径
 AUDIT_PATHS = [
-    '/admin/',
-    '/api/auth/',
-    '/api/users/',
-    '/api/auth/login/',
-    '/api/auth/logout/',
-    '/api/auth/register/',
+    "/admin/",
+    "/api/auth/",
+    "/api/users/",
+    "/api/auth/login/",
+    "/api/auth/logout/",
+    "/api/auth/register/",
 ]
 
 # 需要审计的方法
-AUDIT_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
+AUDIT_METHODS = ["POST", "PUT", "PATCH", "DELETE"]
 
 
 class SecurityAuditMiddleware(MiddlewareMixin):
@@ -64,27 +63,27 @@ class SecurityAuditMiddleware(MiddlewareMixin):
 
         try:
             # 获取用户信息
-            user_id = getattr(request.user, 'id', None)
-            username = getattr(request.user, 'username', None)
+            user_id = getattr(request.user, "id", None)
+            username = getattr(request.user, "username", None)
 
             # 确定事件类型
             event_type = self._get_event_type(request)
 
             # 记录审计日志
             logger.info(
-                f'Security audit: {event_type}',
+                f"Security audit: {event_type}",
                 extra={
-                    'extra_data': {
-                        'event_type': event_type,
-                        'path': request.path,
-                        'method': request.method,
-                        'user_id': user_id,
-                        'username': username,
-                        'status_code': response.status_code,
-                        'ip_address': self._get_client_ip(request),
-                        'user_agent': request.headers.get('User-Agent', '-')[:200],
+                    "extra_data": {
+                        "event_type": event_type,
+                        "path": request.path,
+                        "method": request.method,
+                        "user_id": user_id,
+                        "username": username,
+                        "status_code": response.status_code,
+                        "ip_address": self._get_client_ip(request),
+                        "user_agent": request.headers.get("User-Agent", "-")[:200],
                     }
-                }
+                },
             )
         except Exception:
             pass
@@ -96,7 +95,7 @@ class SecurityAuditMiddleware(MiddlewareMixin):
             return True
 
         # 审计特定路径的 GET 请求
-        if request.method == 'GET':
+        if request.method == "GET":
             for path in AUDIT_PATHS:
                 if request.path.startswith(path):
                     return True
@@ -109,41 +108,41 @@ class SecurityAuditMiddleware(MiddlewareMixin):
         method = request.method
 
         # 认证相关
-        if '/login/' in path:
-            return 'login_attempt'
-        if '/logout/' in path:
-            return 'logout'
-        if '/register/' in path:
-            return 'register'
+        if "/login/" in path:
+            return "login_attempt"
+        if "/logout/" in path:
+            return "logout"
+        if "/register/" in path:
+            return "register"
 
         # 管理后台
-        if path.startswith('/admin/'):
-            if method == 'POST':
-                return 'admin_create'
-            elif method == 'PUT' or method == 'PATCH':
-                return 'admin_update'
-            elif method == 'DELETE':
-                return 'admin_delete'
-            return 'admin_access'
+        if path.startswith("/admin/"):
+            if method == "POST":
+                return "admin_create"
+            elif method == "PUT" or method == "PATCH":
+                return "admin_update"
+            elif method == "DELETE":
+                return "admin_delete"
+            return "admin_access"
 
         # 用户管理
-        if '/users/' in path:
-            if method == 'POST':
-                return 'user_create'
-            elif method == 'PUT' or method == 'PATCH':
-                return 'user_update'
-            elif method == 'DELETE':
-                return 'user_delete'
+        if "/users/" in path:
+            if method == "POST":
+                return "user_create"
+            elif method == "PUT" or method == "PATCH":
+                return "user_update"
+            elif method == "DELETE":
+                return "user_delete"
 
         # 默认
-        return 'api_access'
+        return "api_access"
 
     def _get_client_ip(self, request: HttpRequest) -> str:
         """获取客户端 IP"""
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            return x_forwarded_for.split(',')[0].strip()
-        return request.META.get('REMOTE_ADDR', '-')
+            return x_forwarded_for.split(",")[0].strip()
+        return request.META.get("REMOTE_ADDR", "-")
 
 
 class SuspiciousActivityMiddleware(MiddlewareMixin):
@@ -169,7 +168,7 @@ class SuspiciousActivityMiddleware(MiddlewareMixin):
     def process_request(self, request: HttpRequest) -> Optional[HttpResponse]:
         """处理请求前的检查"""
         # 检查登录失败次数
-        if '/login/' in request.path and request.method == 'POST':
+        if "/login/" in request.path and request.method == "POST":
             self._check_failed_logins(request)
 
         return None
@@ -177,7 +176,7 @@ class SuspiciousActivityMiddleware(MiddlewareMixin):
     def _check_failed_logins(self, request: HttpRequest) -> None:
         """检查登录失败次数"""
         ip = self._get_client_ip(request)
-        now = now_time = __import__('time').time()
+        now = now_time = __import__("time").time()
 
         # 清理过期记录
         self._cleanup_expired(now)
@@ -201,15 +200,15 @@ class SuspiciousActivityMiddleware(MiddlewareMixin):
 
     def _get_client_ip(self, request: HttpRequest) -> str:
         """获取客户端 IP"""
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            return x_forwarded_for.split(',')[0].strip()
-        return request.META.get('REMOTE_ADDR', '-')
+            return x_forwarded_for.split(",")[0].strip()
+        return request.META.get("REMOTE_ADDR", "-")
 
     def record_failed_login(self, request: HttpRequest, username: str = None) -> None:
         """记录登录失败（由视图调用）"""
         ip = self._get_client_ip(request)
-        now = __import__('time').time()
+        now = __import__("time").time()
 
         if ip not in self._failed_logins:
             self._failed_logins[ip] = []
@@ -218,22 +217,21 @@ class SuspiciousActivityMiddleware(MiddlewareMixin):
 
         # 检查是否超出阈值
         recent_attempts = [
-            (t, u) for t, u in self._failed_logins[ip]
-            if now - t < self.FAILED_LOGIN_WINDOW
+            (t, u) for t, u in self._failed_logins[ip] if now - t < self.FAILED_LOGIN_WINDOW
         ]
 
         if len(recent_attempts) >= self.FAILED_LOGIN_THRESHOLD:
             logger.warning(
-                'Suspicious activity: multiple failed login attempts',
+                "Suspicious activity: multiple failed login attempts",
                 extra={
-                    'extra_data': {
-                        'event_type': 'brute_force_attempt',
-                        'ip_address': ip,
-                        'failed_attempts': len(recent_attempts),
-                        'target_username': username,
-                        'threshold': self.FAILED_LOGIN_THRESHOLD,
+                    "extra_data": {
+                        "event_type": "brute_force_attempt",
+                        "ip_address": ip,
+                        "failed_attempts": len(recent_attempts),
+                        "target_username": username,
+                        "threshold": self.FAILED_LOGIN_THRESHOLD,
                     }
-                }
+                },
             )
 
             # 清理

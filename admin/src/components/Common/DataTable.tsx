@@ -1,6 +1,11 @@
-import { Table, Pagination, Space, Button, ConfigProvider } from 'antd';
-import type { TableProps } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Pagination, Space, Button, ConfigProvider } from "antd";
+import type { TableProps } from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
 
 interface DataTableProps<T> {
   loading: boolean;
@@ -17,8 +22,8 @@ interface DataTableProps<T> {
   onDelete?: (record: T) => void;
   onView?: (record: T) => void;
   onRefresh?: () => void;
-  onChange?: TableProps<T>['onChange'];
-  rowSelection?: TableProps<T>['rowSelection'];
+  onChange?: TableProps<T>["onChange"];
+  rowSelection?: TableProps<T>["rowSelection"];
 }
 
 function DataTable<T extends { id: number }>({
@@ -26,7 +31,7 @@ function DataTable<T extends { id: number }>({
   data,
   columns,
   pagination,
-  rowKey = 'id',
+  rowKey = "id",
   onEdit,
   onDelete,
   onView,
@@ -35,8 +40,8 @@ function DataTable<T extends { id: number }>({
   rowSelection,
 }: DataTableProps<T>) {
   const actionColumn = {
-    title: '操作',
-    key: 'action',
+    title: "操作",
+    key: "action",
     width: 150,
     render: (_: any, record: T) => (
       <Space size="middle">
@@ -83,15 +88,15 @@ function DataTable<T extends { id: number }>({
       theme={{
         components: {
           Table: {
-            headerBg: '#fafafa',
-            headerColor: '#666',
+            headerBg: "#fafafa",
+            headerColor: "#666",
           },
         },
       }}
     >
       <div style={{ marginLeft: 8 }}>
         {onRefresh && (
-          <div style={{ marginBottom: 16, textAlign: 'left' }}>
+          <div style={{ marginBottom: 16, textAlign: "left" }}>
             <Button
               icon={<ReloadOutlined />}
               onClick={onRefresh}
@@ -112,7 +117,7 @@ function DataTable<T extends { id: number }>({
           rowSelection={rowSelection}
           onChange={onChange}
         />
-        <div style={{ marginTop: 16, textAlign: 'right' }}>
+        <div style={{ marginTop: 16, textAlign: "right" }}>
           <Pagination
             current={pagination.current}
             pageSize={pagination.pageSize}

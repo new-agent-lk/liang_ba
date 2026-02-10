@@ -1,6 +1,6 @@
-import request from '@/utils/request';
-import { DashboardStats } from '@/types';
+import request from "@/utils/request";
+import { DashboardStats } from "@/types";
 
 export const getDashboardStats = (): Promise<DashboardStats> => {
-  return request.get('/api/admin/dashboard/stats/');
+  return request.get("/api/admin/dashboard/stats/");
 };

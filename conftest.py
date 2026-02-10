@@ -1,12 +1,12 @@
 """
 Pytest configuration and fixtures for Django tests.
 """
+
 import os
 import sys
 from pathlib import Path
 
-import django
-from django.conf import settings
+import pytest
 
 # Add the project root to the Python path
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -14,38 +14,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Configure Django settings before loading
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "local_settings")
-
-
-def pytest_configure():
-    """Configure Django for pytest."""
-    # Override database settings for testing
-    settings.DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:",
-        }
-    }
-    # Use faster password hasher
-    settings.PASSWORD_HASHERS = [
-        "django.contrib.auth.hashers.MD5PasswordHasher",
-    ]
-    # Disable migrations during tests for speed
-    settings.MIGRATION_MODULES = {
-        "auth": None,
-        "contenttypes": None,
-    }
-    # Disable logging during tests
-    settings.LOGGING = {}
-
-    django.setup()
-
-
-@pytest.fixture(scope="session")
-def django_db_setup():
-    """Set up the test database."""
-    from django.test.utils import setup_test_environment
-
-    setup_test_environment()
 
 
 @pytest.fixture(scope="function")
@@ -70,9 +38,7 @@ def authenticated_client(api_client, test_user):
         format="json",
     )
     if response.status_code == status.HTTP_200_OK:
-        api_client.credentials(
-            HTTP_AUTHORIZATION=f'Bearer {response.data["access"]}'
-        )
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
     return api_client
 
 
@@ -132,10 +98,11 @@ def sample_company(db):
 @pytest.fixture(scope="function")
 def sample_market_data(db):
     """Create sample market data for testing."""
-    from apps.factorhub.models import MarketData
+    from datetime import date, timedelta
 
     import pandas as pd
-    from datetime import date, timedelta
+
+    from apps.factorhub.models import MarketData
 
     today = date.today()
     dates = [today - timedelta(days=i) for i in range(10)]

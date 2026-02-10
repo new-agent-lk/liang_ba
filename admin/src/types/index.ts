@@ -18,41 +18,41 @@ export interface User {
 
 // 部门选项
 export const DEPARTMENT_CHOICES = [
-  { value: 'quant', label: '量化部' },
-  { value: 'risk', label: '风控部' },
-  { value: 'tech', label: '技术部' },
-  { value: 'research', label: '研究部' },
-  { value: 'hr', label: '人力资源部' },
-  { value: 'finance', label: '财务部' },
-  { value: 'admin', label: '行政部' },
-  { value: 'other', label: '其他' },
+  { value: "quant", label: "量化部" },
+  { value: "risk", label: "风控部" },
+  { value: "tech", label: "技术部" },
+  { value: "research", label: "研究部" },
+  { value: "hr", label: "人力资源部" },
+  { value: "finance", label: "财务部" },
+  { value: "admin", label: "行政部" },
+  { value: "other", label: "其他" },
 ];
 
 // 职位选项
 export const POSITION_CHOICES = [
-  { value: 'intern', label: '实习生' },
-  { value: 'junior', label: '初级' },
-  { value: 'middle', label: '中级' },
-  { value: 'senior', label: '高级' },
-  { value: 'expert', label: '专家' },
-  { value: 'manager', label: '经理' },
-  { value: 'director', label: '总监' },
-  { value: 'vp', label: '副总裁' },
-  { value: 'partner', label: '合伙人' },
+  { value: "intern", label: "实习生" },
+  { value: "junior", label: "初级" },
+  { value: "middle", label: "中级" },
+  { value: "senior", label: "高级" },
+  { value: "expert", label: "专家" },
+  { value: "manager", label: "经理" },
+  { value: "director", label: "总监" },
+  { value: "vp", label: "副总裁" },
+  { value: "partner", label: "合伙人" },
 ];
 
 // 性别选项
 export const GENDER_CHOICES = [
-  { value: 'M', label: '男' },
-  { value: 'F', label: '女' },
-  { value: 'O', label: '其他' },
+  { value: "M", label: "男" },
+  { value: "F", label: "女" },
+  { value: "O", label: "其他" },
 ];
 
 export interface UserProfile {
   phone?: string;
   avatar?: string;
   avatar_url?: string;
-  gender?: 'M' | 'F' | 'O';
+  gender?: "M" | "F" | "O";
   birthday?: string;
   department?: string;
   position?: string;
@@ -70,7 +70,7 @@ export interface UserProfile {
   last_login_ip?: string;
   language?: string;
   timezone_str?: string;
-  theme?: 'light' | 'dark' | 'auto';
+  theme?: "light" | "dark" | "auto";
   email_notifications?: boolean;
   sms_notifications?: boolean;
   push_notifications?: boolean;
@@ -172,7 +172,7 @@ export interface Resume {
   self_introduction?: string;
   resume_file?: string;
   resume_file_url?: string;
-  status: 'pending' | 'reviewing' | 'approved' | 'rejected';
+  status: "pending" | "reviewing" | "approved" | "rejected";
   status_display?: string;
   review_notes?: string;
   reviewed_by?: number;
@@ -194,7 +194,7 @@ export interface JobPosition {
   salary_range?: string;
   description: string;
   requirements: string;
-  status: 'draft' | 'active' | 'paused' | 'closed';
+  status: "draft" | "active" | "paused" | "closed";
   status_display?: string;
   sort_order: number;
   created_at: string;
@@ -203,43 +203,43 @@ export interface JobPosition {
 
 // Job category choices
 export const JOB_CATEGORY_CHOICES = [
-  { value: 'quant_dev', label: '量化开发' },
-  { value: 'data_engineer', label: '数据工程师' },
-  { value: 'risk_manager', label: '风控专员' },
-  { value: 'researcher', label: '研究员' },
-  { value: 'it_support', label: 'IT支持' },
-  { value: 'other', label: '其他' },
+  { value: "quant_dev", label: "量化开发" },
+  { value: "data_engineer", label: "数据工程师" },
+  { value: "risk_manager", label: "风控专员" },
+  { value: "researcher", label: "研究员" },
+  { value: "it_support", label: "IT支持" },
+  { value: "other", label: "其他" },
 ];
 
 // Education choices
 export const EDUCATION_CHOICES = [
-  { value: 'high_school', label: '高中' },
-  { value: 'associate', label: '大专' },
-  { value: 'bachelor', label: '本科' },
-  { value: 'master', label: '硕士' },
-  { value: 'doctor', label: '博士' },
+  { value: "high_school", label: "高中" },
+  { value: "associate", label: "大专" },
+  { value: "bachelor", label: "本科" },
+  { value: "master", label: "硕士" },
+  { value: "doctor", label: "博士" },
 ];
 
 // Resume status choices
 export const RESUME_STATUS_CHOICES = [
-  { value: 'pending', label: '待审核', color: 'orange' },
-  { value: 'reviewing', label: '审核中', color: 'blue' },
-  { value: 'approved', label: '已通过', color: 'green' },
-  { value: 'rejected', label: '已拒绝', color: 'red' },
+  { value: "pending", label: "待审核", color: "orange" },
+  { value: "reviewing", label: "审核中", color: "blue" },
+  { value: "approved", label: "已通过", color: "green" },
+  { value: "rejected", label: "已拒绝", color: "red" },
 ];
 
 // Job status choices
 export const JOB_STATUS_CHOICES = [
-  { value: 'draft', label: '草稿', color: 'default' },
-  { value: 'active', label: '招聘中', color: 'processing' },
-  { value: 'paused', label: '暂停招聘', color: 'warning' },
-  { value: 'closed', label: '已关闭', color: 'error' },
+  { value: "draft", label: "草稿", color: "default" },
+  { value: "active", label: "招聘中", color: "processing" },
+  { value: "paused", label: "暂停招聘", color: "warning" },
+  { value: "closed", label: "已关闭", color: "error" },
 ];
 
 // Recruitment type choices
 export const RECRUITMENT_TYPE_CHOICES = [
-  { value: 'social', label: '社会招聘' },
-  { value: 'campus', label: '校园招聘' },
+  { value: "social", label: "社会招聘" },
+  { value: "campus", label: "校园招聘" },
 ];
 
 // Research Report types
@@ -268,7 +268,7 @@ export interface ResearchReport {
   tags: string;
   author: number;
   author_username?: string;
-  status: 'draft' | 'pending' | 'approved' | 'rejected' | 'published';
+  status: "draft" | "pending" | "approved" | "rejected" | "published";
   status_display?: string;
   reviewer?: number;
   reviewer_username?: string;
@@ -284,22 +284,22 @@ export interface ResearchReport {
 
 // Research strategy type choices
 export const RESEARCH_STRATEGY_TYPES = [
-  { value: 'momentum', label: '趋势跟踪' },
-  { value: 'mean_reversion', label: '均值回归' },
-  { value: 'arbitrage', label: '套利策略' },
-  { value: 'market_making', label: '做市策略' },
-  { value: 'high_frequency', label: '高频策略' },
-  { value: 'multi_factor', label: '多因子策略' },
-  { value: 'machine_learning', label: '机器学习' },
-  { value: 'event_driven', label: '事件驱动' },
-  { value: 'macro', label: '宏观策略' },
-  { value: 'other', label: '其他' },
+  { value: "momentum", label: "趋势跟踪" },
+  { value: "mean_reversion", label: "均值回归" },
+  { value: "arbitrage", label: "套利策略" },
+  { value: "market_making", label: "做市策略" },
+  { value: "high_frequency", label: "高频策略" },
+  { value: "multi_factor", label: "多因子策略" },
+  { value: "machine_learning", label: "机器学习" },
+  { value: "event_driven", label: "事件驱动" },
+  { value: "macro", label: "宏观策略" },
+  { value: "other", label: "其他" },
 ];
 
 // Log types
-export type LogType = 'app' | 'error' | 'security' | 'performance' | 'django';
+export type LogType = "app" | "error" | "security" | "performance" | "django";
 
-export type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
+export type LogLevel = "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL";
 
 export interface LogEntry {
   timestamp: string;
@@ -392,24 +392,28 @@ export interface LogListParams {
 
 // Log rotation action params
 export interface LogRotationAction {
-  action: 'rotate' | 'pause' | 'resume';
+  action: "rotate" | "pause" | "resume";
   log_type: LogType;
 }
 
 // Log type choices
 export const LOG_TYPE_CHOICES: { value: LogType; label: string }[] = [
-  { value: 'app', label: '应用日志' },
-  { value: 'error', label: '错误日志' },
-  { value: 'security', label: '安全日志' },
-  { value: 'performance', label: '性能日志' },
-  { value: 'django', label: 'Django日志' },
+  { value: "app", label: "应用日志" },
+  { value: "error", label: "错误日志" },
+  { value: "security", label: "安全日志" },
+  { value: "performance", label: "性能日志" },
+  { value: "django", label: "Django日志" },
 ];
 
 // Log level choices with colors
-export const LOG_LEVEL_CHOICES: { value: LogLevel; label: string; color: string }[] = [
-  { value: 'DEBUG', label: 'DEBUG', color: 'default' },
-  { value: 'INFO', label: 'INFO', color: 'processing' },
-  { value: 'WARNING', label: 'WARNING', color: 'warning' },
-  { value: 'ERROR', label: 'ERROR', color: 'error' },
-  { value: 'CRITICAL', label: 'CRITICAL', color: 'red' },
+export const LOG_LEVEL_CHOICES: {
+  value: LogLevel;
+  label: string;
+  color: string;
+}[] = [
+  { value: "DEBUG", label: "DEBUG", color: "default" },
+  { value: "INFO", label: "INFO", color: "processing" },
+  { value: "WARNING", label: "WARNING", color: "warning" },
+  { value: "ERROR", label: "ERROR", color: "error" },
+  { value: "CRITICAL", label: "CRITICAL", color: "red" },
 ];

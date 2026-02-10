@@ -3,13 +3,13 @@ Log Reader with Caching and Indexing
 
 Provides cached, indexed log reading for high-performance admin viewing.
 """
-import json
+
 import hashlib
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Optional, Any
-from functools import lru_cache
+import json
 import logging
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 from .parser import LogParser, ParsedLogEntry
 
@@ -24,13 +24,13 @@ class CachedLogReader:
     - Memory-mapped style access patterns
     """
 
-    CACHE_PREFIX = 'log_cache:'
-    INDEX_PREFIX = 'log_index:'
+    CACHE_PREFIX = "log_cache:"
+    INDEX_PREFIX = "log_index:"
 
     def __init__(self, redis_client=None):
         self.redis = redis_client
         self._indexes: Dict[Path, Any] = {}
-        self.logger = logging.getLogger('app.admin.logs.reader')
+        self.logger = logging.getLogger("app.admin.logs.reader")
 
     def _get_cache_key(self, file_path: str, offset: int, limit: int) -> str:
         """Generate cache key"""
@@ -71,11 +71,11 @@ class CachedLogReader:
 
         if not file_path.exists():
             return {
-                'entries': [],
-                'total': 0,
-                'offset': offset,
-                'limit': limit,
-                'has_more': False,
+                "entries": [],
+                "total": 0,
+                "offset": offset,
+                "limit": limit,
+                "has_more": False,
             }
 
         # Try cache first
@@ -126,11 +126,11 @@ class CachedLogReader:
         total = offset + skipped + len(entries)
 
         result = {
-            'entries': entries,
-            'total': total,
-            'offset': offset,
-            'limit': limit,
-            'has_more': len(entries) == limit,
+            "entries": entries,
+            "total": total,
+            "offset": offset,
+            "limit": limit,
+            "has_more": len(entries) == limit,
         }
 
         # Cache result
@@ -146,19 +146,19 @@ class CachedLogReader:
     def _serialize_entry(self, entry: ParsedLogEntry) -> Dict[str, Any]:
         """Serialize entry for JSON response"""
         return {
-            'timestamp': entry.timestamp.isoformat(),
-            'level': entry.level.value,
-            'logger': entry.logger,
-            'message': entry.message,
-            'module': entry.module,
-            'function': entry.function,
-            'line': entry.line,
-            'process_id': entry.process_id,
-            'thread_id': entry.thread_id,
-            'trace_id': entry.trace_id,
-            'request_id': entry.request_id,
-            'user_id': entry.user_id,
-            'extra': entry.extra,
+            "timestamp": entry.timestamp.isoformat(),
+            "level": entry.level.value,
+            "logger": entry.logger,
+            "message": entry.message,
+            "module": entry.module,
+            "function": entry.function,
+            "line": entry.line,
+            "process_id": entry.process_id,
+            "thread_id": entry.thread_id,
+            "trace_id": entry.trace_id,
+            "request_id": entry.request_id,
+            "user_id": entry.user_id,
+            "extra": entry.extra,
         }
 
     def get_log_stats(self, log_type: str) -> Dict[str, Any]:
@@ -166,12 +166,12 @@ class CachedLogReader:
         file_path = LogParser.get_log_file(log_type)
 
         if not file_path.exists():
-            return {'error': 'Log file not found'}
+            return {"error": "Log file not found"}
 
         stats = {
-            'file_path': str(file_path),
-            'file_size_mb': round(file_path.stat().st_size / (1024 * 1024), 2),
-            'last_modified': datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
+            "file_path": str(file_path),
+            "file_size_mb": round(file_path.stat().st_size / (1024 * 1024), 2),
+            "last_modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
         }
 
         # Count entries by level
@@ -180,8 +180,8 @@ class CachedLogReader:
             level = entry.level.value
             level_counts[level] = level_counts.get(level, 0) + 1
 
-        stats['level_counts'] = level_counts
-        stats['total_entries'] = sum(level_counts.values())
+        stats["level_counts"] = level_counts
+        stats["total_entries"] = sum(level_counts.values())
 
         return stats
 

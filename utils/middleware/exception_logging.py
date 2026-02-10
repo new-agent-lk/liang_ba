@@ -5,12 +5,11 @@
 """
 
 import traceback
-import logging
 from typing import Callable, Optional
 
+from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.utils.deprecation import MiddlewareMixin
-from django.conf import settings
 
 from utils.logging import get_error_logger
 
@@ -36,9 +35,7 @@ class ExceptionLoggingMiddleware(MiddlewareMixin):
         return self.get_response(request)
 
     def process_exception(
-        self,
-        request: HttpRequest,
-        exception: Exception
+        self, request: HttpRequest, exception: Exception
     ) -> Optional[HttpResponse]:
         """处理异常"""
         # 获取异常信息
@@ -48,17 +45,17 @@ class ExceptionLoggingMiddleware(MiddlewareMixin):
 
         # 记录异常日志
         logger.exception(
-            f'Unhandled exception: {exc_type}',
+            f"Unhandled exception: {exc_type}",
             extra={
-                'extra_data': {
-                    'path': request.path,
-                    'method': request.method,
-                    'exception_type': exc_type,
-                    'exception_message': exc_message,
-                    'traceback': exc_traceback,
-                    'query_string': request.META.get('QUERY_STRING', '') or '',
+                "extra_data": {
+                    "path": request.path,
+                    "method": request.method,
+                    "exception_type": exc_type,
+                    "exception_message": exc_message,
+                    "traceback": exc_traceback,
+                    "query_string": request.META.get("QUERY_STRING", "") or "",
                 }
-            }
+            },
         )
 
         # 返回 None 继续默认异常处理
@@ -80,16 +77,16 @@ class ErrorResponseMiddleware(MiddlewareMixin):
         response = self.get_response(request)
 
         # 如果是错误状态码且 DEBUG=False，记录错误响应
-        if response.status_code >= 400 and not getattr(settings, 'DEBUG', False):
+        if response.status_code >= 400 and not getattr(settings, "DEBUG", False):
             logger.warning(
-                'Error response',
+                "Error response",
                 extra={
-                    'extra_data': {
-                        'path': request.path,
-                        'method': request.method,
-                        'status_code': response.status_code,
+                    "extra_data": {
+                        "path": request.path,
+                        "method": request.method,
+                        "status_code": response.status_code,
                     }
-                }
+                },
             )
 
         return response

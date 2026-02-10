@@ -1,13 +1,13 @@
 from .research_report import (
-    ResearchReportSerializer,
     ResearchReportCreateSerializer,
-    ResearchReportReviewSerializer,
     ResearchReportListSerializer,
+    ResearchReportReviewSerializer,
+    ResearchReportSerializer,
 )
 
 __all__ = [
-    'ResearchReportSerializer',
-    'ResearchReportCreateSerializer',
-    'ResearchReportReviewSerializer',
-    'ResearchReportListSerializer',
+    "ResearchReportSerializer",
+    "ResearchReportCreateSerializer",
+    "ResearchReportReviewSerializer",
+    "ResearchReportListSerializer",
 ]

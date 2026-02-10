@@ -3,27 +3,28 @@ Log Rotation Manager
 
 Handles log file rotation with configurable policies.
 """
-import os
+
 import glob
-import shutil
 import gzip
-from pathlib import Path
-from datetime import datetime
-from dataclasses import dataclass
-from typing import Optional, Dict, Any
-from enum import Enum
 import logging
+import shutil
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 
 class RotationStrategy(Enum):
-    SIZE = 'size'
-    TIME = 'time'
-    COUNT = 'count'
+    SIZE = "size"
+    TIME = "time"
+    COUNT = "count"
 
 
 @dataclass
 class RotationPolicy:
     """Configuration for log rotation"""
+
     max_size_mb: int = 10
     max_files: int = 10
     max_age_days: int = 30
@@ -34,6 +35,7 @@ class RotationPolicy:
 @dataclass
 class LogFileInfo:
     """Information about a log file"""
+
     path: Path
     size_bytes: int
     modified: datetime
@@ -53,14 +55,14 @@ class LogRotationManager:
     """
 
     def __init__(self, logs_dir: Path = None):
-        self.logs_dir = logs_dir or Path('/home/ubuntu/liang_ba/logs')
-        self.logger = logging.getLogger('app.admin.logs.rotation')
+        self.logs_dir = logs_dir or Path("/home/ubuntu/liang_ba/logs")
+        self.logger = logging.getLogger("app.admin.logs.rotation")
         self.policies: Dict[str, RotationPolicy] = {
-            'app': RotationPolicy(max_size_mb=10, max_files=10, max_age_days=30),
-            'error': RotationPolicy(max_size_mb=10, max_files=20, max_age_days=60),
-            'security': RotationPolicy(max_size_mb=10, max_files=30, max_age_days=90),
-            'performance': RotationPolicy(max_size_mb=10, max_files=10, max_age_days=30),
-            'django': RotationPolicy(max_size_mb=10, max_files=5, max_age_days=14),
+            "app": RotationPolicy(max_size_mb=10, max_files=10, max_age_days=30),
+            "error": RotationPolicy(max_size_mb=10, max_files=20, max_age_days=60),
+            "security": RotationPolicy(max_size_mb=10, max_files=30, max_age_days=90),
+            "performance": RotationPolicy(max_size_mb=10, max_files=10, max_age_days=30),
+            "django": RotationPolicy(max_size_mb=10, max_files=5, max_age_days=14),
         }
 
     def check_and_rotate(self, log_type: str) -> Dict[str, Any]:
@@ -74,25 +76,25 @@ class LogRotationManager:
         log_file = self.logs_dir / f"{log_type}.log"
 
         if not log_file.exists():
-            return {'rotated': False, 'reason': 'file_not_found'}
+            return {"rotated": False, "reason": "file_not_found"}
 
         file_size_mb = log_file.stat().st_size / (1024 * 1024)
 
         if file_size_mb < policy.max_size_mb:
-            return {'rotated': False, 'reason': 'size_below_threshold', 'current_mb': file_size_mb}
+            return {"rotated": False, "reason": "size_below_threshold", "current_mb": file_size_mb}
 
         # Perform rotation
         result = self._rotate_by_size(log_file, policy)
 
         # Cleanup old files
         cleanup_result = self._cleanup_old_files(log_type, policy)
-        result['cleanup'] = cleanup_result
+        result["cleanup"] = cleanup_result
 
         return result
 
     def _rotate_by_size(self, log_file: Path, policy: RotationPolicy) -> Dict[str, Any]:
         """Rotate log file by size"""
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         rotated_name = f"{log_file.stem}_{timestamp}.log"
         rotated_path = self.logs_dir / rotated_name
 
@@ -102,30 +104,30 @@ class LogRotationManager:
             self.logger.info(f"Rotated {log_file} to {rotated_path}")
         except OSError as e:
             self.logger.error(f"Failed to rotate {log_file}: {e}")
-            return {'rotated': False, 'error': str(e)}
+            return {"rotated": False, "error": str(e)}
 
         # Create new empty log file
         log_file.touch()
 
         result = {
-            'rotated': True,
-            'old_file': str(rotated_path),
-            'new_file': str(log_file),
+            "rotated": True,
+            "old_file": str(rotated_path),
+            "new_file": str(log_file),
         }
 
         # Compress if configured
         if policy.compress_old:
             compressed = self._compress_file(rotated_path)
-            result['compressed'] = compressed
+            result["compressed"] = compressed
 
         return result
 
     def _compress_file(self, file_path: Path) -> bool:
         """Gzip compress a file"""
-        compressed_path = Path(str(file_path) + '.gz')
+        compressed_path = Path(str(file_path) + ".gz")
         try:
-            with open(file_path, 'rb') as f_in:
-                with gzip.open(compressed_path, 'wb') as f_out:
+            with open(file_path, "rb") as f_in:
+                with gzip.open(compressed_path, "wb") as f_out:
                     shutil.copyfileobj(f_in, f_out)
             file_path.unlink()  # Remove original
             return True
@@ -139,8 +141,8 @@ class LogRotationManager:
         # 1. django.log.1, django.log.2 (Python logging style)
         # 2. django_YYYYMMDD_HHMMSS.log (our rotation style)
         patterns = [
-            self.logs_dir / f"{log_type}.log.*",      # django.log.1, django.log.2, etc.
-            self.logs_dir / f"{log_type}_*.log*",      # django_20260204.log, django_20260204.log.gz
+            self.logs_dir / f"{log_type}.log.*",  # django.log.1, django.log.2, etc.
+            self.logs_dir / f"{log_type}_*.log*",  # django_20260204.log, django_20260204.log.gz
         ]
         files = []
         for pattern in patterns:
@@ -149,11 +151,11 @@ class LogRotationManager:
                 # Exclude current log file
                 if path.name == f"{log_type}.log":
                     continue
-                files.append(LogFileInfo(
-                    path,
-                    path.stat().st_size,
-                    datetime.fromtimestamp(path.stat().st_mtime)
-                ))
+                files.append(
+                    LogFileInfo(
+                        path, path.stat().st_size, datetime.fromtimestamp(path.stat().st_mtime)
+                    )
+                )
 
         # Sort by modification time (newest first)
         files = sorted(files, key=lambda x: x.modified, reverse=True)
@@ -167,28 +169,28 @@ class LogRotationManager:
             # Check age
             age_days = (now - f.modified).days
             should_delete = False
-            reason = ''
+            reason = ""
 
             if age_days > policy.max_age_days:
                 should_delete = True
-                reason = f'age_{age_days}_days'
+                reason = f"age_{age_days}_days"
             elif len([x for x in kept if not x.is_compressed]) > policy.max_files:
                 should_delete = True
-                reason = 'count_exceeded'
+                reason = "count_exceeded"
 
             if should_delete:
                 try:
                     f.path.unlink()
-                    deleted.append({'path': str(f.path), 'reason': reason})
+                    deleted.append({"path": str(f.path), "reason": reason})
                 except Exception as e:
                     self.logger.error(f"Failed to delete {f.path}: {e}")
             else:
                 kept.append(f)
 
         return {
-            'deleted_count': len(deleted),
-            'deleted_files': deleted,
-            'remaining_count': len(kept),
+            "deleted_count": len(deleted),
+            "deleted_files": deleted,
+            "remaining_count": len(kept),
         }
 
     def get_rotation_status(self, log_type: str) -> Dict[str, Any]:
@@ -197,30 +199,30 @@ class LogRotationManager:
         log_file = self.logs_dir / f"{log_type}.log"
 
         status = {
-            'log_type': log_type,
-            'policy': {
-                'max_size_mb': policy.max_size_mb,
-                'max_files': policy.max_files,
-                'max_age_days': policy.max_age_days,
-                'compress_old': policy.compress_old,
+            "log_type": log_type,
+            "policy": {
+                "max_size_mb": policy.max_size_mb,
+                "max_files": policy.max_files,
+                "max_age_days": policy.max_age_days,
+                "compress_old": policy.compress_old,
             },
         }
 
         if not log_file.exists():
-            status['current_size_mb'] = 0
-            status['exists'] = False
+            status["current_size_mb"] = 0
+            status["exists"] = False
             return status
 
-        status['exists'] = True
-        status['current_size_mb'] = round(log_file.stat().st_size / (1024 * 1024), 2)
-        status['last_modified'] = datetime.fromtimestamp(log_file.stat().st_mtime).isoformat()
+        status["exists"] = True
+        status["current_size_mb"] = round(log_file.stat().st_size / (1024 * 1024), 2)
+        status["last_modified"] = datetime.fromtimestamp(log_file.stat().st_mtime).isoformat()
 
         # Get archived files - match both patterns:
         # 1. django.log.1, django.log.2 (Python logging style)
         # 2. django_YYYYMMDD_HHMMSS.log (our rotation style)
         patterns = [
-            self.logs_dir / f"{log_type}.log.*",      # django.log.1, django.log.2, etc.
-            self.logs_dir / f"{log_type}_*.log*",      # django_20260204.log, django_20260204.log.gz
+            self.logs_dir / f"{log_type}.log.*",  # django.log.1, django.log.2, etc.
+            self.logs_dir / f"{log_type}_*.log*",  # django_20260204.log, django_20260204.log.gz
         ]
         archived = []
         for pattern in patterns:
@@ -229,19 +231,19 @@ class LogRotationManager:
                 # Exclude current log file
                 if path.name == f"{log_type}.log":
                     continue
-                archived.append(LogFileInfo(
-                    path,
-                    path.stat().st_size,
-                    datetime.fromtimestamp(path.stat().st_mtime)
-                ))
+                archived.append(
+                    LogFileInfo(
+                        path, path.stat().st_size, datetime.fromtimestamp(path.stat().st_mtime)
+                    )
+                )
 
-        status['archived_files_count'] = len(archived)
-        status['archived_files'] = [
+        status["archived_files_count"] = len(archived)
+        status["archived_files"] = [
             {
-                'name': f.path.name,
-                'size_mb': round(f.size_bytes / (1024 * 1024), 2),
-                'modified': f.modified.isoformat(),
-                'is_compressed': f.is_compressed,
+                "name": f.path.name,
+                "size_mb": round(f.size_bytes / (1024 * 1024), 2),
+                "modified": f.modified.isoformat(),
+                "is_compressed": f.is_compressed,
             }
             for f in archived[:10]  # Last 10
         ]

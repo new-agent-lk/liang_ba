@@ -1,11 +1,12 @@
 from wagtail.blocks import (
     CharBlock,
     ChoiceBlock,
+    ListBlock,
+    RawHTMLBlock,
     RichTextBlock,
     StreamBlock,
     StructBlock,
     TextBlock,
-    RawHTMLBlock, ListBlock,
 )
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -68,9 +69,7 @@ class BaseStreamBlock(StreamBlock):
     """
 
     heading_block = HeadingBlock()
-    paragraph_block = RichTextBlock(
-        icon="pilcrow", template="blocks/paragraph_block.html"
-    )
+    paragraph_block = RichTextBlock(icon="pilcrow", template="blocks/paragraph_block.html")
     image_block = ImageBlock()
     block_quote = BlockQuote()
     embed_block = EmbedBlock(
@@ -82,21 +81,28 @@ class BaseStreamBlock(StreamBlock):
 
 class BaseDailyPageStreamBlock(StreamBlock):
     source_code = RawHTMLBlock()
-    big_title = CharBlock(max_length=512, help_text='大标题')
-    content = RichTextBlock(help_text='内容')
-    ico_image = ImageChooserBlock(help_text='头像')
-    author_name = CharBlock(max_length=255, help_text='作者')
-    author_intro = CharBlock(max_length=255, help_text='作者介绍')
+    big_title = CharBlock(max_length=512, help_text="大标题")
+    content = RichTextBlock(help_text="内容")
+    ico_image = ImageChooserBlock(help_text="头像")
+    author_name = CharBlock(max_length=255, help_text="作者")
+    author_intro = CharBlock(max_length=255, help_text="作者介绍")
 
 
 class BasePageStreamBlock(StreamBlock):
     source_code = RawHTMLBlock()
-    big_title = CharBlock(max_length=512, help_text='大标题')
-    content = ListBlock(RichTextBlock(help_text='内容'), help_text='这里可以填入多个内容，也可以只填写一个')
+    big_title = CharBlock(max_length=512, help_text="大标题")
+    content = ListBlock(
+        RichTextBlock(help_text="内容"), help_text="这里可以填入多个内容，也可以只填写一个"
+    )
 
-    author_info = StructBlock([
-        ('ico_image', ImageChooserBlock(help_text='头像')),
-        ('author_name', CharBlock(max_length=255, help_text='作者')),
-        ('author_intro', CharBlock(max_length=255, help_text='作者介绍')),
-    ], null=True, blank=True, max_num=1, help_text='作者信息')
-
+    author_info = StructBlock(
+        [
+            ("ico_image", ImageChooserBlock(help_text="头像")),
+            ("author_name", CharBlock(max_length=255, help_text="作者")),
+            ("author_intro", CharBlock(max_length=255, help_text="作者介绍")),
+        ],
+        null=True,
+        blank=True,
+        max_num=1,
+        help_text="作者信息",
+    )

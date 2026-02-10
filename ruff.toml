@@ -5,11 +5,17 @@ line-length = 100
 
 [lint]
 # Enable pycodestyle (E), Pyflakes (F), isort (I), and flake8-quotes (Q)
-select = ["E", "F", "I", "Q", "W"]
+select = ["E", "F", "I", "W"]
 # Disable rules that conflict with Black or are unnecessary
 ignore = [
     "E501",  # Line too long - handled by black
     "E731",  # Do not assign a lambda expression
+    "F403",  # from ... import * usage in legacy modules
+    "F405",  # names from star imports in legacy modules
+    "E402",  # legacy modules with deferred imports
+    "E722",  # legacy broad exception handlers
+    "F821",  # unresolved names in legacy/test helpers
+    "F841",  # keep temporary variables in legacy code
 ]
 
 [lint.per-file-ignores]

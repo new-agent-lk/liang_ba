@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
-import { Card, Row, Col, Form, Select, InputNumber, Button, Table, Statistic, Space, Typography, Spin, Divider } from 'antd';
-import { BarChartOutlined, TrophyOutlined } from '@ant-design/icons';
-import { runBacktest } from '@/api/factorhub';
+import React, { useState } from "react";
+import {
+  Card,
+  Row,
+  Col,
+  Form,
+  Select,
+  InputNumber,
+  Button,
+  Table,
+  Statistic,
+  Space,
+  Typography,
+  Spin,
+  Divider,
+} from "antd";
+import { BarChartOutlined, TrophyOutlined } from "@ant-design/icons";
+import { runBacktest } from "@/api/factorhub";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -26,15 +40,20 @@ const FactorBacktestPage: React.FC = () => {
 
       setResults(response.data);
     } catch (error: any) {
-      console.error('回测失败', error);
+      console.error("回测失败", error);
     } finally {
       setLoading(false);
     }
   };
 
   const columns = [
-    { title: '日期', dataIndex: 'date', key: 'date' },
-    { title: '组合价值', dataIndex: 'value', key: 'value', render: (v: number) => v?.toLocaleString() },
+    { title: "日期", dataIndex: "date", key: "date" },
+    {
+      title: "组合价值",
+      dataIndex: "value",
+      key: "value",
+      render: (v: number) => v?.toLocaleString(),
+    },
   ];
 
   return (
@@ -48,7 +67,9 @@ const FactorBacktestPage: React.FC = () => {
               precision={2}
               suffix="%"
               prefix={<TrophyOutlined />}
-              valueStyle={{ color: (results?.total_return || 0) > 0 ? '#52c41a' : '#ff4d4f' }}
+              valueStyle={{
+                color: (results?.total_return || 0) > 0 ? "#52c41a" : "#ff4d4f",
+              }}
             />
           </Card>
         </Col>
@@ -78,7 +99,10 @@ const FactorBacktestPage: React.FC = () => {
               value={(results?.max_drawdown || 0) * 100}
               precision={2}
               suffix="%"
-              valueStyle={{ color: (results?.max_drawdown || 0) > -0.1 ? '#52c41a' : '#ff4d4f' }}
+              valueStyle={{
+                color:
+                  (results?.max_drawdown || 0) > -0.1 ? "#52c41a" : "#ff4d4f",
+              }}
             />
           </Card>
         </Col>
@@ -122,7 +146,7 @@ const FactorBacktestPage: React.FC = () => {
           <Form.Item
             name="factor_name"
             label="选择因子"
-            rules={[{ required: true, message: '请选择因子' }]}
+            rules={[{ required: true, message: "请选择因子" }]}
           >
             <Select style={{ width: 150 }} placeholder="选择因子">
               <Option value="ma20">MA20</Option>
@@ -131,11 +155,22 @@ const FactorBacktestPage: React.FC = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item name="initial_capital" label="初始资金" initialValue={1000000}>
-            <InputNumber style={{ width: 120 }} formatter={(value) => `¥ ${value}`} />
+          <Form.Item
+            name="initial_capital"
+            label="初始资金"
+            initialValue={1000000}
+          >
+            <InputNumber
+              style={{ width: 120 }}
+              formatter={(value) => `¥ ${value}`}
+            />
           </Form.Item>
 
-          <Form.Item name="rebalance_freq" label="再平衡频率" initialValue="weekly">
+          <Form.Item
+            name="rebalance_freq"
+            label="再平衡频率"
+            initialValue="weekly"
+          >
             <Select style={{ width: 100 }}>
               <Option value="daily">日频</Option>
               <Option value="weekly">周频</Option>
@@ -165,7 +200,7 @@ const FactorBacktestPage: React.FC = () => {
       </Card>
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: 40 }}>
+        <div style={{ textAlign: "center", padding: 40 }}>
           <Spin size="large" />
           <div style={{ marginTop: 16 }}>
             <Text>回测运行中...</Text>
@@ -177,7 +212,15 @@ const FactorBacktestPage: React.FC = () => {
         <Row gutter={24}>
           <Col span={16}>
             <Card title="资金曲线">
-              <div style={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' }}>
+              <div
+                style={{
+                  height: 350,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#f5f5f5",
+                }}
+              >
                 <Text type="secondary">资金曲线图 (Plotly Chart)</Text>
               </div>
             </Card>
@@ -195,37 +238,56 @@ const FactorBacktestPage: React.FC = () => {
 
           <Col span={8}>
             <Card title="绩效指标">
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>总收益率：</Text>
-                  <Text strong style={{ color: results.total_return > 0 ? '#52c41a' : '#ff4d4f' }}>
+                  <Text
+                    strong
+                    style={{
+                      color: results.total_return > 0 ? "#52c41a" : "#ff4d4f",
+                    }}
+                  >
                     {(results.total_return * 100).toFixed(2)}%
                   </Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>年化收益率：</Text>
-                  <Text strong>{(results.annual_return * 100).toFixed(2)}%</Text>
+                  <Text strong>
+                    {(results.annual_return * 100).toFixed(2)}%
+                  </Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>年化波动率：</Text>
                   <Text strong>{(results.volatility * 100).toFixed(2)}%</Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>夏普比率：</Text>
                   <Text strong>{results.sharpe_ratio.toFixed(2)}</Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>最大回撤：</Text>
-                  <Text strong style={{ color: '#ff4d4f' }}>
+                  <Text strong style={{ color: "#ff4d4f" }}>
                     {(results.max_drawdown * 100).toFixed(2)}%
                   </Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>胜率：</Text>
                   <Text strong>{(results.win_rate * 100).toFixed(1)}%</Text>
                 </div>
@@ -233,23 +295,40 @@ const FactorBacktestPage: React.FC = () => {
             </Card>
 
             <Card title="交易统计" style={{ marginTop: 16 }}>
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>初始资金：</Text>
                   <Text>¥{results.initial_capital?.toLocaleString()}</Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>最终价值：</Text>
-                  <Text strong style={{ color: '#52c41a' }}>
+                  <Text strong style={{ color: "#52c41a" }}>
                     ¥{results.final_value?.toLocaleString()}
                   </Text>
                 </div>
-                <Divider style={{ margin: '12px 0' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Divider style={{ margin: "12px 0" }} />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Text>绝对收益：</Text>
-                  <Text strong style={{ color: (results.final_value - results.initial_capital) > 0 ? '#52c41a' : '#ff4d4f' }}>
-                    ¥{(results.final_value - results.initial_capital)?.toLocaleString()}
+                  <Text
+                    strong
+                    style={{
+                      color:
+                        results.final_value - results.initial_capital > 0
+                          ? "#52c41a"
+                          : "#ff4d4f",
+                    }}
+                  >
+                    ¥
+                    {(
+                      results.final_value - results.initial_capital
+                    )?.toLocaleString()}
                   </Text>
                 </div>
               </Space>

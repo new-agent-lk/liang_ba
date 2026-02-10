@@ -4,46 +4,45 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('companyinfo', '0001_initial'),
+        ("companyinfo", "0001_initial"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='Carousls',
+            name="Carousls",
         ),
         migrations.DeleteModel(
-            name='News',
+            name="News",
         ),
         migrations.RemoveField(
-            model_name='productpics',
-            name='product',
+            model_name="productpics",
+            name="product",
         ),
         migrations.RemoveField(
-            model_name='products',
-            name='category',
+            model_name="products",
+            name="category",
         ),
         migrations.RemoveField(
-            model_name='products',
-            name='tag',
+            model_name="products",
+            name="tag",
         ),
         migrations.DeleteModel(
-            name='Projects',
+            name="Projects",
         ),
         migrations.DeleteModel(
-            name='Recruits',
+            name="Recruits",
         ),
         migrations.DeleteModel(
-            name='ProductCats',
+            name="ProductCats",
         ),
         migrations.DeleteModel(
-            name='ProductPics',
+            name="ProductPics",
         ),
         migrations.DeleteModel(
-            name='Products',
+            name="Products",
         ),
         migrations.DeleteModel(
-            name='ProductTags',
+            name="ProductTags",
         ),
     ]

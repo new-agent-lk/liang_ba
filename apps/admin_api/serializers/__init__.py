@@ -1,34 +1,33 @@
 # User serializers
-from .user_profile import UserProfileSerializer
-from .user import (
-    UserSerializer,
-    UserCreateSerializer,
-    UserUpdateSerializer,
-    UserPasswordChangeSerializer,
-)
-
 # Company serializers
 from .company import CompanyInfoSerializer, CompanyInfoUpdateSerializer
-
-# Resume serializers
-from .resume import ResumeSerializer, ResumeReviewSerializer
 
 # Job serializers
 from .job import JobPositionSerializer
 
+# Resume serializers
+from .resume import ResumeReviewSerializer, ResumeSerializer
+from .user import (
+    UserCreateSerializer,
+    UserPasswordChangeSerializer,
+    UserSerializer,
+    UserUpdateSerializer,
+)
+from .user_profile import UserProfileSerializer
+
 __all__ = [
     # User
-    'UserProfileSerializer',
-    'UserSerializer',
-    'UserCreateSerializer',
-    'UserUpdateSerializer',
-    'UserPasswordChangeSerializer',
+    "UserProfileSerializer",
+    "UserSerializer",
+    "UserCreateSerializer",
+    "UserUpdateSerializer",
+    "UserPasswordChangeSerializer",
     # Company
-    'CompanyInfoSerializer',
-    'CompanyInfoUpdateSerializer',
+    "CompanyInfoSerializer",
+    "CompanyInfoUpdateSerializer",
     # Resume
-    'ResumeSerializer',
-    'ResumeReviewSerializer',
+    "ResumeSerializer",
+    "ResumeReviewSerializer",
     # Job
-    'JobPositionSerializer',
+    "JobPositionSerializer",
 ]

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { ConfigProvider, Spin } from 'antd';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider } from 'react-router-dom';
-import router from './router';
-import { useAuth } from '@/hooks/useAuth';
+import React, { useEffect, useState } from "react";
+import { ConfigProvider, Spin } from "antd";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
+import { useAuth } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,8 +25,11 @@ const AppContent: React.FC = () => {
       setAuthChecking(false);
 
       // If not authenticated and not on login page, redirect to login
-      if (!result.isAuthenticated && !window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+      if (
+        !result.isAuthenticated &&
+        !window.location.pathname.includes("/login")
+      ) {
+        window.location.href = "/login";
       }
     };
     initAuth();
@@ -34,7 +37,14 @@ const AppContent: React.FC = () => {
 
   if (authChecking) {
     return (
-      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Spin size="large" tip="加载中..." />
       </div>
     );
@@ -49,7 +59,7 @@ const App: React.FC = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#1677ff',
+            colorPrimary: "#1677ff",
             borderRadius: 6,
           },
         }}

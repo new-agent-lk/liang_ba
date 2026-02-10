@@ -1,12 +1,14 @@
 """
 回测引擎
 """
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta
+
 import warnings
-warnings.filterwarnings('ignore')
+from typing import Dict
+
+import numpy as np
+import pandas as pd
+
+warnings.filterwarnings("ignore")
 
 from .logger import logger
 
@@ -14,11 +16,13 @@ from .logger import logger
 class Backtester:
     """回测引擎"""
 
-    def __init__(self,
-                 initial_capital: float = 1000000,
-                 commission: float = 0.0003,
-                 slippage: float = 0.001,
-                 benchmark: str = "000300"):
+    def __init__(
+        self,
+        initial_capital: float = 1000000,
+        commission: float = 0.0003,
+        slippage: float = 0.001,
+        benchmark: str = "000300",
+    ):
         self.initial_capital = initial_capital
         self.commission = commission
         self.slippage = slippage
@@ -38,26 +42,22 @@ class Backtester:
 
     def load_price_data(self, data: pd.DataFrame, symbol: str, date) -> Dict:
         """获取股票价格数据"""
-        symbol_data = data[data['symbol'] == symbol]
-        price_data = symbol_data[symbol_data['date'] <= date].sort_values('date')
+        symbol_data = data[data["symbol"] == symbol]
+        price_data = symbol_data[symbol_data["date"] <= date].sort_values("date")
 
         if len(price_data) == 0:
             return {}
 
         latest = price_data.iloc[-1]
         return {
-            'open': latest['open'],
-            'close': latest['close'],
-            'high': latest['high'],
-            'low': latest['low'],
-            'volume': latest['volume']
+            "open": latest["open"],
+            "close": latest["close"],
+            "high": latest["high"],
+            "low": latest["low"],
+            "volume": latest["volume"],
         }
 
-    def execute_trade(self,
-                      symbol: str,
-                      target_weight: float,
-                      current_price: float,
-                      date) -> Dict:
+    def execute_trade(self, symbol: str, target_weight: float, current_price: float, date) -> Dict:
         """执行交易"""
         try:
             portfolio_value = self.current_capital + sum(
@@ -106,25 +106,27 @@ class Backtester:
                 "action": action,
                 "quantity": trade_quantity,
                 "price": adjusted_price,
-                "cost": cost
+                "cost": cost,
             }
 
         except Exception as e:
             self.logger.error(f"交易执行失败: {str(e)}")
             return {"symbol": symbol, "action": "error", "error": str(e)}
 
-    def run_backtest(self,
-                     data: pd.DataFrame,
-                     factor_name: str,
-                     rebalance_freq: str = "weekly",
-                     long_quantile: int = 3,
-                     short_quantile: int = 8) -> Dict:
+    def run_backtest(
+        self,
+        data: pd.DataFrame,
+        factor_name: str,
+        rebalance_freq: str = "weekly",
+        long_quantile: int = 3,
+        short_quantile: int = 8,
+    ) -> Dict:
         """运行回测"""
         self.reset()
 
         try:
-            dates = sorted(data['date'].unique())
-            symbols = data['symbol'].unique()
+            dates = sorted(data["date"].unique())
+            symbols = data["symbol"].unique()
 
             if len(dates) < 10 or len(symbols) < 10:
                 return {"error": "数据量不足"}
@@ -144,7 +146,7 @@ class Backtester:
             for date in dates:
                 if date in rebalance_dates:
                     # 计算因子分位数
-                    date_data = data[data['date'] == date].copy()
+                    date_data = data[data["date"] == date].copy()
                     if factor_name not in date_data.columns:
                         continue
 
@@ -153,18 +155,19 @@ class Backtester:
                         continue
 
                     try:
-                        date_data['quantile'] = pd.qcut(
-                            date_data[factor_name],
-                            q=10,
-                            labels=False,
-                            duplicates='drop'
+                        date_data["quantile"] = pd.qcut(
+                            date_data[factor_name], q=10, labels=False, duplicates="drop"
                         )
                     except:
                         continue
 
                     # 计算目标权重
-                    long_symbols = date_data[date_data['quantile'] <= long_quantile]['symbol'].tolist()
-                    short_symbols = date_data[date_data['quantile'] >= short_quantile]['symbol'].tolist()
+                    long_symbols = date_data[date_data["quantile"] <= long_quantile][
+                        "symbol"
+                    ].tolist()
+                    short_symbols = date_data[date_data["quantile"] >= short_quantile][
+                        "symbol"
+                    ].tolist()
 
                     n_long = max(1, len(long_symbols))
                     n_short = max(1, len(short_symbols))
@@ -181,19 +184,16 @@ class Backtester:
                         else:
                             target_weight = 0
 
-                        self.execute_trade(symbol, target_weight, price_data['close'], date)
+                        self.execute_trade(symbol, target_weight, price_data["close"], date)
 
                 # 更新组合价值
                 total_value = self.current_capital
                 for symbol, quantity in self.positions.items():
                     price_data = self.load_price_data(data, symbol, date)
                     if price_data:
-                        total_value += quantity * price_data['close']
+                        total_value += quantity * price_data["close"]
 
-                portfolio_values.append({
-                    'date': str(date),
-                    'value': total_value
-                })
+                portfolio_values.append({"date": str(date), "value": total_value})
                 self.portfolio_value.append(total_value)
 
             # 计算绩效指标
@@ -201,16 +201,22 @@ class Backtester:
             if len(portfolio_values_df) < 2:
                 return {"error": "回测数据不足"}
 
-            returns = portfolio_values_df['value'].pct_change().dropna()
+            returns = portfolio_values_df["value"].pct_change().dropna()
 
-            total_return = (portfolio_values_df['value'].iloc[-1] / self.initial_capital - 1) if self.initial_capital > 0 else 0
-            annual_return = total_return * 252 / len(portfolio_values_df) if len(portfolio_values_df) > 0 else 0
+            total_return = (
+                (portfolio_values_df["value"].iloc[-1] / self.initial_capital - 1)
+                if self.initial_capital > 0
+                else 0
+            )
+            annual_return = (
+                total_return * 252 / len(portfolio_values_df) if len(portfolio_values_df) > 0 else 0
+            )
             volatility = returns.std() * np.sqrt(252) if len(returns) > 0 else 0
             sharpe = annual_return / volatility if volatility > 0 else 0
 
             # 计算最大回撤
-            cummax = portfolio_values_df['value'].cummax()
-            drawdown = (portfolio_values_df['value'] - cummax) / cummax
+            cummax = portfolio_values_df["value"].cummax()
+            drawdown = (portfolio_values_df["value"] - cummax) / cummax
             max_drawdown = drawdown.min()
 
             # 胜率
@@ -219,15 +225,15 @@ class Backtester:
             win_rate = positive_days / total_days if total_days > 0 else 0
 
             return {
-                'portfolio_values': portfolio_values_df.to_dict('records'),
-                'total_return': total_return,
-                'annual_return': annual_return,
-                'volatility': volatility,
-                'sharpe_ratio': sharpe,
-                'max_drawdown': max_drawdown,
-                'win_rate': win_rate,
-                'final_value': portfolio_values_df['value'].iloc[-1],
-                'initial_capital': self.initial_capital
+                "portfolio_values": portfolio_values_df.to_dict("records"),
+                "total_return": total_return,
+                "annual_return": annual_return,
+                "volatility": volatility,
+                "sharpe_ratio": sharpe,
+                "max_drawdown": max_drawdown,
+                "win_rate": win_rate,
+                "final_value": portfolio_values_df["value"].iloc[-1],
+                "initial_capital": self.initial_capital,
             }
 
         except Exception as e:

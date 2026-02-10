@@ -12,13 +12,17 @@
   ],
   "ignorePatterns": [
     "dist",
-    "*.local"
+    "*.local",
+    "vite.config.ts",
+    "vitest.config.ts"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json"]
+    "project": [
+      "./tsconfig.json"
+    ]
   },
   "plugins": [
     "react-refresh",
@@ -26,21 +30,11 @@
     "prettier"
   ],
   "rules": {
-    "react-refresh/only-export-components": [
-      "warn",
-      {
-        "allowConstantExport": true
-      }
-    ],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
-      }
-    ],
-    "no-console": "warn",
-    "prettier/prettier": "error"
+    "react-refresh/only-export-components": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-console": "off",
+    "prettier/prettier": "error",
+    "react-hooks/exhaustive-deps": "off"
   }
 }

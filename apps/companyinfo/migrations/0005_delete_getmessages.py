@@ -4,13 +4,12 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('companyinfo', '0004_delete_advantages_delete_comments_delete_indexask'),
+        ("companyinfo", "0004_delete_advantages_delete_comments_delete_indexask"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='GetMessages',
+            name="GetMessages",
         ),
     ]

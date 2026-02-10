@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from "@/utils/request";
 
 // 统计信息
 export const getStats = () => {
@@ -6,11 +6,11 @@ export const getStats = () => {
 };
 
 // 股票相关
-export const getStockList = (market: string = 'all') => {
+export const getStockList = (market: string = "all") => {
   return request.get(`/api/factorhub/stocks/`, { params: { market } });
 };
 
-export const getStockPool = (pool: string = 'hs300') => {
+export const getStockPool = (pool: string = "hs300") => {
   return request.get(`/api/factorhub/stock-pool/`, { params: { pool } });
 };
 
@@ -77,7 +77,7 @@ export const runBacktest = (data: {
 
 // 分析执行
 export const executeAnalysis = (data: {
-  action: 'ic' | 'decile' | 'backtest';
+  action: "ic" | "decile" | "backtest";
   [key: string]: any;
 }) => {
   return request.post(`/api/factorhub/analysis/execute/`, data);

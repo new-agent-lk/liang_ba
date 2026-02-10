@@ -1,3 +1,3 @@
-from .reports import ReportListView, ReportDetailView
+from .reports import ReportDetailView, ReportListView
 
-__all__ = ['ReportListView', 'ReportDetailView']
+__all__ = ["ReportListView", "ReportDetailView"]

@@ -1,13 +1,14 @@
 """
 预置因子库
 """
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Optional, Callable
-from abc import ABC, abstractmethod
 
-from .logger import logger
+from abc import ABC, abstractmethod
+from typing import Dict, List, Optional
+
+import pandas as pd
+
 from .config import PRESET_FACTORS
+from .logger import logger
 
 
 class BaseFactor(ABC):
@@ -32,7 +33,7 @@ class TrendFactor(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算移动平均因子"""
-        return data['close'].rolling(self.ma_period).mean()
+        return data["close"].rolling(self.ma_period).mean()
 
 
 class MomentumFactor(BaseFactor):
@@ -44,7 +45,7 @@ class MomentumFactor(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算动量因子"""
-        return data['close'].pct_change(self.period)
+        return data["close"].pct_change(self.period)
 
 
 class RSI(BaseFactor):
@@ -56,7 +57,7 @@ class RSI(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算RSI"""
-        delta = data['close'].diff()
+        delta = data["close"].diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=self.period).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=self.period).mean()
         rs = gain / loss
@@ -67,8 +68,14 @@ class RSI(BaseFactor):
 class MACD(BaseFactor):
     """MACD指标"""
 
-    def __init__(self, name: str = "MACD", description: str = "MACD指标",
-                 fast: int = 12, slow: int = 26, signal: int = 9):
+    def __init__(
+        self,
+        name: str = "MACD",
+        description: str = "MACD指标",
+        fast: int = 12,
+        slow: int = 26,
+        signal: int = 9,
+    ):
         super().__init__(name, description)
         self.fast = fast
         self.slow = slow
@@ -76,8 +83,8 @@ class MACD(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算MACD"""
-        ema_fast = data['close'].ewm(span=self.fast, adjust=False).mean()
-        ema_slow = data['close'].ewm(span=self.slow, adjust=False).mean()
+        ema_fast = data["close"].ewm(span=self.fast, adjust=False).mean()
+        ema_slow = data["close"].ewm(span=self.slow, adjust=False).mean()
         dif = ema_fast - ema_slow
         dea = dif.ewm(span=self.signal, adjust=False).mean()
         macd = 2 * (dif - dea)
@@ -87,16 +94,17 @@ class MACD(BaseFactor):
 class BollingerBand(BaseFactor):
     """布林带"""
 
-    def __init__(self, name: str = "BOLL", description: str = "布林带",
-                 period: int = 20, std_dev: int = 2):
+    def __init__(
+        self, name: str = "BOLL", description: str = "布林带", period: int = 20, std_dev: int = 2
+    ):
         super().__init__(name, description)
         self.period = period
         self.std_dev = std_dev
 
     def calculate(self, data: pd.DataFrame, band: str = "mid") -> pd.Series:
         """计算布林带"""
-        ma = data['close'].rolling(self.period).mean()
-        std = data['close'].rolling(self.period).std()
+        ma = data["close"].rolling(self.period).mean()
+        std = data["close"].rolling(self.period).std()
 
         if band == "upper":
             return ma + self.std_dev * std
@@ -115,9 +123,9 @@ class ATR(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算ATR"""
-        high_low = data['high'] - data['low']
-        high_close = abs(data['high'] - data['close'].shift())
-        low_close = abs(data['low'] - data['close'].shift())
+        high_low = data["high"] - data["low"]
+        high_close = abs(data["high"] - data["close"].shift())
+        low_close = abs(data["low"] - data["close"].shift())
 
         tr = pd.concat([high_low, high_close, low_close], axis=1).max(axis=1)
         atr = tr.rolling(window=self.period).mean()
@@ -132,8 +140,8 @@ class VolumeFactor(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算成交量因子"""
-        volume_ma = data['volume'].rolling(20).mean()
-        return (data['volume'] - volume_ma) / volume_ma
+        volume_ma = data["volume"].rolling(20).mean()
+        return (data["volume"] - volume_ma) / volume_ma
 
 
 class ROC(BaseFactor):
@@ -145,7 +153,11 @@ class ROC(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算ROC"""
-        return (data['close'] - data['close'].shift(self.period)) / data['close'].shift(self.period) * 100
+        return (
+            (data["close"] - data["close"].shift(self.period))
+            / data["close"].shift(self.period)
+            * 100
+        )
 
 
 class WilliamsR(BaseFactor):
@@ -157,9 +169,9 @@ class WilliamsR(BaseFactor):
 
     def calculate(self, data: pd.DataFrame) -> pd.Series:
         """计算Williams %R"""
-        highest_high = data['high'].rolling(window=self.period).max()
-        lowest_low = data['low'].rolling(window=self.period).min()
-        williams_r = -100 * (highest_high - data['close']) / (highest_high - lowest_low)
+        highest_high = data["high"].rolling(window=self.period).max()
+        lowest_low = data["low"].rolling(window=self.period).min()
+        williams_r = -100 * (highest_high - data["close"]) / (highest_high - lowest_low)
         return williams_r
 
 
@@ -173,35 +185,39 @@ class FactorLibrary:
     def list_factors(self, category: str = None) -> List[Dict]:
         """列出因子"""
         if category:
-            return [v for k, v in self.factors.items() if v['category'] == category]
+            return [v for k, v in self.factors.items() if v["category"] == category]
         return list(self.factors.values())
 
     def get_factor_categories(self) -> List[str]:
         """获取因子分类"""
         categories = set()
         for f in self.factors.values():
-            categories.add(f['category'])
+            categories.add(f["category"])
         return sorted(list(categories))
 
     def get_factor(self, factor_name: str) -> Optional[BaseFactor]:
         """获取因子计算器"""
         factor_map = {
-            'ma5': lambda: TrendFactor('MA5', '5日移动平均', 5),
-            'ma10': lambda: TrendFactor('MA10', '10日移动平均', 10),
-            'ma20': lambda: TrendFactor('MA20', '20日移动平均', 20),
-            'ma60': lambda: TrendFactor('MA60', '60日移动平均', 60),
-            'rsi': lambda: RSI('RSI', '相对强弱指标', 14),
-            'macd': lambda: MACD('MACD', 'MACD指标'),
-            'boll_upper': lambda: BollingerBand('BOLL_UPPER', '布林线上轨').calculate(data, 'upper'),
-            'boll_lower': lambda: BollingerBand('BOLL_LOWER', '布林线下轨').calculate(data, 'lower'),
-            'atr': lambda: ATR('ATR', '真实波动幅度均值', 14),
-            'volume_ratio': lambda: VolumeFactor('VR', '量比'),
-            'momentum_1m': lambda: MomentumFactor('MOM_1M', '1个月动量', 20),
-            'momentum_3m': lambda: MomentumFactor('MOM_3M', '3个月动量', 60),
-            'momentum_6m': lambda: MomentumFactor('MOM_6M', '6个月动量', 120),
-            'momentum_12m': lambda: MomentumFactor('MOM_12M', '12个月动量', 240),
-            'roc': lambda: ROC('ROC', '变动率指标', 12),
-            'williams_r': lambda: WilliamsR('Williams%R', '威廉指标', 14),
+            "ma5": lambda: TrendFactor("MA5", "5日移动平均", 5),
+            "ma10": lambda: TrendFactor("MA10", "10日移动平均", 10),
+            "ma20": lambda: TrendFactor("MA20", "20日移动平均", 20),
+            "ma60": lambda: TrendFactor("MA60", "60日移动平均", 60),
+            "rsi": lambda: RSI("RSI", "相对强弱指标", 14),
+            "macd": lambda: MACD("MACD", "MACD指标"),
+            "boll_upper": lambda: BollingerBand("BOLL_UPPER", "布林线上轨").calculate(
+                data, "upper"
+            ),
+            "boll_lower": lambda: BollingerBand("BOLL_LOWER", "布林线下轨").calculate(
+                data, "lower"
+            ),
+            "atr": lambda: ATR("ATR", "真实波动幅度均值", 14),
+            "volume_ratio": lambda: VolumeFactor("VR", "量比"),
+            "momentum_1m": lambda: MomentumFactor("MOM_1M", "1个月动量", 20),
+            "momentum_3m": lambda: MomentumFactor("MOM_3M", "3个月动量", 60),
+            "momentum_6m": lambda: MomentumFactor("MOM_6M", "6个月动量", 120),
+            "momentum_12m": lambda: MomentumFactor("MOM_12M", "12个月动量", 240),
+            "roc": lambda: ROC("ROC", "变动率指标", 12),
+            "williams_r": lambda: WilliamsR("Williams%R", "威廉指标", 14),
         }
 
         if factor_name in factor_map:

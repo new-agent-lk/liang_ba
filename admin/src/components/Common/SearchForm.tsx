@@ -1,6 +1,6 @@
-import React from 'react';
-import { Form, Input, Button, Select, DatePicker, Space } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import React from "react";
+import { Form, Input, Button, Select, DatePicker, Space } from "antd";
+import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 
@@ -14,7 +14,7 @@ interface SearchFormProps {
 interface SearchField {
   name: string;
   label: string;
-  type: 'input' | 'select' | 'dateRange';
+  type: "input" | "select" | "dateRange";
   placeholder?: string;
   options?: { label: string; value: any }[];
 }
@@ -36,15 +36,23 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
   const renderField = (field: SearchField) => {
     switch (field.type) {
-      case 'input':
+      case "input":
         return (
-          <Form.Item key={field.name as string} name={field.name} label={field.label}>
+          <Form.Item
+            key={field.name as string}
+            name={field.name}
+            label={field.label}
+          >
             <Input placeholder={field.placeholder} allowClear />
           </Form.Item>
         );
-      case 'select':
+      case "select":
         return (
-          <Form.Item key={field.name as string} name={field.name} label={field.label}>
+          <Form.Item
+            key={field.name as string}
+            name={field.name}
+            label={field.label}
+          >
             <Select
               placeholder={field.placeholder}
               allowClear
@@ -53,9 +61,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
             />
           </Form.Item>
         );
-      case 'dateRange':
+      case "dateRange":
         return (
-          <Form.Item key={field.name as string} name={field.name} label={field.label}>
+          <Form.Item
+            key={field.name as string}
+            name={field.name}
+            label={field.label}
+          >
             <RangePicker />
           </Form.Item>
         );
