@@ -133,16 +133,19 @@ git pull
 # 2. 重新构建镜像
 docker-compose -f docker-compose.prod.yml build web
 
-# 3. 滚动更新（零停机）
-docker-compose -f docker-compose.prod.yml up -d --no-deps --build web
+# 3. 先启动依赖服务
+docker-compose -f docker-compose.prod.yml up -d db redis
 
-# 4. 运行迁移（如果有）
-docker-compose -f docker-compose.prod.yml exec web python manage_prod.py migrate
+# 4. 使用一次性容器执行迁移
+docker-compose -f docker-compose.prod.yml run --rm web python manage_prod.py migrate
 
-# 5. 收集静态文件（如果有更新）
-docker-compose -f docker-compose.prod.yml exec web python manage_prod.py collectstatic --noinput
+# 5. 使用一次性容器收集静态文件
+docker-compose -f docker-compose.prod.yml run --rm web python manage_prod.py collectstatic --noinput
 
-# 6. 重载 Nginx 以确保最新静态目录映射生效
+# 6. 启动 Web 和 Nginx
+docker-compose -f docker-compose.prod.yml up -d web nginx
+
+# 7. 重载 Nginx 以确保最新静态目录映射生效
 docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
 ```
 
@@ -297,6 +300,16 @@ ls -la ./media/
 - Django `collectstatic` 输出到 `/app/staticfiles`
 - Nginx 从 `/staticfiles` 提供 `/static/` 访问
 - 媒体文件必须保存在宿主机 `./media`，不会由 `collectstatic` 自动生成
+
+如果 `web` 容器启动后持续 `restarting`，优先检查宿主机目录权限：
+
+```bash
+mkdir -p staticfiles media logs
+chmod 0777 staticfiles media logs
+docker logs --tail=100 liang_ba_web
+```
+
+这是因为生产镜像以非 root 用户 `appuser` 运行，若宿主机挂载目录不可写，一次性执行的迁移或 `collectstatic` 会直接失败。
 
 ## 备份和恢复
 

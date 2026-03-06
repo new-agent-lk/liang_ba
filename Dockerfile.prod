@@ -58,5 +58,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # 暴露端口
 EXPOSE 8000
 
-# 启动命令 - 先收集静态文件，再启动 gunicorn
-CMD sh -c "python manage_prod.py collectstatic --noinput && gunicorn --chdir /app --bind 0.0.0.0:8000 wsgi:application --workers 2 --access-logfile - --error-logfile -"
+# 启动命令 - 仅启动应用，迁移和静态收集由 CD 执行
+CMD ["gunicorn", "--chdir", "/app", "--bind", "0.0.0.0:8000", "wsgi:application", "--workers", "2", "--access-logfile", "-", "--error-logfile", "-"]

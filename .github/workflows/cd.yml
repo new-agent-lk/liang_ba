@@ -59,14 +59,46 @@ jobs:
             docker pull "$WEB_IMAGE"
 
             mkdir -p staticfiles media logs
+            chmod 0777 staticfiles media logs
 
             docker compose -f docker-compose.prod.yml pull db redis
-            docker compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d db redis
 
-            sleep 30
+            for service in liang_ba_db liang_ba_redis; do
+              for i in $(seq 1 30); do
+                if docker inspect -f '{{.State.Running}}' "$service" 2>/dev/null | grep -q '^true$'; then
+                  break
+                fi
+                sleep 2
+              done
 
-            docker compose -f docker-compose.prod.yml exec -T web python manage_prod.py migrate --noinput
-            docker compose -f docker-compose.prod.yml exec -T web python manage_prod.py collectstatic --noinput
+              if ! docker inspect -f '{{.State.Running}}' "$service" 2>/dev/null | grep -q '^true$'; then
+                echo "$service failed to reach running state"
+                docker logs --tail=50 "$service" || true
+                exit 1
+              fi
+            done
+
+            docker compose -f docker-compose.prod.yml run --rm web python manage_prod.py migrate --noinput
+            docker compose -f docker-compose.prod.yml run --rm web python manage_prod.py collectstatic --noinput
+
+            docker compose -f docker-compose.prod.yml up -d web nginx
+
+            for service in liang_ba_web liang_ba_nginx; do
+              for i in $(seq 1 30); do
+                if docker inspect -f '{{.State.Running}} {{.State.Restarting}}' "$service" 2>/dev/null | grep -q '^true false$'; then
+                  break
+                fi
+                sleep 2
+              done
+
+              if ! docker inspect -f '{{.State.Running}}' "$service" 2>/dev/null | grep -q '^true$'; then
+                echo "$service failed to reach running state"
+                docker logs --tail=50 "$service" || true
+                exit 1
+              fi
+            done
+
             docker compose -f docker-compose.prod.yml exec -T nginx nginx -s reload || docker compose -f docker-compose.prod.yml restart nginx
 
             if curl -sf http://localhost/api/admin/health > /dev/null; then
