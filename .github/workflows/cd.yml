@@ -58,12 +58,16 @@ jobs:
             export WEB_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
             docker pull "$WEB_IMAGE"
 
+            mkdir -p staticfiles media logs
+
             docker compose -f docker-compose.prod.yml pull db redis
             docker compose -f docker-compose.prod.yml up -d
 
             sleep 30
 
             docker compose -f docker-compose.prod.yml exec -T web python manage_prod.py migrate --noinput
+            docker compose -f docker-compose.prod.yml exec -T web python manage_prod.py collectstatic --noinput
+            docker compose -f docker-compose.prod.yml exec -T nginx nginx -s reload || docker compose -f docker-compose.prod.yml restart nginx
 
             if curl -sf http://localhost/api/admin/health > /dev/null; then
               echo "Deployment successful!"

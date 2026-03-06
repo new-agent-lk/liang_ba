@@ -137,10 +137,13 @@ docker-compose -f docker-compose.prod.yml build web
 docker-compose -f docker-compose.prod.yml up -d --no-deps --build web
 
 # 4. 运行迁移（如果有）
-docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
+docker-compose -f docker-compose.prod.yml exec web python manage_prod.py migrate
 
 # 5. 收集静态文件（如果有更新）
-docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+docker-compose -f docker-compose.prod.yml exec web python manage_prod.py collectstatic --noinput
+
+# 6. 重载 Nginx 以确保最新静态目录映射生效
+docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
 ```
 
 ## 性能优化
@@ -275,14 +278,25 @@ docker network inspect liang_ba_liang_ba_network
 
 ```bash
 # 检查静态文件是否收集
-docker-compose -f docker-compose.prod.yml exec web ls -la static/
+docker-compose -f docker-compose.prod.yml exec web ls -la /app/staticfiles/
+
+# 检查 Nginx 是否读取相同目录
+docker-compose -f docker-compose.prod.yml exec nginx ls -la /staticfiles/
 
 # 重新收集静态文件
-docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+docker-compose -f docker-compose.prod.yml exec web python manage_prod.py collectstatic --noinput
 
 # 检查 Nginx 配置
 docker-compose -f docker-compose.prod.yml exec nginx nginx -t
+
+# 检查媒体目录是否已持久化
+ls -la ./media/
 ```
+
+生产环境静态文件统一使用宿主机目录 `./staticfiles`：
+- Django `collectstatic` 输出到 `/app/staticfiles`
+- Nginx 从 `/staticfiles` 提供 `/static/` 访问
+- 媒体文件必须保存在宿主机 `./media`，不会由 `collectstatic` 自动生成
 
 ## 备份和恢复
 
