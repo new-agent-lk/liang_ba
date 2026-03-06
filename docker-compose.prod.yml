@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile.prod
     image: ${WEB_IMAGE:-liang_ba:prod}
     container_name: liang_ba_web
+    user: "0:0"
     restart: unless-stopped
     ports:
       - "8000:8000"
