@@ -1,5 +1,5 @@
 # ========================================
-# 生产环境 Dockerfile（简化版本）
+# 生产环境 Dockerfile（uv 版本）
 # ========================================
 
 FROM python:3.10-slim-bookworm
@@ -9,6 +9,8 @@ ENV PYTHONUNBUFFERED=1
 ENV TZ=Asia/Shanghai
 ENV PIP_INDEX_URL=https://repo.huaweicloud.com/repository/pypi/simple
 ENV PIP_TRUSTED_HOST=repo.huaweicloud.com
+ENV UV_INDEX_URL=https://mirrors.huaweicloud.com/repository/pypi/simple
+ENV PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
@@ -35,9 +37,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
 
-# 复制依赖文件并安装
-COPY requirements.txt pyproject.toml ./
-RUN pip install --no-cache-dir -r requirements.txt
+# 安装 uv 并基于锁文件安装生产依赖
+RUN pip install --no-cache-dir uv
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
 
 # 复制应用代码
 COPY . .
@@ -59,4 +62,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 EXPOSE 8000
 
 # 启动命令 - 仅启动应用，迁移和静态收集由 CD 执行
-CMD ["gunicorn", "--chdir", "/app", "--bind", "0.0.0.0:8000", "wsgi:application", "--workers", "2", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["uwsgi", "--ini", "/app/liangba.ini"]
