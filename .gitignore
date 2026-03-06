@@ -56,3 +56,4 @@ dist-ssr/
 *.pid
 *.seed
 *.pid.lock
+local_settings.py

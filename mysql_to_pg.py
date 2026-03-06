@@ -17,16 +17,16 @@ from psycopg2.extras import execute_values
 
 # Configuration
 MYSQL_CONFIG = {
-    "host": "127.0.0.1",
+    "host": "10.0.0.6",
     "port": 3306,
     "user": "root",
-    "password": "Kang0716.",
+    "password": "StrongRoot@123",
     "database": "liang_ba",
 }
 
 # Get PostgreSQL config from environment or docker-compose
 PG_CONFIG = {
-    "host": "127.0.0.1",
+    "host": "10.0.0.6",
     "port": 5432,
     "user": "postgres",
     "password": "postgres",
