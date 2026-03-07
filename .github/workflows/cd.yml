@@ -60,10 +60,9 @@ jobs:
 
             mkdir -p staticfiles media logs
 
-            docker compose -f docker-compose.prod.yml pull db redis
-            docker compose -f docker-compose.prod.yml up -d db redis
+            docker compose -f docker-compose.prod.yml up -d redis
 
-            for service in liang_ba_db liang_ba_redis; do
+            for service in liang_ba_redis; do
               for i in $(seq 1 30); do
                 if docker inspect -f '{{.State.Running}}' "$service" 2>/dev/null | grep -q '^true$'; then
                   break

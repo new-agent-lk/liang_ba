@@ -22,7 +22,6 @@ services:
       - ./logs:/app/logs
       - ./staticfiles:/app/staticfiles
     depends_on:
-      - db
       - redis
     networks:
       - liang_ba_network
@@ -32,27 +31,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # PostgreSQL 数据库
-  db:
-    image: postgres:16-alpine
-    container_name: liang_ba_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME:-liang_ba}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - liang_ba_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-liang_ba}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   # Redis 缓存
   redis:
@@ -102,8 +80,6 @@ services:
       - ./certbot/log:/var/log/letsencrypt
 
 volumes:
-  db_data:
-    driver: local
   redis_data:
     driver: local
 

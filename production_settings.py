@@ -17,15 +17,15 @@ ALLOWED_HOSTS = [".liangbax.com", "localhost", "127.0.0.1"] + os.getenv(
 # Static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# PostgreSQL configuration
+# MySQL configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": os.getenv("DB_NAME", "liang_ba"),
-        "USER": os.getenv("DB_USER", "postgres"),
+        "USER": os.getenv("DB_USER", "liang_ba"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST", "db"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+        "PORT": os.getenv("DB_PORT", "3306"),
         "CONN_MAX_AGE": int(os.getenv("CONN_MAX_AGE", "60")),
     }
 }
