@@ -17,6 +17,8 @@ WORKDIR /app
 # 安装运行时依赖和构建工具
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    pkg-config \
+    default-libmysqlclient-dev \
     libpq5 \
     libssl3 \
     libffi8 \
