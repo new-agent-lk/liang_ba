@@ -103,9 +103,12 @@ request.interceptors.response.use(
 
         try {
           // 调用刷新 token 接口
-          const response = await axios.post(`${API_BASE_URL}/api/admin/auth/refresh/`, {
-            refresh: refreshToken,
-          });
+          const response = await axios.post(
+            `${API_BASE_URL}/api/admin/auth/refresh/`,
+            {
+              refresh: refreshToken,
+            },
+          );
 
           const { access, refresh } = response.data;
 

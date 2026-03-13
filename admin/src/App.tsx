@@ -25,7 +25,10 @@ const AppContent: React.FC = () => {
       setAuthChecking(false);
 
       // If not authenticated and not on login page, redirect to login
-      if (!result.isAuthenticated && !window.location.pathname.includes("/login")) {
+      if (
+        !result.isAuthenticated &&
+        !window.location.pathname.includes("/login")
+      ) {
         window.location.href = "/login";
       }
     };
