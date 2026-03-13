@@ -5,13 +5,14 @@ set -euo pipefail
 
 DOMAIN="liangbax.com"
 WWW_DOMAIN="www.liangbax.com"
+CONSOLE_DOMAIN="console.liangbax.com"
 EMAIL="liangbax@126.com"
 COMPOSE_FILE="docker-compose.prod.yml"
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT_DIR"
 
-echo "正在为 $DOMAIN 和 $WWW_DOMAIN 获取 SSL 证书..."
+echo "正在为 $DOMAIN、$WWW_DOMAIN 和 $CONSOLE_DOMAIN 获取 SSL 证书..."
 
 # 创建必要目录
 mkdir -p certbot/www certbot/conf certbot/log
@@ -30,8 +31,11 @@ docker compose -f "$COMPOSE_FILE" run --rm certbot \
     --email="$EMAIL" \
     --agree-tos \
     --no-eff-email \
+    --cert-name "$DOMAIN" \
+    --expand \
     -d "$DOMAIN" \
-    -d "$WWW_DOMAIN"
+    -d "$WWW_DOMAIN" \
+    -d "$CONSOLE_DOMAIN"
 
 # 重载 nginx 应用新证书
 docker compose -f "$COMPOSE_FILE" exec nginx nginx -s reload

@@ -18,6 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: admin/package-lock.json
+
       - name: Set image tag
         id: vars
         run: |
@@ -27,6 +33,15 @@ jobs:
             TAG=latest
           fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Build admin frontend
+        working-directory: ./admin
+        run: |
+          npm ci
+          npm run build
+
+      - name: Package admin frontend
+        run: tar -czf admin-dist.tgz -C admin dist
 
       - uses: docker/setup-buildx-action@v3
 
@@ -44,6 +59,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          source: admin-dist.tgz
+          target: /data/wwwroot/liang_ba
+
       - uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
@@ -58,7 +81,10 @@ jobs:
             export WEB_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
             docker pull "$WEB_IMAGE"
 
-            mkdir -p staticfiles media logs
+            mkdir -p staticfiles media logs frontend_dist
+            rm -rf frontend_dist/*
+            tar -xzf admin-dist.tgz --strip-components=1 -C frontend_dist
+            rm -f admin-dist.tgz
 
             docker compose -f docker-compose.prod.yml up -d redis
 
@@ -99,7 +125,8 @@ jobs:
 
             docker compose -f docker-compose.prod.yml exec -T nginx nginx -s reload || docker compose -f docker-compose.prod.yml restart nginx
 
-            if curl -sf http://localhost/api/admin/health > /dev/null; then
+            if curl -sf -H 'Host: liangbax.com' http://localhost/api/admin/health > /dev/null && \
+               curl -sf -H 'Host: console.liangbax.com' http://localhost/ > /dev/null; then
               echo "Deployment successful!"
             else
               docker compose -f docker-compose.prod.yml logs --tail=30

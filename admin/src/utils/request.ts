@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { message } from "antd";
+import { API_BASE_URL } from "@/config/env";
 
 // Token 存储键名
 const ACCESS_TOKEN_KEY = "admin_access_token";
@@ -27,6 +28,7 @@ const processQueue = (error: any, token: string | null = null) => {
 
 // 创建 axios 实例
 const request = axios.create({
+  baseURL: API_BASE_URL || undefined,
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
@@ -101,7 +103,7 @@ request.interceptors.response.use(
 
         try {
           // 调用刷新 token 接口
-          const response = await axios.post("/api/admin/auth/refresh/", {
+          const response = await axios.post(`${API_BASE_URL}/api/admin/auth/refresh/`, {
             refresh: refreshToken,
           });
 
