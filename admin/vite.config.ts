@@ -9,6 +9,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: "/",
+    define: isProduction
+      ? {
+          "import.meta.env.VITE_API_BASE_URL": JSON.stringify(""),
+          "import.meta.env.VITE_DEV_PROXY_TARGET": JSON.stringify(""),
+        }
+      : undefined,
     plugins: [react()],
     resolve: {
       alias: {

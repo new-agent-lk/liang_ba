@@ -8,7 +8,8 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: kang523/liang-ba
+  WEB_IMAGE_NAME: kang523/liang-ba
+  FRONTEND_IMAGE_NAME: kang523/liang-ba-admin
 
 jobs:
   build:
@@ -36,12 +37,13 @@ jobs:
 
       - name: Build admin frontend
         working-directory: ./admin
+        env:
+          VITE_API_BASE_URL: ""
+          VITE_BUILD_SOURCEMAP: "false"
         run: |
           npm ci
-          npm run build
-
-      - name: Package admin frontend
-        run: tar -czf admin-dist.tgz -C admin dist
+          npm run build:prod
+          ! grep -R "localhost:9999" dist
 
       - uses: docker/setup-buildx-action@v3
 
@@ -55,17 +57,21 @@ jobs:
           context: .
           file: ./Dockerfile.prod
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - uses: appleboy/scp-action@v1
+      - uses: docker/build-push-action@v5
         with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          source: admin-dist.tgz
-          target: /data/wwwroot/liang_ba
+          context: ./admin
+          file: ./admin/Dockerfile.prod
+          push: true
+          build-args: |
+            VITE_API_BASE_URL=
+            VITE_BUILD_SOURCEMAP=false
+          tags: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.vars.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - uses: appleboy/ssh-action@v1
         with:
@@ -78,13 +84,12 @@ jobs:
             cd /data/wwwroot/liang_ba
             TAG=${{ steps.vars.outputs.tag }}
 
-            export WEB_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$TAG
+            export WEB_IMAGE=${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}:$TAG
+            export FRONTEND_IMAGE=${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}:$TAG
             docker pull "$WEB_IMAGE"
+            docker pull "$FRONTEND_IMAGE"
 
-            mkdir -p staticfiles media logs frontend_dist
-            rm -rf frontend_dist/*
-            tar -xzf admin-dist.tgz --strip-components=1 -C frontend_dist
-            rm -f admin-dist.tgz
+            mkdir -p staticfiles media logs
 
             docker compose -f docker-compose.prod.yml up -d redis
 
@@ -106,9 +111,9 @@ jobs:
             docker compose -f docker-compose.prod.yml run --rm web python manage_prod.py migrate --noinput
             docker compose -f docker-compose.prod.yml run --rm web python manage_prod.py collectstatic --noinput
 
-            docker compose -f docker-compose.prod.yml up -d web nginx
+            docker compose -f docker-compose.prod.yml up -d web frontend nginx
 
-            for service in liang_ba_web liang_ba_nginx; do
+            for service in liang_ba_web liang_ba_frontend liang_ba_nginx; do
               for i in $(seq 1 30); do
                 if docker inspect -f '{{.State.Running}} {{.State.Restarting}}' "$service" 2>/dev/null | grep -q '^true false$'; then
                   break

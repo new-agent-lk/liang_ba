@@ -4,7 +4,6 @@ import { afterAll, beforeAll, vi } from "vitest";
 // Mock environment variables
 vi.mock("../config/env", () => ({
   API_BASE_URL: "",
-  DEV_PROXY_TARGET: "http://localhost:9999",
   APP_ENV: "test",
   APP_BASE_PATH: "/",
 }));
