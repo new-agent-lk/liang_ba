@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, theme } from "antd";
+import { Drawer, Layout, Menu, theme } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMenuStore } from "@/store/useMenuStore";
 import { MENU_CONFIG } from "@/utils/constants";
@@ -7,10 +7,14 @@ import * as Icons from "@ant-design/icons";
 
 const { Sider } = Layout;
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  mobile?: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ mobile = false }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { collapsed } = useMenuStore();
+  const { collapsed, mobileOpen, closeMobileMenu } = useMenuStore();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -47,38 +51,60 @@ const Sidebar: React.FC = () => {
   };
 
   const selectedKeys = findSelectedKey(location.pathname, MENU_CONFIG);
+  const openKeys = selectedKeys.slice(0, -1);
+
+  const menuContent = (
+    <>
+      <div className={`admin-sidebar-brand ${collapsed && !mobile ? "is-collapsed" : ""}`}>
+        <div className="admin-sidebar-brand__mark">LB</div>
+        {(!collapsed || mobile) && (
+          <div className="admin-sidebar-brand__text">
+            <strong>量霸科技</strong>
+            <span>Enterprise Console</span>
+          </div>
+        )}
+      </div>
+      <Menu
+        theme="light"
+        mode="inline"
+        selectedKeys={selectedKeys}
+        defaultOpenKeys={openKeys}
+        items={getMenuItems(MENU_CONFIG)}
+        style={{ borderRight: 0, background: "transparent" }}
+        onClick={() => {
+          if (mobile) {
+            closeMobileMenu();
+          }
+        }}
+      />
+    </>
+  );
+
+  if (mobile) {
+    return (
+      <Drawer
+        placement="left"
+        open={mobileOpen}
+        onClose={closeMobileMenu}
+        bodyStyle={{ padding: 12, background: "#f4f7fb" }}
+        width={280}
+        closable={false}
+      >
+        {menuContent}
+      </Drawer>
+    );
+  }
 
   return (
     <Sider
       trigger={null}
       collapsible
       collapsed={collapsed}
-      style={{
-        background: colorBgContainer,
-      }}
+      width={248}
+      className="admin-sidebar"
+      style={{ background: colorBgContainer }}
     >
-      <div
-        style={{
-          height: 32,
-          margin: 16,
-          background: "rgba(255, 255, 255, 0.2)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontWeight: "bold",
-          fontSize: collapsed ? 12 : 16,
-        }}
-      >
-        {collapsed ? "量霸" : "量霸科技后台管理"}
-      </div>
-      <Menu
-        theme="light"
-        mode="inline"
-        selectedKeys={selectedKeys}
-        defaultOpenKeys={selectedKeys.slice(0, -1)}
-        items={getMenuItems(MENU_CONFIG)}
-        style={{ borderRight: 0 }}
-      />
+      {menuContent}
     </Sider>
   );
 };
