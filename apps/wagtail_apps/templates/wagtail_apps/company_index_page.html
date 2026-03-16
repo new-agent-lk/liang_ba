@@ -20,12 +20,76 @@
 <div class="page-content">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
+            <h2 class="section-title">公司介绍</h2>
+            <p class="section-subtitle">金融科技驱动 · 量化研究先行</p>
+        </div>
+
+        <div class="company-intro-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="company-intro-lead">
+                <span class="company-intro-badge">About LiangBa</span>
+                <h3>以量化智慧连接金融科技与资本市场</h3>
+                <p>
+                    上海量霸科技有限公司成立于2018年8月，是一家聚焦量化交易技术前沿研究的金融科技企业。公司自创立以来，持续跟踪国际金融科技发展方向，围绕机器学习、交易算法和量化投资体系展开研究，开发了量霸量化交易机器人软件。自2018年8月在A股实盘运行以来，平台曾实现年化收益率30%以上，随着系统不断优化迭代，整体收益能力仍在持续提升。
+                </p>
+
+                <div class="company-intro-visual">
+                    {% if companyinfo.topimg %}
+                    <img src="{{ companyinfo.topimg.url }}" alt="{{ companyinfo.name|default:'量霸科技' }}">
+                    {% elif companyinfo.logo %}
+                    <img src="{{ companyinfo.logo.url }}" alt="{{ companyinfo.name|default:'量霸科技' }}">
+                    {% else %}
+                    <div class="company-intro-placeholder">
+                        <span>LB</span>
+                    </div>
+                    {% endif %}
+                    <div class="company-intro-stats">
+                        <div class="company-intro-stat">
+                            <strong>2018.08</strong>
+                            <span>公司成立时间</span>
+                        </div>
+                        <div class="company-intro-stat">
+                            <strong>30%+</strong>
+                            <span>历史年化收益峰值</span>
+                        </div>
+                        <div class="company-intro-stat">
+                            <strong>AI + Algo</strong>
+                            <span>深度学习与交易算法双驱动</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="company-intro-content">
+                <p>
+                    量霸科技的愿景，是用中国量化智慧点亮全球资本市场，努力成长为中国的 Renaissance。公司希望汇聚高校、科研机构与产业界的量化研究能力，推动中国量化交易技术持续进步，在全球金融科技与资本市场竞争中形成自身立足点。
+                </p>
+                <p>
+                    围绕这一目标，团队从项目启动之初就坚持技术先进性导向。通过长期阅读研究、跟踪行业演进并反复试验提炼，最终确立了以深度学习为核心的平台建设思路，将大数据分析作为起点，将算法能力作为核心，将自动交易作为执行辅助，逐步搭建起完整的量化交易平台。
+                </p>
+                <p>
+                    在发展路径上，公司短期目标是实现自营资金的稳健增值，为业务发展和成本投入建立良性基础；中期将逐步扩大经营范围，为高净值客户提供资产增值服务，并为金融科技行业输出软件与数据平台能力；长期则致力于成长为国内头部量化公司，在技术和服务上形成坚实护城河，推动中国金融科技和资本市场不断完善，最终成为全球卓越的金融科技与资产管理公司。
+                </p>
+            </div>
+        </div>
+
+        <div class="section-header" data-aos="fade-up">
             <h2 class="section-title">最新观点</h2>
             <p class="section-subtitle">专业洞察 · 深度分析</p>
         </div>
 
+        <div class="insight-shell" data-aos="fade-up" data-aos-delay="100">
+            <div class="insight-shell__intro">
+                <div>
+                    <span class="company-intro-badge">Latest Insights</span>
+                    <h3>聚焦市场变化，输出策略观点与研究判断</h3>
+                </div>
+                <p>
+                    这里收录量霸科技围绕市场分析、投资框架与量化研究持续输出的最新内容，帮助读者快速了解团队近期关注的方向与核心判断。
+                </p>
+            </div>
+
         {% if content_page_count > 0 %}
-        <div class="row">
+        <div class="row insight-row">
             {% for content in content_pages %}
                 {% with content.specific as content_detail %}
                 <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 | add:1 }}00">
@@ -48,16 +112,160 @@
                 {% endwith %}
             {% endfor %}
         </div>
+        {% else %}
+        <div class="insight-empty">
+            <i class="fas fa-inbox"></i>
+            <p>最新观点正在整理中，敬请期待。</p>
+        </div>
         {% endif %}
+        </div>
     </div>
 </div>
 
 <style>
+.company-intro-card {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.4fr);
+    gap: 30px;
+    padding: 35px;
+    margin-bottom: 50px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.06), rgba(255, 255, 255, 0.98));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.company-intro-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    margin-bottom: 18px;
+    background: var(--bg-tertiary);
+    color: var(--accent-gold);
+    font-size: 12px;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.company-intro-lead h3 {
+    margin-bottom: 18px;
+    font-size: 28px;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+.company-intro-visual {
+    margin-top: 28px;
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    border-radius: var(--radius-lg);
+}
+
+.company-intro-visual img,
+.company-intro-placeholder {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(50, 84, 168, 0.88));
+}
+
+.company-intro-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-intro-placeholder span {
+    color: #fff;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.company-intro-lead p,
+.company-intro-content p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.company-intro-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.company-intro-stat {
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.company-intro-stat strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+    font-size: 20px;
+}
+
+.company-intro-stat span {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.company-intro-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.insight-shell {
+    padding: 32px;
+    margin-bottom: 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 248, 235, 0.78));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.insight-shell__intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.insight-shell__intro h3 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+.insight-shell__intro p {
+    max-width: 520px;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.insight-row {
+    margin-bottom: 0;
+}
+
 .article-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    height: 100%;
     margin-bottom: 30px;
     transition: all var(--transition-base);
 }
@@ -138,7 +346,66 @@
     transform: translateX(5px);
 }
 
+.insight-empty {
+    text-align: center;
+    padding: 50px 20px 30px;
+    color: var(--text-muted);
+}
+
+.insight-empty i {
+    font-size: 42px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
 @media (max-width: 767px) {
+    .company-intro-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 24px 20px;
+        margin-bottom: 40px;
+    }
+
+    .company-intro-visual {
+        padding: 16px;
+    }
+
+    .company-intro-visual img,
+    .company-intro-placeholder {
+        height: 180px;
+    }
+
+    .company-intro-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .company-intro-lead h3 {
+        font-size: 22px;
+    }
+
+    .company-intro-lead p,
+    .company-intro-content p {
+        font-size: 14px;
+    }
+
+    .insight-shell {
+        padding: 24px 20px;
+    }
+
+    .insight-shell__intro {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 22px;
+    }
+
+    .insight-shell__intro h3 {
+        font-size: 22px;
+    }
+
+    .insight-shell__intro p {
+        font-size: 14px;
+    }
+
     .article-content {
         padding: 20px;
     }
