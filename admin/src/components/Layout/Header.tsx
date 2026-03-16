@@ -52,11 +52,13 @@ const Header: React.FC = () => {
         <Button
           type="text"
           icon={
-            isMobile
-              ? <MenuUnfoldOutlined />
-              : collapsed
-                ? <MenuUnfoldOutlined />
-                : <MenuFoldOutlined />
+            isMobile ? (
+              <MenuUnfoldOutlined />
+            ) : collapsed ? (
+              <MenuUnfoldOutlined />
+            ) : (
+              <MenuFoldOutlined />
+            )
           }
           onClick={isMobile ? openMobileMenu : toggleCollapsed}
           style={{ fontSize: 16 }}

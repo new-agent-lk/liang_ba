@@ -55,7 +55,9 @@ const Login: React.FC = () => {
             统一管理内容、招聘与量化研究流程
           </Title>
           <Paragraph className="login-brand__desc">
-            登录后进入企业控制台，集中处理后台账号、内容发布、研究报告与 FactorHub 分析任务。桌面端强调信息层次，移动端保留精简入口和核心说明。
+            登录后进入企业控制台，集中处理后台账号、内容发布、研究报告与
+            FactorHub
+            分析任务。桌面端强调信息层次，移动端保留精简入口和核心说明。
           </Paragraph>
           <div className="login-brand__feature-list">
             <div className="login-brand__feature">
@@ -121,7 +123,10 @@ const Login: React.FC = () => {
                 { min: 6, message: "密码至少6个字符" },
               ]}
             >
-              <Input.Password prefix={<LockOutlined />} placeholder="请输入密码" />
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="请输入密码"
+              />
             </Form.Item>
             <Form.Item>
               <Button
@@ -134,7 +139,10 @@ const Login: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-          <Space split={<span className="login-card__dot" />} className="login-card__footer">
+          <Space
+            split={<span className="login-card__dot" />}
+            className="login-card__footer"
+          >
             <Text type="secondary">JWT 鉴权</Text>
             <Text type="secondary">企业控制台</Text>
             <Text type="secondary">移动端已适配</Text>

@@ -55,7 +55,9 @@ const Sidebar: React.FC<SidebarProps> = ({ mobile = false }) => {
 
   const menuContent = (
     <>
-      <div className={`admin-sidebar-brand ${collapsed && !mobile ? "is-collapsed" : ""}`}>
+      <div
+        className={`admin-sidebar-brand ${collapsed && !mobile ? "is-collapsed" : ""}`}
+      >
         <div className="admin-sidebar-brand__mark">LB</div>
         {(!collapsed || mobile) && (
           <div className="admin-sidebar-brand__text">

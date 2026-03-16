@@ -125,7 +125,9 @@ const Dashboard: React.FC = () => {
           update: "更新",
           delete: "删除",
         };
-        return <Tag color={colors[type] || "default"}>{labels[type] || type}</Tag>;
+        return (
+          <Tag color={colors[type] || "default"}>{labels[type] || type}</Tag>
+        );
       },
     },
     {
@@ -176,7 +178,11 @@ const Dashboard: React.FC = () => {
             首页整合账户、招聘与研究进展，减少进入后台后的空白感。移动端下保留核心指标和快捷入口，优先保证可读性与操作路径。
           </Paragraph>
           <Space wrap>
-            <Button type="primary" size="large" onClick={() => navigate("/factor-hub")}>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => navigate("/factor-hub")}
+            >
               进入量化因子中心
             </Button>
             <Button size="large" onClick={() => navigate("/research/reports")}>
@@ -187,7 +193,9 @@ const Dashboard: React.FC = () => {
         <div className="dashboard-hero__panel">
           <div className="dashboard-hero__metric">
             <span>本周处理任务</span>
-            <strong>{(stats?.total_jobs || 0) + (stats?.total_resumes || 0)}</strong>
+            <strong>
+              {(stats?.total_jobs || 0) + (stats?.total_resumes || 0)}
+            </strong>
           </div>
           <div className="dashboard-hero__metric">
             <span>系统活跃模块</span>
@@ -220,7 +228,10 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[16, 16]} className="dashboard-grid-row">
         <Col xs={24} xl={16}>
-          <Card bordered={false} className="dashboard-surface dashboard-surface--highlight">
+          <Card
+            bordered={false}
+            className="dashboard-surface dashboard-surface--highlight"
+          >
             <div className="dashboard-section-head">
               <div>
                 <Text className="dashboard-section-kicker">运营趋势</Text>
@@ -234,7 +245,10 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} xl={8}>
-          <Card bordered={false} className="dashboard-surface dashboard-surface--warm">
+          <Card
+            bordered={false}
+            className="dashboard-surface dashboard-surface--warm"
+          >
             <div className="dashboard-section-head">
               <div>
                 <Text className="dashboard-section-kicker">结构分布</Text>
@@ -263,7 +277,9 @@ const Dashboard: React.FC = () => {
                   className="dashboard-action-card"
                   onClick={() => navigate(action.path)}
                 >
-                  <span className="dashboard-action-card__icon">{action.icon}</span>
+                  <span className="dashboard-action-card__icon">
+                    {action.icon}
+                  </span>
                   <strong>{action.title}</strong>
                   <span>{action.description}</span>
                 </button>
