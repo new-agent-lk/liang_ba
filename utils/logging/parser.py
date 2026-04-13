@@ -7,9 +7,11 @@ Supports both JSON format and Django's text format.
 
 import json
 import re
+from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from itertools import islice
 from pathlib import Path
 from typing import Any, Dict, Generator, Iterator, Optional, Union
 
@@ -167,8 +169,7 @@ class LogParser:
                 line_num = int(parts[1])
             except ValueError:
                 pass
-            if "." in module:
-                module = module.rsplit(".", 1)[-1]
+            module = Path(module).name or module
 
         message = groups.get("message", "").strip()
 
@@ -202,51 +203,41 @@ class LogParser:
             return datetime.now()
 
     def _read_lines(self, offset: int, limit: int) -> Generator[str, None, None]:
-        """Read lines efficiently from end of file"""
+        """Read lines reliably for both reverse and forward modes."""
         with open(self.file_path, "r", encoding="utf-8") as f:
-            f.seek(0, 2)
-            file_size = f.tell()
-
-            if file_size == 0:
+            if self.reverse:
+                max_lines = offset + limit
+                buffered_lines = deque(f, maxlen=max_lines)
+                lines = [line.rstrip("\n") for line in buffered_lines if line.strip()]
+                start = max(0, len(lines) - limit)
+                for line in lines[start:]:
+                    yield line
                 return
 
-            position = file_size
-            lines_read = 0
-            lines_buffer = []
-
-            while position > 0 and lines_read < offset + limit:
-                chunk_size = min(8192, position)
-                position -= chunk_size
-                f.seek(position)
-                chunk = f.read(chunk_size)
-
-                chunk_lines = chunk.split("\n")
-
-                if lines_buffer:
-                    lines_buffer[0] = chunk_lines[-1] + lines_buffer[0]
-                else:
-                    if chunk_lines[-1]:
-                        lines_buffer.append(chunk_lines[-1])
-
-                for i in range(len(chunk_lines) - 2, -1, -1):
-                    lines_buffer.append(chunk_lines[i])
-
-                lines_read += len(chunk_lines)
-
-            if lines_buffer and not lines_buffer[-1].strip():
-                lines_buffer.pop()
-
-            result = lines_buffer[-limit:] if self.reverse else lines_buffer[:limit]
-
-            if self.reverse:
-                result = list(reversed(result))
-
-            for line in result:
+            for line in islice((line.rstrip("\n") for line in f if line.strip()), offset, offset + limit):
                 yield line
 
     def parse_all(self) -> Generator[ParsedLogEntry, None, None]:
-        """Parse entire log file"""
-        return self.parse(offset=0, limit=float("inf"))
+        """Parse entire log file."""
+        if not self.file_path.exists():
+            return
+
+        with open(self.file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.rstrip("\n")
+                if not line.strip():
+                    continue
+
+                try:
+                    data = json.loads(line)
+                    yield ParsedLogEntry.from_dict(data, line, self.file_path)
+                    continue
+                except json.JSONDecodeError:
+                    pass
+
+                parsed = self._parse_django_text_format(line)
+                if parsed:
+                    yield parsed
 
     @classmethod
     def get_log_file(cls, log_type: str) -> Path:

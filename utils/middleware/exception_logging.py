@@ -32,18 +32,27 @@ class ExceptionLoggingMiddleware(MiddlewareMixin):
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        return self.get_response(request)
+        try:
+            return self.get_response(request)
+        except Exception as exception:
+            self._log_exception(request, exception)
+            raise
 
     def process_exception(
         self, request: HttpRequest, exception: Exception
     ) -> Optional[HttpResponse]:
         """处理异常"""
-        # 获取异常信息
+        self._log_exception(request, exception)
+
+        # 返回 None 继续默认异常处理
+        return None
+
+    def _log_exception(self, request: HttpRequest, exception: Exception) -> None:
+        """记录异常日志。"""
         exc_type = type(exception).__name__
         exc_message = str(exception)
         exc_traceback = traceback.format_exc()
 
-        # 记录异常日志
         logger.exception(
             f"Unhandled exception: {exc_type}",
             extra={
@@ -57,9 +66,6 @@ class ExceptionLoggingMiddleware(MiddlewareMixin):
                 }
             },
         )
-
-        # 返回 None 继续默认异常处理
-        return None
 
 
 class ErrorResponseMiddleware(MiddlewareMixin):

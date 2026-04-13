@@ -346,6 +346,7 @@ WAGTAIL_ENABLE_UPDATE_CHECK = False
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "EXCEPTION_HANDLER": "utils.logging.drf_exception_handler.custom_exception_handler",
     # JWT 认证配置
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -531,7 +532,7 @@ LOGGING = {
         # Django 框架日志
         "django": {
             "handlers": ["console", "file_django"],
-            "level": LOG_LEVEL,
+            "level": "INFO",
             "propagate": False,
         },
         "django.request": {
@@ -564,7 +565,7 @@ LOGGING = {
         },
         # 错误日志
         "app.error": {
-            "handlers": ["console", "file_error", "mail_admins"],
+            "handlers": ["console", "file_app", "file_error", "mail_admins"],
             "level": "ERROR",
             "propagate": False,
         },

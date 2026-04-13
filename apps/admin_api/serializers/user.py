@@ -99,7 +99,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
-            "avatar",
             "is_active",
             "is_staff",
             "is_superuser",
