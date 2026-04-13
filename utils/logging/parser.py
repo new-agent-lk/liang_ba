@@ -13,6 +13,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, Generator, Iterator, Optional, Union
 
+from django.conf import settings
+
 
 class LogLevel(Enum):
     DEBUG = "DEBUG"
@@ -87,14 +89,6 @@ class ParsedLogEntry:
 
 class LogParser:
     """Efficient JSON log file parser"""
-
-    LOG_FILES = {
-        "app": Path("/home/ubuntu/liang_ba/logs/app.log"),
-        "error": Path("/home/ubuntu/liang_ba/logs/error.log"),
-        "security": Path("/home/ubuntu/liang_ba/logs/security.log"),
-        "performance": Path("/home/ubuntu/liang_ba/logs/performance.log"),
-        "django": Path("/home/ubuntu/liang_ba/logs/django.log"),
-    }
 
     def __init__(self, file_path: Union[Path, str], reverse: bool = True):
         self.file_path = Path(file_path) if isinstance(file_path, str) else file_path
@@ -257,9 +251,22 @@ class LogParser:
     @classmethod
     def get_log_file(cls, log_type: str) -> Path:
         """Get path to log file by type"""
-        return cls.LOG_FILES.get(log_type, cls.LOG_FILES["app"])
+        log_files = cls._get_log_files()
+        return log_files.get(log_type, log_files["app"])
+
+    @classmethod
+    def _get_log_files(cls) -> Dict[str, Path]:
+        """Get configured log file paths."""
+        log_dir = Path(settings.LOG_DIR)
+        return {
+            "app": log_dir / "app.log",
+            "error": log_dir / "error.log",
+            "security": log_dir / "security.log",
+            "performance": log_dir / "performance.log",
+            "django": log_dir / "django.log",
+        }
 
     @classmethod
     def list_available_logs(cls) -> Dict[str, Path]:
         """List all available log files"""
-        return {name: path for name, path in cls.LOG_FILES.items() if path.exists()}
+        return {name: path for name, path in cls._get_log_files().items() if path.exists()}

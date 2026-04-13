@@ -14,6 +14,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from django.conf import settings
+
 
 class RotationStrategy(Enum):
     SIZE = "size"
@@ -55,7 +57,7 @@ class LogRotationManager:
     """
 
     def __init__(self, logs_dir: Path = None):
-        self.logs_dir = logs_dir or Path("/home/ubuntu/liang_ba/logs")
+        self.logs_dir = logs_dir or Path(settings.LOG_DIR)
         self.logger = logging.getLogger("app.admin.logs.rotation")
         self.policies: Dict[str, RotationPolicy] = {
             "app": RotationPolicy(max_size_mb=10, max_files=10, max_age_days=30),

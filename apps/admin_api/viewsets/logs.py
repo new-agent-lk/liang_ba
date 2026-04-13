@@ -6,6 +6,7 @@ API endpoints for viewing and managing system logs.
 
 import logging
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework import status, views
@@ -132,6 +133,8 @@ class LogStatsView(views.APIView):
 
         reader = get_log_reader()
         stats = reader.get_log_stats(log_type)
+        if "error" in stats:
+            return Response(stats, status=status.HTTP_404_NOT_FOUND)
 
         serializer = LogStatsSerializer(stats)
         return Response(serializer.data)
@@ -264,7 +267,7 @@ class LogRotationArchivedFilesView(views.APIView):
 
         from pathlib import Path
 
-        logs_dir = Path("/home/ubuntu/liang_ba/logs")
+        logs_dir = Path(settings.LOG_DIR)
         file_path = logs_dir / filename
 
         if not file_path.exists():
