@@ -214,7 +214,11 @@ class LogParser:
                     yield line
                 return
 
-            for line in islice((line.rstrip("\n") for line in f if line.strip()), offset, offset + limit):
+            for line in islice(
+                (line.rstrip("\n") for line in f if line.strip()),
+                offset,
+                offset + limit,
+            ):
                 yield line
 
     def parse_all(self) -> Generator[ParsedLogEntry, None, None]:

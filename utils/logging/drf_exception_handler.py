@@ -24,8 +24,9 @@ def custom_exception_handler(exc, context):
         "exception_type": type(exc).__name__,
         "exception_message": str(exc),
         "status_code": getattr(response, "status_code", 500),
-        "query_string": getattr(getattr(request, "META", {}), "get", lambda *_: "")("QUERY_STRING", "")
-        or "",
+        "query_string": (
+            getattr(getattr(request, "META", {}), "get", lambda *_: "")("QUERY_STRING", "") or ""
+        ),
     }
 
     if response is None:

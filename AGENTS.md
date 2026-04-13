@@ -116,6 +116,14 @@ Core components in `apps/factorhub/core/`:
 - hadolint (Docker), shellcheck (shell scripts)
 - Secret detection (gitleaks via CI)
 
+## CI Requirements
+
+- 修改代码后必须符合 CI 要求，避免只在本地可运行但 CI 失败
+- Python 代码至少满足 `ruff check` 和 `ruff format --check`
+- 本项目优先使用项目虚拟环境中的工具：`./.venv/bin/ruff`
+- 提交前优先检查改动文件；如有需要再扩大到全量检查
+- 已安装 `pre-commit` 钩子，默认应保持可用
+
 ## Environment
 
 **Settings**: `base_settings.py` + `local_settings.py` (gitignored)
