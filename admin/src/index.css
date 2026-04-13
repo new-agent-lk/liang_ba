@@ -38,11 +38,8 @@ body {
 .ant-input-number,
 .ant-cascader-picker-label,
 .ant-mentions,
-.ant-select-dropdown,
 .ant-select-item-option-content {
   color: rgba(0, 0, 0, 0.85) !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 
 /* 确保 Select placeholder 显示 */

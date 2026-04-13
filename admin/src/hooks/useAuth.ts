@@ -15,6 +15,7 @@ const REFRESH_TOKEN_KEY = "admin_refresh_token";
 interface LoginResult {
   success: boolean;
   error?: unknown;
+  user?: User;
 }
 
 interface CheckAuthResult {
@@ -48,7 +49,7 @@ export const useAuth = () => {
         localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
 
         message.success("登录成功");
-        return { success: true };
+        return { success: true, user: userData };
       } catch (error) {
         return { success: false, error };
       }
@@ -77,7 +78,13 @@ export const useAuth = () => {
   }, [clearAuth]);
 
   const checkAuth = useCallback(async (): Promise<CheckAuthResult> => {
-    if (accessToken && !user) {
+    const needsRefresh =
+      !!accessToken &&
+      (!user ||
+        typeof user.can_access_console !== "boolean" ||
+        !Array.isArray(user.capabilities));
+
+    if (needsRefresh) {
       try {
         const userData = await getCurrentUser();
         setUser(userData);

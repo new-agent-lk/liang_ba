@@ -3,6 +3,8 @@ import { Drawer, Layout, Menu, theme } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMenuStore } from "@/store/useMenuStore";
 import { MENU_CONFIG } from "@/utils/constants";
+import { filterMenuItems } from "@/utils/access";
+import { useAuthStore } from "@/store/useAuthStore";
 import * as Icons from "@ant-design/icons";
 
 const { Sider } = Layout;
@@ -15,9 +17,11 @@ const Sidebar: React.FC<SidebarProps> = ({ mobile = false }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { collapsed, mobileOpen, closeMobileMenu } = useMenuStore();
+  const user = useAuthStore((state) => state.user);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const visibleMenuConfig = filterMenuItems(MENU_CONFIG, user);
 
   const getIcon = (iconName: string) => {
     const IconComponent = (Icons as any)[iconName];
@@ -50,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobile = false }) => {
     return [];
   };
 
-  const selectedKeys = findSelectedKey(location.pathname, MENU_CONFIG);
+  const selectedKeys = findSelectedKey(location.pathname, visibleMenuConfig);
   const openKeys = selectedKeys.slice(0, -1);
 
   const menuContent = (
@@ -71,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobile = false }) => {
         mode="inline"
         selectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
-        items={getMenuItems(MENU_CONFIG)}
+        items={getMenuItems(visibleMenuConfig)}
         style={{ borderRight: 0, background: "transparent" }}
         onClick={() => {
           if (mobile) {

@@ -1,14 +1,19 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.admin_api.serializers import UserSerializer
+from apps.admin_api.permissions import IsConsoleUser
+from apps.admin_api.serializers import UserSelfUpdateSerializer, UserSerializer
+from utils.authz import can_access_console
 
 User = get_user_model()
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LoginView(views.APIView):
     """
     登录认证视图
@@ -35,8 +40,7 @@ class LoginView(views.APIView):
         if user is None:
             return Response({"detail": "用户名或密码错误"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # 检查用户是否为管理员
-        if not user.is_staff:
+        if not can_access_console(user):
             return Response(
                 {"detail": "您没有权限访问后台管理系统"}, status=status.HTTP_403_FORBIDDEN
             )
@@ -57,12 +61,13 @@ class LoginView(views.APIView):
         return Response({"detail": "退出成功"})
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class UserInfoView(views.APIView):
     """
     获取当前用户信息视图
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsConsoleUser]
 
     def get(self, request):
         """
@@ -70,4 +75,14 @@ class UserInfoView(views.APIView):
         """
         # 从数据库重新获取用户信息，确保数据是最新的
         user = User.objects.get(id=request.user.id)
+        return Response(UserSerializer(user).data)
+
+    def patch(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSelfUpdateSerializer(
+            user, data=request.data, partial=True, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user.refresh_from_db()
         return Response(UserSerializer(user).data)

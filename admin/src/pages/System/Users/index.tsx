@@ -6,11 +6,9 @@ import {
   Switch,
   Button,
   message,
-  Popconfirm,
   Tabs,
   Select,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
 import PageHeader from "@/components/Common/PageHeader";
 import DataTable from "@/components/Common/DataTable";
 import { useTable } from "@/hooks/useTable";
@@ -20,6 +18,7 @@ import {
   DEPARTMENT_CHOICES,
   POSITION_CHOICES,
   GENDER_CHOICES,
+  USER_CATEGORY_CHOICES,
 } from "@/types";
 
 const { Option } = Select;
@@ -62,6 +61,7 @@ const Users: React.FC = () => {
     if (record.profile) {
       profileForm.setFieldsValue({
         phone: record.profile.phone,
+        user_category: record.profile.user_category,
         gender: record.profile.gender,
         birthday: record.profile.birthday
           ? new Date(record.profile.birthday)
@@ -78,12 +78,38 @@ const Users: React.FC = () => {
   };
 
   const handleDelete = async (record: User) => {
+    Modal.confirm({
+      title: "确定要删除此用户吗？",
+      content: `用户“${record.username}”删除后将无法恢复。`,
+      okText: "确定",
+      cancelText: "取消",
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        try {
+          await deleteUser(record.id);
+          message.success("删除成功");
+          refresh();
+        } catch (error) {
+          message.error("删除失败");
+        }
+      },
+    });
+  };
+
+  const handleUpdateUserCategory = async (
+    record: User,
+    userCategory: NonNullable<User["profile"]>["user_category"],
+  ) => {
     try {
-      await deleteUser(record.id);
-      message.success("删除成功");
+      await updateUser(record.id, {
+        profile: {
+          user_category: userCategory,
+        },
+      });
+      message.success("用户类型更新成功");
       refresh();
     } catch (error) {
-      message.error("删除失败");
+      message.error("用户类型更新失败");
     }
   };
 
@@ -137,6 +163,29 @@ const Users: React.FC = () => {
         record.first_name || record.last_name
           ? `${record.first_name || ""} ${record.last_name || ""}`.trim()
           : "-",
+    },
+    {
+      title: "用户类型",
+      dataIndex: ["profile", "user_category"],
+      key: "user_category",
+      width: 160,
+      render: (value: string, record: User) => {
+        return (
+          <Select
+            size="small"
+            value={value || undefined}
+            placeholder="设置类型"
+            style={{ width: "100%" }}
+            onChange={(nextValue) =>
+              handleUpdateUserCategory(
+                record,
+                nextValue as NonNullable<User["profile"]>["user_category"],
+              )
+            }
+            options={USER_CATEGORY_CHOICES}
+          />
+        );
+      },
     },
     {
       title: "部门",
@@ -218,16 +267,7 @@ const Users: React.FC = () => {
         pagination={pagination}
         onRefresh={refresh}
         onEdit={handleEdit}
-        onDelete={(record) => (
-          <Popconfirm
-            title="确定要删除此用户吗？"
-            onConfirm={() => handleDelete(record)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <DeleteOutlined style={{ color: "#ff4d4f" }} />
-          </Popconfirm>
-        )}
+        onDelete={handleDelete}
       />
 
       <Modal
@@ -361,10 +401,19 @@ const Users: React.FC = () => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: "1fr 1fr 1fr",
                   gap: 16,
                 }}
               >
+                <Form.Item name="user_category" label="用户类型">
+                  <Select placeholder="请选择用户类型" allowClear>
+                    {USER_CATEGORY_CHOICES.map((item) => (
+                      <Option key={item.value} value={item.value}>
+                        {item.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
                 <Form.Item name="department" label="部门">
                   <Select placeholder="请选择部门" allowClear>
                     {DEPARTMENT_CHOICES.map((item) => (

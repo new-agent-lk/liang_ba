@@ -1,5 +1,7 @@
 from rest_framework import permissions
 
+from utils.authz import can_access_console
+
 
 class IsAdminUser(permissions.BasePermission):
     """
@@ -26,3 +28,12 @@ class IsAuthenticated(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated)
+
+
+class IsConsoleUser(permissions.BasePermission):
+    """
+    允许控制台用户访问（管理员、超级管理员、研究员）
+    """
+
+    def has_permission(self, request, view):
+        return can_access_console(request.user)

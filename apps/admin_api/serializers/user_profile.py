@@ -11,6 +11,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "avatar",
             "gender",
             "birthday",
+            "user_category",
             "department",
             "position",
             "employee_id",

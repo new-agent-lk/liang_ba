@@ -55,6 +55,7 @@ class UserProfile(models.Model):
         default="job_seeker",
         choices=[
             ("job_seeker", "求职者"),
+            ("researcher", "研究员"),
             ("investor", "投资者"),
             ("partner", "合作伙伴"),
             ("other", "其他"),

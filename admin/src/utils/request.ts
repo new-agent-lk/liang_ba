@@ -35,9 +35,20 @@ const request = axios.create({
   },
 });
 
+const normalizeApiPath = (url?: string) => {
+  if (!url) {
+    return url;
+  }
+  if (API_BASE_URL.endsWith("/api") && url.startsWith("/api/")) {
+    return url.replace(/^\/api/, "");
+  }
+  return url;
+};
+
 // 请求拦截器
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    config.url = normalizeApiPath(config.url);
     // 从 localStorage 获取 access token
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token && config.headers) {
@@ -73,7 +84,12 @@ request.interceptors.response.use(
       const status = error.response.status;
 
       // Token 过期，尝试刷新
-      if (status === 401 && originalRequest && !originalRequest._retry) {
+      if (
+        status === 401 &&
+        originalRequest &&
+        !originalRequest._retry &&
+        !originalRequest.url?.includes("/api/admin/auth/refresh/")
+      ) {
         if (isRefreshing) {
           // 如果正在刷新，将请求加入队列
           return new Promise((resolve, reject) => {
@@ -103,12 +119,12 @@ request.interceptors.response.use(
 
         try {
           // 调用刷新 token 接口
-          const response = await axios.post(
-            `${API_BASE_URL}/api/admin/auth/refresh/`,
-            {
-              refresh: refreshToken,
-            },
-          );
+          const response = await request.post<{
+            access: string;
+            refresh?: string;
+          }>("/api/admin/auth/refresh/", {
+            refresh: refreshToken,
+          });
 
           const { access, refresh } = response.data;
 

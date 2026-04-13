@@ -2,9 +2,13 @@ import React from "react";
 import { Breadcrumb as AntBreadcrumb, ConfigProvider } from "antd";
 import { useLocation, Link } from "react-router-dom";
 import { MENU_CONFIG } from "@/utils/constants";
+import { filterMenuItems } from "@/utils/access";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const Breadcrumb: React.FC = () => {
   const location = useLocation();
+  const user = useAuthStore((state) => state.user);
+  const visibleMenuConfig = filterMenuItems(MENU_CONFIG, user);
 
   const findBreadcrumbs = (
     path: string,
@@ -28,7 +32,7 @@ const Breadcrumb: React.FC = () => {
     return [];
   };
 
-  const breadcrumbs = findBreadcrumbs(location.pathname, MENU_CONFIG);
+  const breadcrumbs = findBreadcrumbs(location.pathname, visibleMenuConfig);
 
   return (
     <ConfigProvider

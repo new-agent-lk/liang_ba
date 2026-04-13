@@ -1,17 +1,19 @@
 from django.db import models
 from django.utils import timezone
+from rest_framework import exceptions
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.reports.models import ResearchReport
-from apps.reports.permissions import IsResearcherOrReadOnly
+from apps.reports.permissions import IsConsoleReportUser
 from apps.reports.serializers import (
     ResearchReportCreateSerializer,
     ResearchReportListSerializer,
     ResearchReportReviewSerializer,
     ResearchReportSerializer,
 )
+from utils.authz import is_manager_user, is_researcher_user
 
 
 class ResearchReportViewSet(viewsets.ModelViewSet):
@@ -20,7 +22,7 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
     """
 
     queryset = ResearchReport.objects.all()
-    permission_classes = [permissions.IsAuthenticated, IsResearcherOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsConsoleReportUser]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -32,17 +34,13 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ResearchReport.objects.select_related("author", "reviewer")
 
-        # 超级管理员和部门负责人可以看到所有报告
         user = self.request.user
-        is_admin = user.is_superuser or (
-            hasattr(user, "profile") and user.profile.position and "负责人" in user.profile.position
-        )
-
-        if not is_admin:
-            # 普通用户只能看到自己的报告或已发布的公开报告
-            queryset = queryset.filter(
-                models.Q(author=user) | models.Q(is_public=True, status="published")
-            )
+        if is_manager_user(user):
+            queryset = queryset
+        elif is_researcher_user(user):
+            queryset = queryset.filter(author=user)
+        else:
+            queryset = queryset.none()
 
         # 筛选状态
         status_filter = self.request.query_params.get("status")
@@ -70,6 +68,20 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
 
         return queryset.order_by("-is_top", "-published_at", "-created_at")
 
+    def _can_edit_report(self, user, report: ResearchReport) -> bool:
+        if is_manager_user(user):
+            return True
+        return report.author_id == user.id and report.status in ["draft", "rejected"]
+
+    def _can_delete_report(self, user, report: ResearchReport) -> bool:
+        if is_manager_user(user):
+            return report.status in ["draft", "rejected"]
+        return report.author_id == user.id and report.status in ["draft", "rejected"]
+
+    def _ensure_manager(self, user):
+        if not is_manager_user(user):
+            raise exceptions.PermissionDenied("没有权限执行此操作")
+
     def perform_create(self, serializer):
         report = serializer.save()
         # 草稿提交后自动设为待审核
@@ -79,6 +91,8 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         report = serializer.instance
+        if not self._can_edit_report(self.request.user, report):
+            raise exceptions.PermissionDenied("没有权限编辑此报告")
         # 检查是否要删除图片（前端传 null 表示删除）
         if (
             "detail_image" in serializer.validated_data
@@ -89,15 +103,21 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
                 report.detail_image.delete(save=False)
         serializer.save()
 
+    def perform_destroy(self, instance):
+        if not self._can_delete_report(self.request.user, instance):
+            raise exceptions.PermissionDenied("没有权限删除此报告")
+        instance.delete()
+
     @action(detail=True, methods=["post"])
     def submit(self, request, pk=None):
         """提交审核"""
         report = self.get_object()
         if report.author != request.user:
             return Response({"detail": "只能提交自己的报告"}, status=status.HTTP_403_FORBIDDEN)
-        if report.status != "draft":
+        if report.status not in ["draft", "rejected"]:
             return Response(
-                {"detail": "只有草稿状态的报告可以提交审核"}, status=status.HTTP_400_BAD_REQUEST
+                {"detail": "只有草稿或已拒绝的报告可以提交审核"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         report.status = "pending"
@@ -109,13 +129,9 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
         """审核报告"""
         report = self.get_object()
 
-        # 检查权限
-        user = request.user
-        is_admin = user.is_superuser or (
-            hasattr(user, "profile") and user.profile.position and "负责人" in user.profile.position
-        )
-        if not is_admin:
-            return Response({"detail": "没有审核权限"}, status=status.HTTP_403_FORBIDDEN)
+        self._ensure_manager(request.user)
+        if report.status != "pending":
+            return Response({"detail": "只有待审核报告可以审核"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ResearchReportReviewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -124,9 +140,9 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
         review_notes = serializer.validated_data.get("review_notes", "")
 
         if review_status == "approved":
-            report.approve(user, review_notes)
+            report.approve(request.user, review_notes)
         else:
-            report.reject(user, review_notes)
+            report.reject(request.user, review_notes)
 
         return Response(ResearchReportSerializer(report).data)
 
@@ -135,13 +151,7 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
         """发布报告"""
         report = self.get_object()
 
-        # 检查权限
-        user = request.user
-        is_admin = user.is_superuser or (
-            hasattr(user, "profile") and user.profile.position and "负责人" in user.profile.position
-        )
-        if not is_admin:
-            return Response({"detail": "没有发布权限"}, status=status.HTTP_403_FORBIDDEN)
+        self._ensure_manager(request.user)
         if report.status != "approved":
             return Response(
                 {"detail": "只有已通过审核的报告才能发布"}, status=status.HTTP_400_BAD_REQUEST
@@ -159,13 +169,7 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
         """取消发布"""
         report = self.get_object()
 
-        # 检查权限
-        user = request.user
-        is_admin = user.is_superuser or (
-            hasattr(user, "profile") and user.profile.position and "负责人" in user.profile.position
-        )
-        if not is_admin:
-            return Response({"detail": "没有权限"}, status=status.HTTP_403_FORBIDDEN)
+        self._ensure_manager(request.user)
 
         report.is_public = False
         report.status = "approved"  # 取消发布后状态变回已通过
@@ -178,13 +182,7 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
         """置顶/取消置顶"""
         report = self.get_object()
 
-        # 检查权限
-        user = request.user
-        is_admin = user.is_superuser or (
-            hasattr(user, "profile") and user.profile.position and "负责人" in user.profile.position
-        )
-        if not is_admin:
-            return Response({"detail": "没有权限"}, status=status.HTTP_403_FORBIDDEN)
+        self._ensure_manager(request.user)
 
         report.is_top = not report.is_top
         report.save()

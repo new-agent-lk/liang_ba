@@ -10,6 +10,7 @@ from .resume import ResumeReviewSerializer, ResumeSerializer
 from .user import (
     UserCreateSerializer,
     UserPasswordChangeSerializer,
+    UserSelfUpdateSerializer,
     UserSerializer,
     UserUpdateSerializer,
 )
@@ -21,6 +22,7 @@ __all__ = [
     "UserSerializer",
     "UserCreateSerializer",
     "UserUpdateSerializer",
+    "UserSelfUpdateSerializer",
     "UserPasswordChangeSerializer",
     # Company
     "CompanyInfoSerializer",

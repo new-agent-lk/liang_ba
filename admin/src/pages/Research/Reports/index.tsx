@@ -11,8 +11,6 @@ import {
   Popconfirm,
   Upload,
   UploadFile,
-  Badge,
-  Dropdown,
 } from "antd";
 import { UploadOutlined, FileTextOutlined } from "@ant-design/icons";
 import {
@@ -36,10 +34,10 @@ import {
   reviewReport,
   publishReport,
   unpublishReport,
-  updateReportStatus,
 } from "@/api/reports";
 import { ResearchReport, RESEARCH_STRATEGY_TYPES } from "@/types";
 import { useAuthStore } from "@/store/useAuthStore";
+import { hasCapability } from "@/utils/access";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -116,8 +114,10 @@ const Reports: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<ResearchReport[]>([]);
 
   const { user } = useAuthStore();
-  const isSuperAdmin = user?.is_superuser || false;
   const currentUserId = user?.id;
+  const canManageAllReports = hasCapability(user, "reports.manage_all");
+  const canReviewReports = hasCapability(user, "reports.review");
+  const canPublishReports = hasCapability(user, "reports.publish");
 
   const {
     data,
@@ -128,13 +128,10 @@ const Reports: React.FC = () => {
     fetchData: getReports,
   });
 
-  // 检查是否可以编辑报告
   const canEditReport = (report: ResearchReport) => {
-    if (isSuperAdmin) {
-      // 超管可以编辑所有报告
+    if (canManageAllReports) {
       return true;
     }
-    // 普通用户只能编辑自己的草稿或被拒绝的报告
     if (
       report.author === currentUserId &&
       (report.status === "draft" || report.status === "rejected")
@@ -146,32 +143,13 @@ const Reports: React.FC = () => {
 
   // 检查是否可以删除报告
   const canDeleteReport = (report: ResearchReport) => {
-    if (isSuperAdmin) {
-      // 超管可以删除所有草稿或被拒绝的报告
+    if (canManageAllReports) {
       return report.status === "draft" || report.status === "rejected";
     }
-    // 普通用户只能删除自己的草稿或被拒绝的报告
     return (
       report.author === currentUserId &&
       (report.status === "draft" || report.status === "rejected")
     );
-  };
-
-  // 检查是否可以编辑状态（超管可以编辑所有，普通用户只能编辑自己的）
-  const canEditStatus = (report: ResearchReport) => {
-    if (isSuperAdmin) return true;
-    return report.author === currentUserId;
-  };
-
-  // 编辑状态
-  const handleEditStatus = async (id: number, newStatus: string) => {
-    try {
-      await updateReportStatus(id, { status: newStatus });
-      message.success("状态更新成功");
-      refresh();
-    } catch (error) {
-      message.error("状态更新失败");
-    }
   };
 
   // 批量发布
@@ -201,20 +179,17 @@ const Reports: React.FC = () => {
 
   // 检查是否可以审核（部门负责人权限）
   const canReview = (report: ResearchReport) => {
-    // 超管可以审核，待审核状态的文章
-    return isSuperAdmin && report.status === "pending";
+    return canReviewReports && report.status === "pending";
   };
 
   // 检查是否可以发布
   const canPublish = (report: ResearchReport) => {
-    // 超管可以发布已通过审核的文章
-    return isSuperAdmin && report.status === "approved";
+    return canPublishReports && report.status === "approved";
   };
 
   // 检查是否可以取消发布
   const canUnpublish = (report: ResearchReport) => {
-    // 超管可以取消发布已发布的文章
-    return isSuperAdmin && report.status === "published";
+    return canPublishReports && report.status === "published";
   };
 
   const handleAdd = () => {
@@ -421,36 +396,8 @@ const Reports: React.FC = () => {
       dataIndex: "status",
       key: "status",
       width: 130,
-      render: (v: string, record: ResearchReport) => {
+      render: (v: string) => {
         const config = STATUS_CONFIG[v] || STATUS_CONFIG.draft;
-        if (canEditStatus(record)) {
-          const menuItems = Object.entries(STATUS_CONFIG).map(([key, cfg]) => ({
-            key,
-            label: (
-              <div style={getStatusTagStyle(cfg)}>
-                <span>{cfg.label}</span>
-              </div>
-            ),
-          }));
-          return (
-            <Dropdown
-              menu={{
-                items: menuItems,
-                onClick: ({ key }) => handleEditStatus(record.id, key),
-              }}
-              trigger={["click"]}
-              placement="bottomLeft"
-            >
-              <Button
-                size="large"
-                type="text"
-                style={getStatusTagStyle(config)}
-              >
-                {config.label}
-              </Button>
-            </Dropdown>
-          );
-        }
         return (
           <div style={getStatusTagStyle(config)}>
             <span>{config.label}</span>
@@ -568,17 +515,21 @@ const Reports: React.FC = () => {
       <PageHeader
         title="研究报告"
         description={
-          isSuperAdmin ? "管理所有研究报告（超管权限）" : "管理自己的研究报告"
+          canManageAllReports ? "管理全部研究报告并执行审核发布" : "管理自己的研究报告"
         }
         actions={[
-          <Button
-            key="bulk-publish"
-            icon={<ExportOutlined />}
-            onClick={handleBulkPublish}
-            disabled={selectedRowKeys.length === 0}
-          >
-            批量发布 ({selectedRowKeys.length})
-          </Button>,
+          ...(canPublishReports
+            ? [
+                <Button
+                  key="bulk-publish"
+                  icon={<ExportOutlined />}
+                  onClick={handleBulkPublish}
+                  disabled={selectedRowKeys.length === 0}
+                >
+                  批量发布 ({selectedRowKeys.length})
+                </Button>,
+              ]
+            : []),
           <Button
             key="add"
             type="primary"
@@ -595,13 +546,17 @@ const Reports: React.FC = () => {
         columns={[...columns, actionColumn]}
         pagination={pagination}
         onRefresh={refresh}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (keys: React.Key[], rows: ResearchReport[]) => {
-            setSelectedRowKeys(keys);
-            setSelectedRows(rows);
-          },
-        }}
+        rowSelection={
+          canPublishReports
+            ? {
+                selectedRowKeys,
+                onChange: (keys: React.Key[], rows: ResearchReport[]) => {
+                  setSelectedRowKeys(keys);
+                  setSelectedRows(rows);
+                },
+              }
+            : undefined
+        }
       />
 
       {/* 添加/编辑弹窗 */}
@@ -805,22 +760,6 @@ const Reports: React.FC = () => {
           <Form.Item name="tags" label="标签">
             <Input placeholder="多个标签用逗号分隔" />
           </Form.Item>
-
-          {/* 状态编辑 - 仅超管可编辑 */}
-          {isSuperAdmin && (
-            <Form.Item name="status" label="状态">
-              <Select placeholder="请选择状态">
-                {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
-                  <Option key={key} value={key}>
-                    <div style={getStatusTagStyle(cfg)}>
-                      <Badge color={cfg.color} />
-                      <span>{cfg.label}</span>
-                    </div>
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )}
 
           <Form.Item style={{ marginBottom: 0, textAlign: "right" }}>
             <Space>

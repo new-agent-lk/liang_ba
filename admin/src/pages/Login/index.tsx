@@ -18,6 +18,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { getDefaultRoute } from "@/utils/access";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -31,7 +32,7 @@ const Login: React.FC = () => {
     try {
       const result = await login(values);
       if (result.success) {
-        navigate("/dashboard");
+        navigate(getDefaultRoute(result.user), { replace: true });
       } else {
         message.error("用户名或密码错误");
       }

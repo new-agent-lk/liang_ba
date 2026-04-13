@@ -1,8 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 import AdminLayout from "@/components/Layout/AdminLayout";
+import { getDefaultRoute, hasCapability } from "@/utils/access";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
+import Profile from "@/pages/System/Profile";
 import Users from "@/pages/System/Users";
 import Settings from "@/pages/System/Settings";
 import Logs from "@/pages/System/Logs";
@@ -18,14 +20,43 @@ import FactorAnalysis from "@/pages/FactorHub/Analysis";
 import FactorBacktest from "@/pages/FactorHub/Backtest";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isAuthenticated, user } = useAuthStore();
   const token = localStorage.getItem("admin_access_token");
 
   if (!isAuthenticated && !token) {
     return <Navigate to="/login" replace />;
   }
 
+  if (user && !user.can_access_console) {
+    return <Navigate to="/login" replace />;
+  }
+
   return <>{children}</>;
+};
+
+const CapabilityRoute = ({
+  children,
+  capability,
+}: {
+  children: React.ReactNode;
+  capability: Parameters<typeof hasCapability>[1];
+}) => {
+  const user = useAuthStore((state) => state.user);
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!hasCapability(user, capability)) {
+    return <Navigate to={getDefaultRoute(user)} replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const DefaultRouteRedirect = () => {
+  const user = useAuthStore((state) => state.user);
+  return <Navigate to={getDefaultRoute(user)} replace />;
 };
 
 const router = createBrowserRouter([
@@ -43,59 +74,138 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/dashboard" replace />,
+        element: <DefaultRouteRedirect />,
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <CapabilityRoute capability="dashboard.view">
+            <Dashboard />
+          </CapabilityRoute>
+        ),
+      },
+      {
+        path: "system/profile",
+        element: (
+          <CapabilityRoute capability="profile.manage">
+            <Profile />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "system/users",
-        element: <Users />,
+        element: (
+          <CapabilityRoute capability="system.users.manage">
+            <Users />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "system/logs",
-        element: <Logs />,
+        element: (
+          <CapabilityRoute capability="logs.view">
+            <Logs />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "system/settings",
-        element: <Settings />,
+        element: (
+          <CapabilityRoute capability="system.settings.manage">
+            <Settings />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "content/company-info",
-        element: <CompanyInfo />,
+        element: (
+          <CapabilityRoute capability="content.manage">
+            <CompanyInfo />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "content/resumes",
-        element: <Resumes />,
+        element: (
+          <CapabilityRoute capability="content.manage">
+            <Resumes />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "content/jobs",
-        element: <Jobs />,
+        element: (
+          <CapabilityRoute capability="content.manage">
+            <Jobs />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "data/import-export",
-        element: <ImportExport />,
+        element: (
+          <CapabilityRoute capability="data.import_export.manage">
+            <ImportExport />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "research/reports",
-        element: <Reports />,
+        element: (
+          <CapabilityRoute capability="reports.access">
+            <Reports />
+          </CapabilityRoute>
+        ),
       },
       {
         path: "factor-hub",
         children: [
-          { index: true, element: <FactorHubIndex /> },
-          { path: "data", element: <FactorData /> },
-          { path: "factors", element: <FactorList /> },
-          { path: "analysis", element: <FactorAnalysis /> },
-          { path: "backtest", element: <FactorBacktest /> },
+          {
+            index: true,
+            element: (
+              <CapabilityRoute capability="factorhub.manage">
+                <FactorHubIndex />
+              </CapabilityRoute>
+            ),
+          },
+          {
+            path: "data",
+            element: (
+              <CapabilityRoute capability="factorhub.manage">
+                <FactorData />
+              </CapabilityRoute>
+            ),
+          },
+          {
+            path: "factors",
+            element: (
+              <CapabilityRoute capability="factorhub.manage">
+                <FactorList />
+              </CapabilityRoute>
+            ),
+          },
+          {
+            path: "analysis",
+            element: (
+              <CapabilityRoute capability="factorhub.manage">
+                <FactorAnalysis />
+              </CapabilityRoute>
+            ),
+          },
+          {
+            path: "backtest",
+            element: (
+              <CapabilityRoute capability="factorhub.manage">
+                <FactorBacktest />
+              </CapabilityRoute>
+            ),
+          },
         ],
       },
     ],
   },
   {
     path: "*",
-    element: <Navigate to="/dashboard" replace />,
+    element: <DefaultRouteRedirect />,
   },
 ]);
 

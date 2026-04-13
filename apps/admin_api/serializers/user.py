@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from apps.users.models import UserProfile
+from utils.authz import can_access_console, get_console_capabilities, get_console_role
+
 from .user_profile import UserProfileSerializer
 
 User = get_user_model()
@@ -9,6 +12,9 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer(read_only=True)
     full_name = serializers.SerializerMethodField()
+    console_role = serializers.SerializerMethodField()
+    capabilities = serializers.SerializerMethodField()
+    can_access_console = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -25,11 +31,23 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login",
             "date_joined",
             "profile",
+            "console_role",
+            "capabilities",
+            "can_access_console",
         ]
         read_only_fields = ["id", "date_joined", "last_login"]
 
     def get_full_name(self, obj):
         return obj.get_full_name()
+
+    def get_console_role(self, obj):
+        return get_console_role(obj)
+
+    def get_capabilities(self, obj):
+        return get_console_capabilities(obj)
+
+    def get_can_access_console(self, obj):
+        return can_access_console(obj)
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -98,9 +116,56 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         # 更新用户资料
         if profile_data:
-            profile = instance.profile
+            profile, _ = UserProfile.objects.get_or_create(user=instance)
             for attr, value in profile_data.items():
                 setattr(profile, attr, value)
+            profile.save()
+
+        return instance
+
+
+class UserSelfUpdateSerializer(serializers.ModelSerializer):
+    profile = serializers.DictField(required=False)
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email", "profile"]
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop("profile", None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if profile_data:
+            profile, _ = UserProfile.objects.get_or_create(user=instance)
+            allowed_profile_fields = {
+                "phone",
+                "gender",
+                "birthday",
+                "department",
+                "position",
+                "employee_id",
+                "address",
+                "city",
+                "province",
+                "postal_code",
+                "wechat",
+                "qq",
+                "linkedin",
+                "bio",
+                "notes",
+                "language",
+                "timezone_str",
+                "theme",
+                "email_notifications",
+                "sms_notifications",
+                "push_notifications",
+            }
+            for attr, value in profile_data.items():
+                if attr in allowed_profile_fields:
+                    setattr(profile, attr, value)
             profile.save()
 
         return instance

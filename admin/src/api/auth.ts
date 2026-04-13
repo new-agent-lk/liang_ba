@@ -13,6 +13,10 @@ export const getCurrentUser = (): Promise<User> => {
   return request.get("/api/admin/auth/me/");
 };
 
+export const updateCurrentUser = (data: Partial<User>): Promise<User> => {
+  return request.patch("/api/admin/auth/me/", data);
+};
+
 export const refreshToken = (
   refreshToken: string,
 ): Promise<{ access: string; refresh: string }> => {

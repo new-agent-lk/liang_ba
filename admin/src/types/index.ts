@@ -1,4 +1,24 @@
 // User types
+export type ConsoleRole = "superuser" | "manager" | "researcher" | "user";
+
+export type ConsoleCapability =
+  | "console.access"
+  | "profile.manage"
+  | "dashboard.view"
+  | "system.users.manage"
+  | "system.settings.manage"
+  | "content.manage"
+  | "data.import_export.manage"
+  | "factorhub.manage"
+  | "logs.view"
+  | "logs.manage"
+  | "reports.access"
+  | "reports.manage_own"
+  | "reports.manage_all"
+  | "reports.review"
+  | "reports.publish"
+  | "reports.toggle_top";
+
 export interface User {
   id: number;
   username: string;
@@ -14,6 +34,9 @@ export interface User {
   date_joined: string;
   last_login?: string;
   profile?: UserProfile;
+  console_role: ConsoleRole;
+  capabilities: ConsoleCapability[];
+  can_access_console: boolean;
 }
 
 // 部门选项
@@ -52,6 +75,12 @@ export interface UserProfile {
   phone?: string;
   avatar?: string;
   avatar_url?: string;
+  user_category?:
+    | "job_seeker"
+    | "researcher"
+    | "investor"
+    | "partner"
+    | "other";
   gender?: "M" | "F" | "O";
   birthday?: string;
   department?: string;
@@ -88,6 +117,14 @@ export interface LoginResponse {
   refresh: string;
   user: User;
 }
+
+export const USER_CATEGORY_CHOICES = [
+  { value: "job_seeker", label: "求职者" },
+  { value: "researcher", label: "研究员" },
+  { value: "investor", label: "投资者" },
+  { value: "partner", label: "合作伙伴" },
+  { value: "other", label: "其他" },
+];
 
 // Common pagination
 export interface PaginatedResponse<T> {
