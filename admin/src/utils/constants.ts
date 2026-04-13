@@ -51,7 +51,11 @@ export const MENU_CONFIG: MenuConfigItem[] = [
     key: "system",
     icon: "SettingOutlined",
     label: "系统管理",
-    requiredCapabilities: ["system.users.manage", "logs.view", "system.settings.manage"],
+    requiredCapabilities: [
+      "system.users.manage",
+      "logs.view",
+      "system.settings.manage",
+    ],
     children: [
       {
         key: ROUTES.USERS,

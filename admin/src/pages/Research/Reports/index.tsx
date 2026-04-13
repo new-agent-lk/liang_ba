@@ -515,7 +515,9 @@ const Reports: React.FC = () => {
       <PageHeader
         title="研究报告"
         description={
-          canManageAllReports ? "管理全部研究报告并执行审核发布" : "管理自己的研究报告"
+          canManageAllReports
+            ? "管理全部研究报告并执行审核发布"
+            : "管理自己的研究报告"
         }
         actions={[
           ...(canPublishReports

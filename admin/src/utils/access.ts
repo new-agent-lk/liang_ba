@@ -31,7 +31,9 @@ export const filterMenuItems = (
 ): MenuItem[] => {
   return items
     .map((item) => {
-      const children = item.children ? filterMenuItems(item.children, user) : [];
+      const children = item.children
+        ? filterMenuItems(item.children, user)
+        : [];
       const hasAccess = hasAnyCapability(user, item.requiredCapabilities);
 
       if (children.length > 0) {
