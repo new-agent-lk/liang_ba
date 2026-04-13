@@ -130,7 +130,9 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
 
         self._ensure_manager(request.user)
         if report.status != "pending":
-            return Response({"detail": "只有待审核报告可以审核"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "只有待审核报告可以审核"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         serializer = ResearchReportReviewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
