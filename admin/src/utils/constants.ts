@@ -17,6 +17,8 @@ export const ROUTES = {
   IMPORT_EXPORT: "/data/import-export",
   // 研究报告
   REPORTS: "/research/reports",
+  REPORTS_WRITE: "/research/reports/write",
+  REPORTS_MANAGE: "/research/reports/manage",
   // 量化因子
   FACTOR_HUB: "/factor-hub",
   FACTOR_DATA: "/factor-hub/data",
@@ -110,7 +112,13 @@ export const MENU_CONFIG: MenuConfigItem[] = [
     requiredCapabilities: ["reports.access"],
     children: [
       {
-        key: ROUTES.REPORTS,
+        key: ROUTES.REPORTS_WRITE,
+        icon: "FormOutlined",
+        label: "报告撰写",
+        requiredCapabilities: ["reports.access"],
+      },
+      {
+        key: ROUTES.REPORTS_MANAGE,
         icon: "FileSearchOutlined",
         label: "报告管理",
         requiredCapabilities: ["reports.access"],

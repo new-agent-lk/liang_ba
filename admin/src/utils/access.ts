@@ -59,7 +59,7 @@ export const getDefaultRoute = (user: User | null | undefined): string => {
     return "/dashboard";
   }
   if (hasCapability(user, "reports.access")) {
-    return "/research/reports";
+    return "/research/reports/manage";
   }
   if (hasCapability(user, "profile.manage")) {
     return "/system/profile";

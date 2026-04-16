@@ -13,6 +13,8 @@ import Resumes from "@/pages/Content/Resumes";
 import Jobs from "@/pages/Content/Jobs";
 import ImportExport from "@/pages/Data/ImportExport";
 import Reports from "@/pages/Research/Reports";
+import ReportsManage from "@/pages/Research/Reports/Manage";
+import ReportsWrite from "@/pages/Research/Reports/Write";
 import FactorHubIndex from "@/pages/FactorHub";
 import FactorData from "@/pages/FactorHub/Data";
 import FactorList from "@/pages/FactorHub/Factors";
@@ -153,6 +155,22 @@ const router = createBrowserRouter([
         element: (
           <CapabilityRoute capability="reports.access">
             <Reports />
+          </CapabilityRoute>
+        ),
+      },
+      {
+        path: "research/reports/write",
+        element: (
+          <CapabilityRoute capability="reports.access">
+            <ReportsWrite />
+          </CapabilityRoute>
+        ),
+      },
+      {
+        path: "research/reports/manage",
+        element: (
+          <CapabilityRoute capability="reports.access">
+            <ReportsManage />
           </CapabilityRoute>
         ),
       },

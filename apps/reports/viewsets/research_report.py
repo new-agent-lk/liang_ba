@@ -111,8 +111,11 @@ class ResearchReportViewSet(viewsets.ModelViewSet):
     def submit(self, request, pk=None):
         """提交审核"""
         report = self.get_object()
-        if report.author != request.user:
-            return Response({"detail": "只能提交自己的报告"}, status=status.HTTP_403_FORBIDDEN)
+        if report.author != request.user and not is_manager_user(request.user):
+            return Response(
+                {"detail": "只有作者或管理员可以提交审核"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         if report.status not in ["draft", "rejected"]:
             return Response(
                 {"detail": "只有草稿或已拒绝的报告可以提交审核"},

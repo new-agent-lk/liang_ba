@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
       title: "研究报告",
       description: "查看回测结论与策略产出",
       icon: <ReadOutlined />,
-      path: "/research/reports",
+      path: "/research/reports/manage",
     },
     {
       title: "量化因子",
@@ -185,8 +185,11 @@ const Dashboard: React.FC = () => {
             >
               进入量化因子中心
             </Button>
-            <Button size="large" onClick={() => navigate("/research/reports")}>
-              查看研究报告
+            <Button
+              size="large"
+              onClick={() => navigate("/research/reports/write")}
+            >
+              去做撰写
             </Button>
           </Space>
         </div>

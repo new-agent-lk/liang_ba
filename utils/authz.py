@@ -19,7 +19,11 @@ def is_superuser_user(user: Any) -> bool:
 
 
 def is_manager_user(user: Any) -> bool:
-    return bool(user and getattr(user, "is_authenticated", False) and user.is_staff)
+    return bool(
+        user
+        and getattr(user, "is_authenticated", False)
+        and (user.is_staff or user.is_superuser)
+    )
 
 
 def is_researcher_user(user: Any) -> bool:
